@@ -1,0 +1,379 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+# Kicad symbol file generator (from .csv pinout)
+# Copyright (C) 2026  Johann A. Sollacher <anmoria.project@gmail.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+import json
+import os, sys
+
+version = "0.1.0"
+
+class TreeNode: 
+    def __init__(self, data):
+        self.data = data
+        self.sub = []
+        self.lastID = 0
+    def add(self, node):
+        self.sub.append(node)
+        self.lastID = self.lastID + 1
+
+class Vec3:
+    def __init__(self, x, y, z=0):
+        self.x = x
+        self.y = y
+        self.z = z
+    def parse(self):
+        return f'{self.x} {self.y} {self.z}'
+
+
+
+class SymbolPin:
+    pindrivers = ['input','output','unspecified','power_in','power_out',
+                  'open_collector','open_emitter','no_connect','free','tri_state','bidirectional']
+    def __init__(self, ic_pin, unit, name, driver):
+        self.ic_pin = ic_pin
+        self.name = name
+        self.unit = unit
+        self.driver = driver
+        if driver not in self.pindrivers:
+            print(f"ERROR: Undefined PinDriver: {driver}")
+            exit(1)
+        self.driver = driver
+    def parse(self, pos):
+        parsed = f'\
+(pin {self.driver} line\n\
+\t(at {pos.parse()})\n\
+\t(length 5.04)\n\
+\t(name "{self.name}"\n\
+\t\t(effects\n\
+\t\t\t(font\n\
+\t\t\t\t(size 1.27 1.27)\n\
+\t\t\t)\n\
+\t\t)\n\
+\t)\n\
+\t(number "{self.ic_pin}"\n\
+\t\t(effects\n\
+\t\t\t(font\n\
+\t\t\t\t(size 1.27 1.27)\n\
+\t\t\t)\n\
+\t\t)\n\
+\t)\n\
+)\n\
+'
+        return parsed
+
+def indent(string, num_spaces):
+    ret_str = ""
+    for line in string.splitlines() :
+        ret_str = ret_str + '\t' * num_spaces + line + '\n'
+    return ret_str
+
+class Symbol:
+
+    def __init__(self, name):
+        self.name = name
+        self.pins = []
+        self.unit_names = []
+
+    def add_pins(self, pins):
+        for pin in pins:
+            if pin.unit not in self.unit_names:
+                self.unit_names.append(pin.unit)
+            self.pins.append(pin)
+
+
+    def parse(self):
+
+        max_char = 0
+        for pin in self.pins:
+            if max_char < len(pin.name):
+                max_char = len(pin.name)
+
+        rect_x = max_char * 2.54 * 0.7
+
+        parsed = f'''
+(symbol "{self.name}"
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(property "Reference" "U"
+			(at {rect_x} -1.524 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "value-text"
+			(at {rect_x} -3.556 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "footprint-text"
+			(at {rect_x} -7.874 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "datasheet-text"
+			(at {rect_x} -9.906 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Description" "description-text"
+			(at {rect_x} -5.842 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Value" "value-text"
+			(at {rect_x} -3.556 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "footprint-text"
+			(at {rect_x} -7.874 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "datasheet-text"
+			(at {rect_x} -9.906 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Description" "description-text"
+			(at {rect_x} -5.842 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+'''
+
+         
+        if len(self.unit_names) == 1:
+            num_pins = len(self.pins)
+
+            parsed = parsed + f'''
+        (symbol "{self.name}_0_1"
+            (rectangle
+                (start 5.04 0)
+                (end {rect_x} {-num_pins*2.54})
+                (stroke
+                    (width 0)
+                    (type default)
+                )
+                (fill
+                    (type none)
+                )
+            )
+        )
+        (symbol "{self.name}_1_1"
+'''
+            unit_pin_id = 0
+            for pin in self.pins:
+                pin_pos = Vec3(0, -1.27 + unit_pin_id * -2.54, 0)
+                parsed = parsed + indent(pin.parse(pin_pos), 2)
+                unit_pin_id = unit_pin_id + 1
+            parsed = parsed + '\t)'
+        
+        if len(self.unit_names) > 1:
+            unit_id = 0
+            for unit_name in self.unit_names:
+                num_unit_pins = 0
+                for pin in self.pins:
+                    if pin.unit == unit_name:
+                        num_unit_pins = num_unit_pins + 1
+                unit_id = unit_id + 1
+                parsed = parsed + f'''
+        (symbol "{self.name}_{unit_id}_1"
+            (rectangle
+                (start 5.04 0)
+                (end {rect_x} {-num_unit_pins*2.45 - 1.27})
+                (stroke
+                    (width 0)
+                    (type default)
+                )
+                (fill
+                    (type none)
+                )
+            )
+'''             
+                unit_pin_id = 0
+                for pin in self.pins:
+                    if unit_name != pin.unit:
+                        continue
+                    pin_pos = Vec3(0, -1.27 + unit_pin_id * -2.54, 0)
+                    parsed = parsed + indent(pin.parse(pin_pos), 2)
+                    unit_pin_id = unit_pin_id + 1
+                parsed = parsed + '\t)'
+
+        return parsed
+
+
+
+class Library:
+    def __init__(self, name):
+        self.name = name
+        self.symbols = []
+
+    def add_symbols(self, symbols):
+        for symbol in symbols:
+            self.symbols.append(symbol)
+
+    def parse(self):
+        parsed = ""
+        parsed = f'''
+(kicad_symbol_lib
+	(version 20241209)
+	(generator "kicad_symbol_editor")
+	(generator_version "9.0")
+'''
+        for symbol in self.symbols:
+            parsed = parsed + indent(symbol.parse(), 1)
+        parsed = parsed + f'\
+\t\t(embedded_fonts no)\n\
+\t)\n\
+)\n\
+\n'
+        return parsed
+
+    def gen_file(self):
+        filepath = f'./build/{self.name}.kicad_sym'
+        f_lib = open(filepath, 'w+', encoding='utf-8')
+        f_lib.write(self.parse())
+        f_lib.flush()
+        f_lib.close()
+        print("Generated file: " + filepath)
+
+
+def csv2pins(filepath):
+    f = open (filepath, 'r', encoding='utf-8')
+    text = f.read()
+    f.close()
+    i = 0
+    Pins = []
+    for line in text.splitlines():
+        if i == 0:
+            i = 1
+            continue
+        splits = line.split(',')
+        pin = SymbolPin(splits[0], splits[1], splits[2], splits[3])
+        i = i + 1
+        Pos = Vec3(-2.54, -1.27 + i* -2.54, 0)
+        Pins.append(pin)
+    return Pins
+
+
+def print_help():
+    helpstr = '''
+Usage: [python3] system-generator.py [Options] FILE
+
+Options:
+    -v, --version   Print license and version
+    -h, --help      Print this help
+
+Example: 
+    
+    python3 symbol-generator.py ./test/multi_unit_test.csv
+
+    ./symbol-generator.py ./test/single_unit_test.csv
+
+Build output will be in the './build/' folder.
+Read the README.md for more information!
+Example input files are in folder ./test/*.csv
+'''
+    print(helpstr)
+
+def print_license_short():
+    license = f'''
+Symbol-generator v{version}  
+Copyright (C) 2026  Johann A. Sollacher
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+
+This is free software; you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+'''
+    print(license)
+
+def main():
+    # DO NOT REMOVE!
+    print("Symbol-generator: For version or license use '--version'. For help use '--help'")
+
+    if '-v' in sys.argv or '--version' in sys.argv:
+        print_license_short()
+        exit(0)
+
+    if '-h' in sys.argv or '--help' in sys.argv or len(sys.argv) != 2:
+        print_license_short()
+        print_help()
+        exit(0)
+    
+    path = sys.argv[-1]
+    if not os.path.isfile(path):
+        print("ERROR: File does not exist! Please specify a file as argument!")
+        exit(1)
+    sym_name = os.path.basename(path).split('.')[0]
+    lib_name = sym_name
+    
+    sym1 = Symbol(sym_name)
+    pins = csv2pins(path)
+    sym1.add_pins(pins)
+    lib1 = Library(lib_name)
+    lib1.add_symbols([sym1])
+    lib1.gen_file()
+
+
+
+if __name__ == "__main__":
+    main()
+
