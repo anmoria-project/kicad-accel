@@ -21,6 +21,7 @@ import json
 import os, sys
 
 version = "0.1.0"
+C_INCH = 2.45
 
 class TreeNode: 
     def __init__(self, data):
@@ -50,7 +51,7 @@ class SymbolPin:
         self.unit = unit
         self.driver = driver
         if driver not in self.pindrivers:
-            print(f"ERROR: Undefined PinDriver: {driver}")
+            print(f"ERROR: Undefined PinDriver: {driver}! Name={name}; Block={unit}; PIN={ic_pin}")
             exit(1)
         self.driver = driver
     def parse(self, pos):
@@ -111,7 +112,8 @@ class Symbol:
 		(in_bom yes)
 		(on_board yes)
 		(property "Reference" "U"
-			(at {rect_x} -1.524 0)
+			(at {rect_x} -1.27 0)
+			(do_not_autoplace)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -119,8 +121,20 @@ class Symbol:
 				(justify left)
 			)
 		)
+		(symbol "{self.name}_0_1"
+			(text "{self.name}"
+				(at {rect_x} -3.81 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+				)
+			)
+		)
 		(property "Value" "value-text"
-			(at {rect_x} -3.556 0)
+			(at {rect_x} -8.89 0)
+			(do_not_autoplace)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -129,17 +143,8 @@ class Symbol:
 			)
 		)
 		(property "Footprint" "footprint-text"
-			(at {rect_x} -7.874 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "datasheet-text"
-			(at {rect_x} -9.906 0)
+			(at {rect_x} -11.43 0)
+			(do_not_autoplace)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -149,26 +154,8 @@ class Symbol:
 			)
 		)
 		(property "Description" "description-text"
-			(at {rect_x} -5.842 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Value" "value-text"
-			(at {rect_x} -3.556 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "footprint-text"
-			(at {rect_x} -7.874 0)
+			(at {rect_x} -13.97 0)
+			(do_not_autoplace)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -178,7 +165,8 @@ class Symbol:
 			)
 		)
 		(property "Datasheet" "datasheet-text"
-			(at {rect_x} -9.906 0)
+			(at {rect_x} -16.51 0)
+			(do_not_autoplace)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -187,45 +175,37 @@ class Symbol:
 				(hide yes)
 			)
 		)
-		(property "Description" "description-text"
-			(at {rect_x} -5.842 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
+
 '''
 
-         
-        if len(self.unit_names) == 1:
-            num_pins = len(self.pins)
+# TODO: Fix this...       
+#         if len(self.unit_names) == 1:
+#             num_pins = len(self.pins)
 
-            parsed = parsed + f'''
-        (symbol "{self.name}_0_1"
-            (rectangle
-                (start 5.04 0)
-                (end {rect_x} {-num_pins*2.54})
-                (stroke
-                    (width 0)
-                    (type default)
-                )
-                (fill
-                    (type none)
-                )
-            )
-        )
-        (symbol "{self.name}_1_1"
-'''
-            unit_pin_id = 0
-            for pin in self.pins:
-                pin_pos = Vec3(0, -1.27 + unit_pin_id * -2.54, 0)
-                parsed = parsed + indent(pin.parse(pin_pos), 2)
-                unit_pin_id = unit_pin_id + 1
-            parsed = parsed + '\t)'
-        
+#             parsed = parsed + f'''
+#         (symbol "{self.name}_0_1"
+#             (rectangle
+#                 (start 5.04 0)
+#                 (end {rect_x} {-num_pins*2.54})
+#                 (stroke
+#                     (width 0)
+#                     (type default)
+#                 )
+#                 (fill
+#                     (type none)
+#                 )
+#             )
+#         )
+#         (symbol "{self.name}_1_1"
+# '''
+#             unit_pin_id = 0
+#             for pin in self.pins:
+#                 pin_pos = Vec3(0, -1.27 + unit_pin_id * -2.54, 0)
+#                 parsed = parsed + indent(pin.parse(pin_pos), 2)
+#                 unit_pin_id = unit_pin_id + 1
+#             parsed = parsed + '\t)'
+
+
         if len(self.unit_names) > 1:
             unit_id = 0
             for unit_name in self.unit_names:
@@ -238,7 +218,7 @@ class Symbol:
         (symbol "{self.name}_{unit_id}_1"
             (rectangle
                 (start 5.04 0)
-                (end {rect_x} {-num_unit_pins*2.45 - 1.27})
+                (end {rect_x} {-num_unit_pins*2.54 - 0.0})
                 (stroke
                     (width 0)
                     (type default)
@@ -247,6 +227,15 @@ class Symbol:
                     (type none)
                 )
             )
+			(text "{unit_name}"
+				(at {rect_x} -6.35 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+				)
+			)
 '''             
                 unit_pin_id = 0
                 for pin in self.pins:
@@ -306,8 +295,62 @@ def csv2pins(filepath):
         if i == 0:
             i = 1
             continue
-        splits = line.split(',')
-        pin = SymbolPin(splits[0], splits[1], splits[2], splits[3])
+        # if line.strip(';').strip() == "":
+        #     continue
+        splits = line.split(';')
+        # Excel structure to parse:
+        if (len(splits) < 14) : 
+            print("ERROR: Excel list must be of format:")
+            print("block; pin_id; pin_prefix; function0(system); direction0; function1; direction1; function2; direction2; function3; direction3; voltage; capabilities; original_name;	info")
+            exit(-1)
+
+        function = []
+        driver = []
+        # print("line={}".format(line))
+        # for s in splits:
+        #     print("\t{}".format(s))
+        block = splits[0].strip()
+        pin_id = splits[1].strip()
+        pin_prefix = splits[2].strip()
+        function.append(splits[3].strip())
+        driver.append(splits[4].strip())
+        function.append(splits[5].strip())
+        driver.append(splits[6].strip())
+        function.append(splits[7].strip())
+        driver.append(splits[8].strip())
+        function.append(splits[9].strip())
+        driver.append(splits[10].strip())
+        voltage = splits[11].strip()
+        capabilities  = splits[12].strip()
+        orig_name = splits[13].strip()
+        info = splits[14].strip()
+
+
+
+        name = pin_prefix.lower()
+        for f in function[1:]:
+            if f != "":
+                if name == "":
+                    name += f.lower()
+                else:
+                    name += "_" + f.lower()
+        if function[0] != "":
+            if name == "":
+                name += function[0].lower()
+            else:
+                name += '_' + function[0].lower()
+        
+        # take the first driver found for time being!
+        driver_full = ""
+        for d in driver:
+            if d != "":
+                driver_full = d.lower()
+                break
+        
+        if (name == "" and block == "" and pin_id == ""):
+            continue
+        print("pin_id={}; block={}; name={}; driver={}".format( pin_id, block, name, driver))
+        pin = SymbolPin(pin_id, block, name, driver_full)
         i = i + 1
         Pos = Vec3(-2.54, -1.27 + i* -2.54, 0)
         Pins.append(pin)
@@ -359,6 +402,7 @@ def main():
         exit(0)
     
     path = sys.argv[-1]
+    # path = "/home/yoctouser/scm/pcb-bricks/kicad-accel/test/multi_unit_big_test.csv"
     if not os.path.isfile(path):
         print("ERROR: File does not exist! Please specify a file as argument!")
         exit(1)
