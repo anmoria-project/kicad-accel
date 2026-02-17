@@ -54,6 +54,24 @@ class SymbolPin:
             print(f"ERROR: Undefined PinDriver: {driver}! Name={name}; Block={unit}; PIN={ic_pin}")
             exit(1)
         self.driver = driver
+
+
+    def parse_label(self, index):
+        labelname = self.name
+        labelpos = 2.54 * index
+        parsed = f'''
+(label "{labelname}"
+	(at 0.0 {labelpos} 180)
+	(effects
+		(font (size 1.27 1.27))
+		(justify right bottom)
+	)
+	(uuid "56f4fb89-7b4a-4f69-8ef8-85994935da29")
+)
+'''
+        return parsed
+
+
     def parse(self, pos):
         parsed = f'\
 (pin {self.driver} line\n\
@@ -95,6 +113,46 @@ class Symbol:
             if pin.unit not in self.unit_names:
                 self.unit_names.append(pin.unit)
             self.pins.append(pin)
+
+
+    def parse_labels(self, prefix):
+        for unit in self.unit_names:
+            i = 0
+            unit_text = ""
+            filepath = f"./build/{prefix}_{unit}.kicad_labels"
+            for pin in self.pins:
+                if pin.unit != unit:
+                    continue
+                i = i + 1
+                unit_text  = unit_text + "\n\n" + pin.parse_label(i)
+
+            print(f"Write file: {filepath}")
+
+            # filepath = f'./build/{filename}.kicad_labels'
+            fd = open(filepath, 'w+', encoding='utf-8')
+            fd.write(unit_text)
+            fd.flush()
+            fd.close()
+
+        #         unit_list.append(pin.unit)
+        #         unit_list[pin.unit] = ""
+        #     else:
+        #         unit_list[pin.unit] = unit_list[pin.unit] + '; ' + pin.name
+
+        # for unit_name in unit_list:
+        #     
+        #     print(f"TEST: Unit_name: {filename}")
+                
+#                 parsed = f'''
+# (label "{labelname}"
+# 	(at {labelpos} 0.0 180)
+# 	(effects
+# 		(font (size 1.27 1.27))
+# 		(justify right bottom)
+# 	)
+# 	(uuid "56f4fb89-7b4a-4f69-8ef8-85994935da29")
+# )
+#         '''
 
 
     def parse(self):
@@ -259,7 +317,12 @@ class Library:
         for symbol in symbols:
             self.symbols.append(symbol)
 
+    def parse_labels(self):
+        for symbol in self.symbols:
+            symbol.parse_labels(self.name)    
+
     def parse(self):
+
         parsed = ""
         parsed = f'''
 (kicad_symbol_lib
@@ -283,6 +346,9 @@ class Library:
         f_lib.flush()
         f_lib.close()
         print("Generated file: " + filepath)
+
+# def gen_labels_file(self):
+
 
 
 def csv2pins(filepath):
@@ -415,6 +481,7 @@ def main():
     lib1 = Library(lib_name)
     lib1.add_symbols([sym1])
     lib1.gen_file()
+    lib1.parse_labels()
 
 
 
