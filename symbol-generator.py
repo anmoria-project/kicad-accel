@@ -20,7 +20,7 @@
 import json
 import os, sys
 
-version = "0.1.0"
+version = "0.3.0"
 C_INCH = 2.45
 
 class TreeNode: 
@@ -45,7 +45,8 @@ class Vec3:
 class SymbolPin:
     pindrivers = ['input','output','unspecified','power_in','power_out',
                   'open_collector','open_emitter','no_connect','free','tri_state','bidirectional']
-    def __init__(self, ic_pin, unit, name, driver):
+    powersymbols = ['+3v3', 'gnd', 'self', 'ext']
+    def __init__(self, ic_pin, unit, name, driver, termination_str):
         self.ic_pin = ic_pin
         self.name = name
         self.unit = unit
@@ -54,10 +55,35 @@ class SymbolPin:
             print(f"ERROR: Undefined PinDriver: {driver}! Name={name}; Block={unit}; PIN={ic_pin}")
             exit(1)
         self.driver = driver
-
+        # self.terminations = terminations
+        self.terminations = []
+        for term in termination_str.replace(' ','').split(','):
+            if term == '':
+                continue
+            # Example: 20.0e+3R:+3v3
+            tmp, driver= term.upper().split(":")
+            float_raw = tmp[0:-1]
+            value = float(float_raw)
+            component = tmp[-1]
+            # if (component not in ['C', 'L', 'R'])
+            print(f"Termination: Type={component}; Value={value}; Driver={driver}")
+            termination = [component, value, driver]
+            if driver.lower() not in self.powersymbols:
+                print(f"Termination driver for pin {self.ic_pin} unkown: {driver}")
+                exit(-1)
+            self.terminations.append(termination)
+        if 'self' in termination_str:
+            self.hasSelfTermination = True
+        else:
+            self.hasSelfTermination = False
 
     def parse_label(self, index):
-        labelname = self.name
+        if self.hasSelfTermination:
+            labelname = '__' + self.name
+        elif len(self.terminations) > 0:
+            labelname = '_' + self.name
+        else:
+            labelname = self.name
         labelpos = 2.54 * index
         parsed = f'''
 (label "{labelname}"
@@ -69,6 +95,116 @@ class SymbolPin:
 	(uuid "56f4fb89-7b4a-4f69-8ef8-85994935da29")
 )
 '''
+        return parsed
+
+    def parse_termination(self, place_position_index, index):
+        driver = self.terminations[index][2].lower()
+        value = self.terminations[index][1]
+        device = "UNDEFINED"
+
+        if self.hasSelfTermination:
+            label = '_' + self.name
+        else:
+            label = '_' + self.name
+        
+        if (driver == 'self'):
+            driver = '__' + self.name
+        elif (driver == 'ext'):
+            driver = self.name
+        else:
+            driver = self.terminations[index][2]
+
+        component = self.terminations[index][0].upper()
+
+        if (component == 'R'):
+            device = "R_Small"
+        elif (component == 'C'):
+            device = "C_Small"
+        elif (component == 'L'):
+            device = "L_Small"
+        else:
+            print(f"ERROR: Termination component unknown: Pin={self.ic_pin}; Component={component}!")
+            exit(-1)
+        ypos = place_position_index * 2.54
+        parsed = f'''
+(hierarchical_label "{driver}"
+	(shape input)
+	(at 5.08 {ypos} 0)
+	(effects
+		(font (size 1.27 1.27))
+		(justify left)
+	)
+	(uuid "98da213c-75d0-49c4-be2f-abf6ce88cee6")
+)
+(symbol
+	(lib_id "Device:{device}")
+	(at 2.54 {ypos} 270)
+	(unit 1)
+	(exclude_from_sim no)
+	(in_bom yes)
+	(on_board yes)
+	(dnp no)
+	(fields_autoplaced yes)
+	(uuid "24b36077-41b9-424d-9cfb-461eded128a1")
+	(property "Reference" "R2"
+		(at 2.54 {ypos} 90)
+		(effects
+			(font (size 1.016 1.016))
+			(hide yes)
+		)
+	)
+	(property "Value" "{value}"
+		(at 2.54 {ypos} 90)
+		(effects
+			(font (size 1.27 1.27))
+			(hide yes)
+		)
+	)
+	(property "Footprint" ""
+		(at 2.54 {ypos} 0)
+		(effects
+			(font (size 1.27 1.27))
+			(hide yes)
+		)
+	)
+	(property "Datasheet" "~"
+		(at 2.54 {ypos} 0)
+		(effects
+			(font (size 1.27 1.27))
+			(hide yes)
+		)
+	)
+	(property "Description" ""
+		(at 2.54 {ypos} 0)
+		(effects
+			(font (size 1.27 1.27))
+			(hide yes)
+		)
+	)
+	(pin "2"
+		(uuid "797aac82-9cef-47da-9779-e734b0ccadb2")
+	)
+	(pin "1"
+		(uuid "0f63ff17-2eab-4a06-9601-d66a851c0ccf")
+	)
+	(instances
+		(project "design1"
+			(path ""
+				(reference "R2")
+				(unit 1)
+			)
+		)
+	)
+)
+(label "{label}"
+	(at 0.0 {ypos} 180)
+	(effects
+		(font (size 1.27 1.27))
+		(justify right bottom)
+	)
+	(uuid "d953bdfa-adda-4b21-9a3a-324b84164f3f")
+)
+        '''
         return parsed
 
 
@@ -126,6 +262,17 @@ class Symbol:
                 i = i + 1
                 unit_text  = unit_text + "\n\n" + pin.parse_label(i)
 
+            term_pos_index = i + 4
+            for pin in self.pins:
+                term_index = 0
+                if pin.unit != unit:
+                    continue
+                for id in range(0, len(pin.terminations)):
+                    #     def parse_termination(self, place_position_index, index, label):
+                    unit_text  = unit_text + "\n\n" + pin.parse_termination(term_pos_index, term_index)
+                    term_pos_index = term_pos_index + 1
+                    term_index = term_index + 1
+
             print(f"Write file: {filepath}")
 
             # filepath = f'./build/{filename}.kicad_labels'
@@ -133,26 +280,6 @@ class Symbol:
             fd.write(unit_text)
             fd.flush()
             fd.close()
-
-        #         unit_list.append(pin.unit)
-        #         unit_list[pin.unit] = ""
-        #     else:
-        #         unit_list[pin.unit] = unit_list[pin.unit] + '; ' + pin.name
-
-        # for unit_name in unit_list:
-        #     
-        #     print(f"TEST: Unit_name: {filename}")
-                
-#                 parsed = f'''
-# (label "{labelname}"
-# 	(at {labelpos} 0.0 180)
-# 	(effects
-# 		(font (size 1.27 1.27))
-# 		(justify right bottom)
-# 	)
-# 	(uuid "56f4fb89-7b4a-4f69-8ef8-85994935da29")
-# )
-#         '''
 
 
     def parse(self):
@@ -387,9 +514,10 @@ def csv2pins(filepath):
         function.append(splits[9].strip())
         driver.append(splits[10].strip())
         voltage = splits[11].strip()
-        capabilities  = splits[12].strip()
-        orig_name = splits[13].strip()
-        info = splits[14].strip()
+        termination_str = splits[12].strip()
+        capabilities  = splits[13].strip()
+        orig_name = splits[14].strip()
+        info = splits[15].strip()
 
 
 
@@ -413,10 +541,13 @@ def csv2pins(filepath):
                 driver_full = d.lower()
                 break
         
+
+
+
         if (name == "" and block == "" and pin_id == ""):
             continue
         print("pin_id={}; block={}; name={}; driver={}".format( pin_id, block, name, driver))
-        pin = SymbolPin(pin_id, block, name, driver_full)
+        pin = SymbolPin(pin_id, block, name, driver_full, termination_str)
         i = i + 1
         Pos = Vec3(-2.54, -1.27 + i* -2.54, 0)
         Pins.append(pin)
@@ -482,7 +613,7 @@ def main():
     lib1.add_symbols([sym1])
     lib1.gen_file()
     lib1.parse_labels()
-
+    print("WARNING: Before using Termination, first add some dummy components from library: L_Small, C_Small, R_Small! Otherwise Kicad will crash!")
 
 
 if __name__ == "__main__":
