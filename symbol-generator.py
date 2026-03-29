@@ -24,7 +24,7 @@ from symbols import *
 version = "0.3.0"
 C_INCH = 2.45
 
-class TreeNode: 
+class TreeNode:
     def __init__(self, data):
         self.data = data
         self.sub = []
@@ -67,22 +67,22 @@ class SymbolPin:
         self.driver = driver
         # self.terminations = terminations
         self.terminations = []
-     
+
 
         term_str = termination_str.lower().replace(' ', '')
         for k, v, in self.term_subst.items():
             if term_str.find(k) != -1:
                 print(f"NOTE: Replace termination '{k}' with '{v}'")
                 term_str = term_str.replace(k, v)
-         
-     
+
+
         for term in term_str.split(','):
             if term == '':
                 continue
             # Example: 20.0e+3R:+3v3
             tmp, driver= term.lower().split(":")
             float_raw = tmp[0:-1]
- 
+
 
 
             value = float(float_raw)
@@ -120,7 +120,7 @@ class SymbolPin:
             label = '_' + self.name
         else:
             label = '_' + self.name
-        
+
         if (driver == 'self'):
             driver = '__' + self.name
         elif (driver == 'ext'):
@@ -142,13 +142,13 @@ class SymbolPin:
             print(f"ERROR: Termination component unknown: Pin={self.ic_pin}; Component={component}!")
             exit(-1)
         ypos = place_position_index * 2.54
-        
+
         parsed = ''
         parsed = parsed + parse_label(driver, 5.08, ypos, 0, "left")
         # parsed = parsed + parse_hierarchical_label(driver, 5.08, ypos, 0)
         parsed = parsed + parse_symbol(device, 2.54,  ypos, 270, value)
         parsed = parsed + parse_label(label, 0.0, ypos, 180, "right")
-        
+
 
 
         return parsed
@@ -309,7 +309,7 @@ class Symbol:
 
 '''
 
-# TODO: Fix this...       
+# TODO: Fix this...
 #         if len(self.unit_names) == 1:
 #             num_pins = len(self.pins)
 
@@ -367,7 +367,7 @@ class Symbol:
 					(justify left)
 				)
 			)
-'''             
+'''
                 unit_pin_id = 0
                 for pin in self.pins:
                     if unit_name != pin.unit:
@@ -392,7 +392,7 @@ class Library:
 
     def parse_labels(self):
         for symbol in self.symbols:
-            symbol.parse_labels(self.name)    
+            symbol.parse_labels(self.name)
 
     def parse(self):
 
@@ -425,23 +425,23 @@ class Library:
 
 def csv2pins(filepath):
     seperator = ';'
-    cols_primary = {"block": -1, 
-                    "pin_id": -1, 
-                    "function0": -1, 
+    cols_primary = {"block": -1,
+                    "pin_id": -1,
+                    "function0": -1,
                     "driver0": -1,
-                      "function1" : -1, 
+                      "function1" : -1,
                       "driver1" : -1
                       }
     cols_optional = {
-                    "pin_prefix": -1, 
-                    "function2": -1, 
-                    "driver2": -1, 
-                    "function3": -1, 
-                    "driver3": -1, 
-                    "voltage": -1, 
-                    "termination": -1, 
-                    "capabilities": -1, 
-                    "origin_pin_name": -1, 
+                    "pin_prefix": -1,
+                    "function2": -1,
+                    "driver2": -1,
+                    "function3": -1,
+                    "driver3": -1,
+                    "voltage": -1,
+                    "termination": -1,
+                    "capabilities": -1,
+                    "origin_pin_name": -1,
                     "notes": -1
     }
 
@@ -490,10 +490,10 @@ def csv2pins(filepath):
         else:
             print(f"WARNING: Column '{key}' is unknown and will be ignored: {key}")
         col_id  = col_id +1
-    
+
     # NOTE: Check for missing keys
     for key, val in cols_primary.items():
-        if val == -1: 
+        if val == -1:
             print(f"ERROR: Column '{key}' is missing!")
             exit(-1)
 
@@ -505,7 +505,7 @@ def csv2pins(filepath):
 
 
     used_function_keys = []
-    for k, v in col_ids.items(): 
+    for k, v in col_ids.items():
         if k.startswith('function'):
             used_function_keys.append(k)
     used_function_keys.sort()
@@ -515,26 +515,29 @@ def csv2pins(filepath):
         splits = line.split(seperator)
 
         function = []
-        driver = []        
-        
+        driver = []
+
         block = splits[col_ids['block']].strip()
         pin_id = splits[col_ids['pin_id']].strip()
-        
+
         pin_prefix = ''
         if 'pin_prefix' in col_ids.keys():
             pin_prefix = splits[col_ids['pin_prefix']].strip()
-        
+
         termination_str = splits[col_ids['termination']].strip()
 
 
         # Assemble name from all specified functionalities
         name = pin_prefix if pin_prefix != '' else ''
-        
+
         for fkt in used_function_keys:
             subfkt = splits[col_ids[fkt]].strip()
             if subfkt == '':
                 continue
-            name = name + '__' + subfkt  
+            if name == '':
+                name = subfkt
+            else:
+                name = name + '__' + subfkt
 
         # NOTE: Driver1 overrides driver0. This must be changed in kicad source code to support multiple drivers!
         driver = ''
@@ -545,9 +548,9 @@ def csv2pins(filepath):
 
         # # Resolve termination stuff:
         # for term in termination_str.split(','):
-            
+
         #     exit(1)
-        
+
 
         if (name == "" and block == "" and pin_id == ""):
             continue
@@ -568,8 +571,8 @@ Options:
     -v, --version   Print license and version
     -h, --help      Print this help
 
-Example: 
-    
+Example:
+
     python3 symbol-generator.py ./test/multi_unit_test.csv
 
     ./symbol-generator.py ./test/single_unit_test.csv
@@ -582,7 +585,7 @@ Example input files are in folder ./test/*.csv
 
 def print_license_short():
     license = f'''
-Symbol-generator v{version}  
+Symbol-generator v{version}
 Copyright (C) 2026  Johann A. Sollacher
 License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
 
@@ -603,7 +606,7 @@ def main():
         print_license_short()
         print_help()
         exit(0)
-    
+
     path = sys.argv[-1]
     # path = "/home/yoctouser/scm/pcb-bricks/kicad-accel/test/multi_unit_big_test.csv"
     if not os.path.isfile(path):
@@ -611,7 +614,7 @@ def main():
         exit(1)
     sym_name = os.path.basename(path).split('.')[0]
     lib_name = sym_name
-    
+
     sym1 = Symbol(sym_name)
     pins = csv2pins(path)
     sym1.add_pins(pins)
