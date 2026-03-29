@@ -46,4 +46,5 @@ fp-info-cache
 tmp
 .vscode
 build/
+__pycache__
 

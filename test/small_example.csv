@@ -1,0 +1,3 @@
+block,pin_id,pin_prefix,function0,driver0,function1,driver1,function2,driver2,function3,driver3,voltage,termination,capabilities,origin_pin_name,notes,
+bank_a,a4,Prefix03,Func0_03,input,,,,,,,gnd,,,,Notes 04,
+bank_a,a8,Prefix04,Func0_04,output,,,,,,,3v3,20.0e+3R:+3v3, 5.0e+1R:GND,,,Notes 08

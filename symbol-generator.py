@@ -19,6 +19,7 @@
 
 import json
 import os, sys
+from symbols import *
 
 version = "0.3.0"
 C_INCH = 2.45
@@ -46,6 +47,15 @@ class SymbolPin:
     pindrivers = ['input','output','unspecified','power_in','power_out',
                   'open_collector','open_emitter','no_connect','free','tri_state','bidirectional']
     powersymbols = ['+3v3', 'gnd', 'self', 'ext']
+    term_subst = {
+        'pf:':'e-12f:',
+        'nf:':'e-9f:',
+        'uf:':'e-6f:',
+        'ph:':'e-12h:',
+        'nh:':'e-9h:',
+        'uh:':'e-6h:',
+        'kr:':'e-3r:'
+    }
     def __init__(self, ic_pin, unit, name, driver, termination_str):
         self.ic_pin = ic_pin
         self.name = name
@@ -57,12 +67,24 @@ class SymbolPin:
         self.driver = driver
         # self.terminations = terminations
         self.terminations = []
-        for term in termination_str.replace(' ','').split(','):
+     
+
+        term_str = termination_str.lower().replace(' ', '')
+        for k, v, in self.term_subst.items():
+            if term_str.find(k) != -1:
+                print(f"NOTE: Replace termination '{k}' with '{v}'")
+                term_str = term_str.replace(k, v)
+         
+     
+        for term in term_str.split(','):
             if term == '':
                 continue
             # Example: 20.0e+3R:+3v3
-            tmp, driver= term.upper().split(":")
+            tmp, driver= term.lower().split(":")
             float_raw = tmp[0:-1]
+ 
+
+
             value = float(float_raw)
             component = tmp[-1]
             # if (component not in ['C', 'L', 'R'])
@@ -85,16 +107,8 @@ class SymbolPin:
         else:
             labelname = self.name
         labelpos = 2.54 * index
-        parsed = f'''
-(label "{labelname}"
-	(at 0.0 {labelpos} 180)
-	(effects
-		(font (size 1.27 1.27))
-		(justify right bottom)
-	)
-	(uuid "56f4fb89-7b4a-4f69-8ef8-85994935da29")
-)
-'''
+        # NOTE: Check, was 'right bottom'
+        parsed = parse_label(labelname, 0.0, labelpos, 180, "right")
         return parsed
 
     def parse_termination(self, place_position_index, index):
@@ -116,95 +130,27 @@ class SymbolPin:
 
         component = self.terminations[index][0].upper()
 
+        # if (component == "short"):
+        #     device = "W_Small"
         if (component == 'R'):
             device = "R_Small"
-        elif (component == 'C'):
+        elif (component == 'C') or (component == "F"):
             device = "C_Small"
-        elif (component == 'L'):
+        elif (component == 'L') or (component == "H"):
             device = "L_Small"
         else:
             print(f"ERROR: Termination component unknown: Pin={self.ic_pin}; Component={component}!")
             exit(-1)
         ypos = place_position_index * 2.54
-        parsed = f'''
-(hierarchical_label "{driver}"
-	(shape input)
-	(at 5.08 {ypos} 0)
-	(effects
-		(font (size 1.27 1.27))
-		(justify left)
-	)
-	(uuid "98da213c-75d0-49c4-be2f-abf6ce88cee6")
-)
-(symbol
-	(lib_id "Device:{device}")
-	(at 2.54 {ypos} 270)
-	(unit 1)
-	(exclude_from_sim no)
-	(in_bom yes)
-	(on_board yes)
-	(dnp no)
-	(fields_autoplaced yes)
-	(uuid "24b36077-41b9-424d-9cfb-461eded128a1")
-	(property "Reference" "R2"
-		(at 2.54 {ypos} 90)
-		(effects
-			(font (size 1.016 1.016))
-			(hide yes)
-		)
-	)
-	(property "Value" "{value}"
-		(at 2.54 {ypos} 90)
-		(effects
-			(font (size 1.27 1.27))
-			(hide yes)
-		)
-	)
-	(property "Footprint" ""
-		(at 2.54 {ypos} 0)
-		(effects
-			(font (size 1.27 1.27))
-			(hide yes)
-		)
-	)
-	(property "Datasheet" "~"
-		(at 2.54 {ypos} 0)
-		(effects
-			(font (size 1.27 1.27))
-			(hide yes)
-		)
-	)
-	(property "Description" ""
-		(at 2.54 {ypos} 0)
-		(effects
-			(font (size 1.27 1.27))
-			(hide yes)
-		)
-	)
-	(pin "2"
-		(uuid "797aac82-9cef-47da-9779-e734b0ccadb2")
-	)
-	(pin "1"
-		(uuid "0f63ff17-2eab-4a06-9601-d66a851c0ccf")
-	)
-	(instances
-		(project "design1"
-			(path ""
-				(reference "R2")
-				(unit 1)
-			)
-		)
-	)
-)
-(label "{label}"
-	(at 0.0 {ypos} 180)
-	(effects
-		(font (size 1.27 1.27))
-		(justify right bottom)
-	)
-	(uuid "d953bdfa-adda-4b21-9a3a-324b84164f3f")
-)
-        '''
+        
+        parsed = ''
+        parsed = parsed + parse_label(driver, 5.08, ypos, 0, "left")
+        # parsed = parsed + parse_hierarchical_label(driver, 5.08, ypos, 0)
+        parsed = parsed + parse_symbol(device, 2.54,  ypos, 270, value)
+        parsed = parsed + parse_label(label, 0.0, ypos, 180, "right")
+        
+
+
         return parsed
 
 
@@ -477,80 +423,140 @@ class Library:
 # def gen_labels_file(self):
 
 
-
 def csv2pins(filepath):
+    seperator = ';'
+    cols_primary = {"block": -1, 
+                    "pin_id": -1, 
+                    "function0": -1, 
+                    "driver0": -1,
+                      "function1" : -1, 
+                      "driver1" : -1
+                      }
+    cols_optional = {
+                    "pin_prefix": -1, 
+                    "function2": -1, 
+                    "driver2": -1, 
+                    "function3": -1, 
+                    "driver3": -1, 
+                    "voltage": -1, 
+                    "termination": -1, 
+                    "capabilities": -1, 
+                    "origin_pin_name": -1, 
+                    "notes": -1
+    }
+
+
     f = open (filepath, 'r', encoding='utf-8')
     text = f.read()
     f.close()
     i = 0
     Pins = []
-    for line in text.splitlines():
-        if i == 0:
-            i = 1
-            continue
-        # if line.strip(';').strip() == "":
-        #     continue
-        splits = line.split(';')
-        # Excel structure to parse:
-        if (len(splits) < 14) : 
-            print("ERROR: Excel list must be of format:")
-            print("block; pin_id; pin_prefix; function0(system); direction0; function1; direction1; function2; direction2; function3; direction3; voltage; capabilities; original_name;	info")
+    line_id = 0
+    lines = text.split('\n')
+
+    cnt_semi = text.count(';')
+    cnt_comma = text.count(',')
+    cnt_tab = text.count('\t')
+
+    print(f"Count semi={cnt_semi}, comma={cnt_comma}, tabs={cnt_tab}")
+
+    if cnt_semi > cnt_comma and cnt_semi > cnt_tab:
+        seperator = ';'
+    elif cnt_comma > cnt_tab:
+        seperator = ','
+    else:
+        seperator = '\t'
+
+    print(f"NOTE: Selected seperator for .csv file: '{seperator}'")
+
+    # NOTE: Autodetect column position
+    col_id = 0
+    for key in lines[0].split(seperator):
+        key = key.strip()
+        if key == '': continue
+        # print(f"Found key: {key}")
+        if key in cols_primary.keys():
+            print(f"KEY '{key}' found in primary keys!")
+            if cols_primary[key] != -1:
+                print(f"ERROR: Column '{key}' is already defined!")
+                exit(1)
+            cols_primary[key] = col_id
+        elif key in cols_optional:
+            if cols_optional[key] != -1:
+                print(f"ERROR: Column '{key}' is already defined!")
+                exit(1)
+            print(f"KEY '{key}' found in optional keys!")
+            cols_optional[key] = col_id
+        else:
+            print(f"WARNING: Column '{key}' is unknown and will be ignored: {key}")
+        col_id  = col_id +1
+    
+    # NOTE: Check for missing keys
+    for key, val in cols_primary.items():
+        if val == -1: 
+            print(f"ERROR: Column '{key}' is missing!")
             exit(-1)
 
+
+
+    col_ids = {}
+    col_ids.update({k: v for k, v in cols_primary.items() if v != -1})
+    col_ids.update({k: v for k, v in cols_optional.items() if v != -1})
+
+
+    used_function_keys = []
+    for k, v in col_ids.items(): 
+        if k.startswith('function'):
+            used_function_keys.append(k)
+    used_function_keys.sort()
+
+    for line in lines[1:-1]:
+
+        splits = line.split(seperator)
+
         function = []
-        driver = []
-        # print("line={}".format(line))
-        # for s in splits:
-        #     print("\t{}".format(s))
-        block = splits[0].strip()
-        pin_id = splits[1].strip()
-        pin_prefix = splits[2].strip()
-        function.append(splits[3].strip())
-        driver.append(splits[4].strip())
-        function.append(splits[5].strip())
-        driver.append(splits[6].strip())
-        function.append(splits[7].strip())
-        driver.append(splits[8].strip())
-        function.append(splits[9].strip())
-        driver.append(splits[10].strip())
-        voltage = splits[11].strip()
-        termination_str = splits[12].strip()
-        capabilities  = splits[13].strip()
-        orig_name = splits[14].strip()
-        info = splits[15].strip()
-
-
-
-        name = pin_prefix.lower()
-        for f in function[1:]:
-            if f != "":
-                if name == "":
-                    name += f.lower()
-                else:
-                    name += "_" + f.lower()
-        if function[0] != "":
-            if name == "":
-                name += function[0].lower()
-            else:
-                name += '_' + function[0].lower()
+        driver = []        
         
-        # take the first driver found for time being!
-        driver_full = ""
-        for d in driver:
-            if d != "":
-                driver_full = d.lower()
-                break
+        block = splits[col_ids['block']].strip()
+        pin_id = splits[col_ids['pin_id']].strip()
         
+        pin_prefix = ''
+        if 'pin_prefix' in col_ids.keys():
+            pin_prefix = splits[col_ids['pin_prefix']].strip()
+        
+        termination_str = splits[col_ids['termination']].strip()
 
 
+        # Assemble name from all specified functionalities
+        name = pin_prefix if pin_prefix != '' else ''
+        
+        for fkt in used_function_keys:
+            subfkt = splits[col_ids[fkt]].strip()
+            if subfkt == '':
+                continue
+            name = name + '__' + subfkt  
+
+        # NOTE: Driver1 overrides driver0. This must be changed in kicad source code to support multiple drivers!
+        driver = ''
+        if splits[col_ids['driver1']].strip() != '' :
+            driver = driver + splits[col_ids['driver1']].strip()
+        elif splits[col_ids['driver0']].strip() != '' :
+            driver = driver + splits[col_ids['driver0']].strip()
+
+        # # Resolve termination stuff:
+        # for term in termination_str.split(','):
+            
+        #     exit(1)
+        
 
         if (name == "" and block == "" and pin_id == ""):
             continue
         print("pin_id={}; block={}; name={}; driver={}".format( pin_id, block, name, driver))
-        pin = SymbolPin(pin_id, block, name, driver_full, termination_str)
+        pin = SymbolPin(pin_id, block, name, driver, termination_str)
         i = i + 1
-        Pos = Vec3(-2.54, -1.27 + i* -2.54, 0)
+        # Pos = Vec3(-2.54, -1.27 + i* -2.54, 0)
         Pins.append(pin)
+
     return Pins
 
 
@@ -618,4 +624,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+print("Test")
 
