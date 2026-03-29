@@ -46,6 +46,19 @@ class Vec3:
 class SymbolPin:
     pindrivers = ['input','output','unspecified','power_in','power_out',
                   'open_collector','open_emitter','no_connect','free','tri_state','bidirectional']
+    driver_subst = {
+        'ai': 'input',
+        'ao' : 'output',
+        'di' : 'input',
+        'do' : 'output',
+        'pi' : 'power_in',
+        'po' : 'power_out',
+        'nc' : 'no_connect',
+        'bi' : 'bidirectional',
+        'bidir' : 'bidirectional',
+        'ci' : 'input',
+        'co': 'output'
+    }
     powersymbols = ['+3v3', 'gnd', 'self', 'ext']
     term_subst = {
         'pf:':'e-12f:',
@@ -56,13 +69,19 @@ class SymbolPin:
         'uh:':'e-6h:',
         'kr:':'e-3r:'
     }
+
     def __init__(self, ic_pin, unit, name, driver, termination_str):
         self.ic_pin = ic_pin
         self.name = name
         self.unit = unit
         self.driver = driver
+
+        # Add substitution for lazy driver keys
+        if driver.lower() in self.driver_subst.keys():
+            driver = self.driver_subst[driver]
+
         if driver not in self.pindrivers:
-            print(f"ERROR: Undefined PinDriver: {driver}! Name={name}; Block={unit}; PIN={ic_pin}")
+            print(f"ERROR: Undefined or missing PinDriver: '{driver}'! Name={name}; Block={unit}; PIN={ic_pin}")
             exit(1)
         self.driver = driver
         # self.terminations = terminations
@@ -77,6 +96,7 @@ class SymbolPin:
 
 
         for term in term_str.split(','):
+            term = term.strip()
             if term == '':
                 continue
             # Example: 20.0e+3R:+3v3
