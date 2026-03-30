@@ -562,7 +562,7 @@ def csv2pins(filepath):
             else:
                 name = name + '__' + subfkt
         subfkt0 = splits[col_ids['function0']].strip()
-        name = name + subfkt0 if (subfkt0 != '') else name
+        name = name + "__" + subfkt0 if (subfkt0 != '') else name
 
 
 
