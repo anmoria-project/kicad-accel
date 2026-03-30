@@ -87,8 +87,8 @@ class SymbolPin:
         # self.terminations = terminations
         self.terminations = []
 
-
-        term_str = termination_str.lower().replace(' ', '')
+        # For some weird reason there are some ticks in the excel stuff. Goddam excel...
+        term_str = termination_str.lower().replace(' ', '').replace('"', '')
         for k, v, in self.term_subst.items():
             if term_str.find(k) != -1:
                 print(f"NOTE: Replace termination '{k}' with '{v}'")
@@ -111,8 +111,10 @@ class SymbolPin:
             print(f"Termination: Type={component}; Value={value}; Driver={driver}")
             termination = [component, value, driver]
             if driver.lower() not in self.powersymbols:
-                print(f"Termination driver for pin {self.ic_pin} unkown: {driver}")
-                exit(-1)
+                print(f"WARNING: Termination unknown: {driver}")
+                # print(f"Termination driver for pin {self.ic_pin} unkown: {driver}")
+
+                # exit(-1)
             self.terminations.append(termination)
         if 'self' in termination_str:
             self.hasSelfTermination = True
@@ -550,7 +552,8 @@ def csv2pins(filepath):
         # Assemble name from all specified functionalities
         name = pin_prefix if pin_prefix != '' else ''
 
-        for fkt in used_function_keys:
+        # Lets add the function0 stuff on the back, so main functionality is centered!
+        for fkt in used_function_keys[1:-1]:
             subfkt = splits[col_ids[fkt]].strip()
             if subfkt == '':
                 continue
@@ -558,6 +561,10 @@ def csv2pins(filepath):
                 name = subfkt
             else:
                 name = name + '__' + subfkt
+        subfkt0 = splits[col_ids['function0']].strip()
+        name = name + subfkt0 if (subfkt0 != '') else name
+
+
 
         # NOTE: Driver1 overrides driver0. This must be changed in kicad source code to support multiple drivers!
         driver = ''
