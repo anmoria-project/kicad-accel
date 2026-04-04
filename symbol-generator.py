@@ -66,10 +66,88 @@ class Vec3:
         return f'{self.x} {self.y} {self.z}'
 
 
+kicad_drivers = ['input','output','unspecified','power_in','power_out',
+                'open_collector','open_emitter','no_connect','free','tri_state','bidirectional']
+
+
+class DriverType:
+    kicad_drivers = kicad_drivers
+    def __init__(self, name, kicad_driver, connection_list, max_allowed_connections, optional):
+        if kicad_driver not in self.kicad_drivers:
+            log(log_error, f"Driver is not in kicad drivers: {kicad_driver}")
+            exit(-1)
+        self.allowed_connection_list = []
+        # TODO: Add some checks
+
+        self.name = name
+        self.kicad_driver = kicad_driver
+        for connection in connection_list:
+            self.allowed_connection_list.append(connection)
+        self.allow_multi_connections = max_allowed_connections
+        self.optional = optional
+
+bus_qspi_slave = [
+    DriverType('busslave_qspi_cs_n', 'input',        ['busmaster_qspi_cs_n'], 1, False),
+    DriverType('busslave_qspi_clk', 'input',         ['busmaster_qspi_clk'], 1, False),
+    DriverType('busslave_qspi_io0', 'bidirectional', ['busmaster_qspi_io0'], 1, False),
+    DriverType('busslave_qspi_io1', 'bidirectional', ['busmaster_qspi_io1'], 1, False),
+    DriverType('busslave_qspi_io2', 'bidirectional', ['busmaster_qspi_io2'], 1, False),
+    DriverType('busslave_qspi_io3', 'bidirectional', ['busmaster_qspi_io3'], 1, False),
+]
+
+bus_qspi_master = [
+    DriverType('busmaster_qspi_cs_n', 'output',         ['busslave_qspi_cs_n'], 1, False),
+    DriverType('busmaster_qspi_clk',  'output',         ['busslave_qspi_clk'], 1, False),
+    DriverType('busmaster_qspi_io0',   'bidirectional', ['busslave_qspi_io0'], 1, False),
+    DriverType('busmaster_qspi_io1',   'bidirectional', ['busslave_qspi_io1'], 1, False),
+    DriverType('busmaster_qspi_io2',   'bidirectional', ['busslave_qspi_io2'], 1, False),
+    DriverType('busmaster_qspi_io3',   'bidirectional', ['busslave_qspi_io3'], 1, False),
+]
+
+bus_spi_master = [
+    DriverType('busmaster_spi_cs_n', 'output', ['busslave_spi_cs_n'], 1, False),
+    DriverType('busmaster_spi_miso', 'input',  ['busslave_spi_miso'], 1, False),
+    DriverType('busmaster_spi_mosi', 'output', ['busslave_spi_mosi'], 1, False),
+    DriverType('busmaster_spi_sck',  'output', ['busslave_spi_sck'],  1, False),
+]
+
+bus_spi_slave = [
+    DriverType('busslave_spi_cs_n', 'input' , ['busmaster_spi_cs_n'], 1, False),
+    DriverType('busslave_spi_miso', 'output', ['busmaster_spi_miso'], 1, False),
+    DriverType('busslave_spi_mosi', 'input' , ['busmaster_spi_mosi'], 1, False),
+    DriverType('busslave_spi_sck',  'input' , ['busmaster_spi_sck'],  1, False),
+]
+
+bus_jtag_slave = [
+    DriverType('busmaster_jtag_tms', 'output',  ['busslave_jtag_tms'], 16, False),
+    DriverType('busmaster_jtag_tck', 'output',  ['busslave_jtag_tck'], 16, False),
+    DriverType('busmaster_jtag_mosi', 'output', ['busslave_jtag_tdi'], 1, False),
+    DriverType('busmaster_jtag_miso', 'input',  ['busslave_jtag_tdo'], 1, False),
+]
+
+bus_jtag_slave = [
+    DriverType('busslave_jtag_tms',  'input',  ['busmaster_jtag_tms'],  1, False),
+    DriverType('busslave_jtag_tck',  'input',  ['busmaster_jtag_tck'],  1, False),
+    DriverType('busslave_jtag_tdo',  'output', ['busmaster_jtag_miso'], 1, False),
+    DriverType('busslave_jtag_tdi',  'input',  ['busmaster_jtag_mosi'], 1, False),
+]
+
+bus_list = [
+    bus_qspi_master,
+    bus_qspi_slave,
+    bus_spi_master,
+    bus_spi_slave,
+    bus_jtag_slave,
+    bus_jtag_slave,
+]
+
+bus_pin_drivers = {}
+for bus in bus_list:
+    for pin in bus:
+        bus_pin_drivers[pin.name] = pin.kicad_driver
 
 class SymbolPin:
-    pindrivers = ['input','output','unspecified','power_in','power_out',
-                  'open_collector','open_emitter','no_connect','free','tri_state','bidirectional']
+    pindrivers = kicad_drivers
     driver_subst = {
         'ai': 'input',
         'ao' : 'output',
@@ -83,7 +161,8 @@ class SymbolPin:
         'dio' : 'bidirectional',
         'ci' : 'input',
         'co': 'output'
-    }
+    } | bus_pin_drivers
+
     powersymbols = ['+3v3', 'gnd', 'self', 'ext']
     term_subst = {
         'pf:':'e-12f:',
