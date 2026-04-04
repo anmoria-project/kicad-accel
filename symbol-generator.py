@@ -131,6 +131,8 @@ class SymbolPin:
 
             value = float(float_raw)
             component = tmp[-1]
+
+
             # if (component not in ['C', 'L', 'R'])
             log(log_note, f"Termination: Type={component}; Value={value}; Driver={driver}")
             termination = [component, value, driver]
@@ -184,6 +186,8 @@ class SymbolPin:
             device = "C_Small"
         elif (component == 'L') or (component == "H"):
             device = "L_Small"
+        elif (component == "X"):
+            device = "FerriteBead_Small"
         else:
             log(log_error, f"Termination component unknown: Pin={self.ic_pin}; Component={component}!")
             exit(-1)
