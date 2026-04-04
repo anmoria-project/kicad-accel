@@ -124,8 +124,12 @@ class SymbolPin:
             if term == '':
                 continue
             # Example: 20.0e+3R:+3v3
-            tmp, driver= term.lower().split(":")
-            float_raw = tmp[0:-1]
+            try:
+                tmp, driver= term.lower().split(":")
+                float_raw = tmp[0:-1]
+            except:
+                log(log_error, f"Could not extract data from Termination field: '{term}'. Pin: '{self.ic_pin}'")
+                exit(-1)
 
 
 
@@ -517,6 +521,10 @@ def csv2pins(filepath):
     else:
         seperator = '\t'
 
+    if seperator == ',':
+        log(log_error, "CSV uses seperator ',' which is forbidden! Please change the CSV to ';' or tab as seperator!")
+        exit(-1)
+
     log(log_note, f"Selected seperator for .csv file: '{seperator}'")
 
     # NOTE: Autodetect column position
@@ -590,8 +598,10 @@ def csv2pins(filepath):
             else:
                 name = name + '__' + subfkt
         subfkt0 = splits[col_ids['function0']].strip()
-        name = name + "__" + subfkt0 if (subfkt0 != '') else name
-
+        if name == '':
+            name = subfkt0
+        else:
+            name = name + "__" + subfkt0 if (subfkt0 != '') else name
 
 
         # NOTE: Driver1 overrides driver0. This must be changed in kicad source code to support multiple drivers!
