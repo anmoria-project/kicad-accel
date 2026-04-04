@@ -24,6 +24,30 @@ from symbols import *
 version = "0.3.0"
 C_INCH = 2.45
 
+# debug=0, info=1, warn=2, error=3
+log_debug = 0
+log_note = 1
+log_warn = 2
+log_error = 3
+log_level_system = 1
+
+def log(lvl, msg):
+    global log_level_system
+    prefix = ''
+    if log_debug == lvl:
+        prefix = "DEBUG: " + msg
+    if log_note == lvl:
+        prefix = "NOTES: " + msg
+    if log_warn == lvl:
+        prefix = "WARN: " + msg
+    if log_error == lvl:
+        prefix = "ERROR: " + msg
+
+    if lvl < log_level_system:
+        return
+    else:
+        print(prefix)
+
 class TreeNode:
     def __init__(self, data):
         self.data = data
@@ -81,7 +105,7 @@ class SymbolPin:
             driver = self.driver_subst[driver]
 
         if driver not in self.pindrivers:
-            print(f"ERROR: Undefined or missing PinDriver: '{driver}'! Name={name}; Block={unit}; PIN={ic_pin}")
+            log(log_error, f"Undefined or missing PinDriver: '{driver}'! Name={name}; Block={unit}; PIN={ic_pin}")
             exit(1)
         self.driver = driver
         # self.terminations = terminations
@@ -91,7 +115,7 @@ class SymbolPin:
         term_str = termination_str.lower().replace(' ', '').replace('"', '')
         for k, v, in self.term_subst.items():
             if term_str.find(k) != -1:
-                print(f"NOTE: Replace termination '{k}' with '{v}'")
+                log(log_note, f"Replace termination '{k}' with '{v}'")
                 term_str = term_str.replace(k, v)
 
 
@@ -108,10 +132,10 @@ class SymbolPin:
             value = float(float_raw)
             component = tmp[-1]
             # if (component not in ['C', 'L', 'R'])
-            print(f"Termination: Type={component}; Value={value}; Driver={driver}")
+            log(log_note, f"Termination: Type={component}; Value={value}; Driver={driver}")
             termination = [component, value, driver]
             if driver.lower() not in self.powersymbols:
-                print(f"WARNING: Termination unknown: {driver}")
+                log(log_warn, f"Termination unknown: {driver}")
                 # print(f"Termination driver for pin {self.ic_pin} unkown: {driver}")
 
                 # exit(-1)
@@ -161,7 +185,7 @@ class SymbolPin:
         elif (component == 'L') or (component == "H"):
             device = "L_Small"
         else:
-            print(f"ERROR: Termination component unknown: Pin={self.ic_pin}; Component={component}!")
+            log(log_error, f"Termination component unknown: Pin={self.ic_pin}; Component={component}!")
             exit(-1)
         ypos = place_position_index * 2.54
 
@@ -241,7 +265,7 @@ class Symbol:
                     term_pos_index = term_pos_index + 1
                     term_index = term_index + 1
 
-            print(f"Write file: {filepath}")
+            log(log_note, f"Write file: {filepath}")
 
             # filepath = f'./build/{filename}.kicad_labels'
             fd = open(filepath, 'w+', encoding='utf-8')
@@ -440,7 +464,7 @@ class Library:
         f_lib.write(self.parse())
         f_lib.flush()
         f_lib.close()
-        print("Generated file: " + filepath)
+        log(log_note, "Generated file: " + filepath)
 
 # def gen_labels_file(self):
 
@@ -480,7 +504,7 @@ def csv2pins(filepath):
     cnt_comma = text.count(',')
     cnt_tab = text.count('\t')
 
-    print(f"Count semi={cnt_semi}, comma={cnt_comma}, tabs={cnt_tab}")
+    log(log_debug, f"Count semi={cnt_semi}, comma={cnt_comma}, tabs={cnt_tab}")
 
     if cnt_semi > cnt_comma and cnt_semi > cnt_tab:
         seperator = ';'
@@ -489,7 +513,7 @@ def csv2pins(filepath):
     else:
         seperator = '\t'
 
-    print(f"NOTE: Selected seperator for .csv file: '{seperator}'")
+    log(log_note, f"Selected seperator for .csv file: '{seperator}'")
 
     # NOTE: Autodetect column position
     col_id = 0
@@ -498,25 +522,25 @@ def csv2pins(filepath):
         if key == '': continue
         # print(f"Found key: {key}")
         if key in cols_primary.keys():
-            print(f"KEY '{key}' found in primary keys!")
+            log(log_note, f"KEY '{key}' found in primary keys!")
             if cols_primary[key] != -1:
-                print(f"ERROR: Column '{key}' is already defined!")
+                log(log_error, f"Column '{key}' is already defined!")
                 exit(1)
             cols_primary[key] = col_id
         elif key in cols_optional:
             if cols_optional[key] != -1:
-                print(f"ERROR: Column '{key}' is already defined!")
+                log(log_error, f"Column '{key}' is already defined!")
                 exit(1)
-            print(f"KEY '{key}' found in optional keys!")
+            log(log_note, f"KEY '{key}' found in optional keys!")
             cols_optional[key] = col_id
         else:
-            print(f"WARNING: Column '{key}' is unknown and will be ignored: {key}")
+            log(log_warn, f"Column '{key}' is unknown and will be ignored: {key}")
         col_id  = col_id +1
 
     # NOTE: Check for missing keys
     for key, val in cols_primary.items():
         if val == -1:
-            print(f"ERROR: Column '{key}' is missing!")
+            log(log_error, f"Column '{key}' is missing!")
             exit(-1)
 
 
@@ -581,7 +605,7 @@ def csv2pins(filepath):
 
         if (name == "" and block == "" and pin_id == ""):
             continue
-        print("pin_id={}; block={}; name={}; driver={}".format( pin_id, block, name, driver))
+        log(log_debug, "pin_id={}; block={}; name={}; driver={}".format( pin_id, block, name, driver))
         pin = SymbolPin(pin_id, block, name, driver, termination_str)
         i = i + 1
         # Pos = Vec3(-2.54, -1.27 + i* -2.54, 0)
@@ -622,6 +646,9 @@ There is NO WARRANTY, to the extent permitted by law.
     print(license)
 
 def main():
+    # TODO: Add switch for argument...
+    global log_level_system
+    log_level_system = log_warn
     # DO NOT REMOVE!
     print("Symbol-generator: For version or license use '--version'. For help use '--help'")
 
@@ -634,10 +661,11 @@ def main():
         print_help()
         exit(0)
 
+
     path = sys.argv[-1]
     # path = "/home/yoctouser/scm/pcb-bricks/kicad-accel/test/multi_unit_big_test.csv"
     if not os.path.isfile(path):
-        print("ERROR: File does not exist! Please specify a file as argument!")
+        log(log_error, "File does not exist! Please specify a file as argument!")
         exit(1)
     sym_name = os.path.basename(path).split('.')[0]
     lib_name = sym_name
@@ -649,11 +677,9 @@ def main():
     lib1.add_symbols([sym1])
     lib1.gen_file()
     lib1.parse_labels()
-    print("WARNING: Before using Termination, first add some dummy components from library: L_Small, C_Small, R_Small! Otherwise Kicad will crash!")
+    log(log_warn, "Before using Termination, first add some dummy components from library: L_Small, C_Small, R_Small! Otherwise Kicad will crash!")
 
 
 if __name__ == "__main__":
     main()
-
-print("Test")
 
