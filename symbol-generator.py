@@ -80,6 +80,7 @@ class SymbolPin:
         'nc' : 'no_connect',
         'bi' : 'bidirectional',
         'bidir' : 'bidirectional',
+        'dio' : 'bidirectional',
         'ci' : 'input',
         'co': 'output'
     }
@@ -568,6 +569,8 @@ def csv2pins(filepath):
             used_function_keys.append(k)
     used_function_keys.sort()
 
+    used_blocks = []
+
     for line in lines[1:-1]:
 
         splits = line.split(seperator)
@@ -621,10 +624,14 @@ def csv2pins(filepath):
             continue
         log(log_debug, "pin_id={}; block={}; name={}; driver={}".format( pin_id, block, name, driver))
         pin = SymbolPin(pin_id, block, name, driver, termination_str)
+        if block not in used_blocks:
+            used_blocks.append(block)
         i = i + 1
         # Pos = Vec3(-2.54, -1.27 + i* -2.54, 0)
         Pins.append(pin)
-
+    if len(used_blocks) < 2:
+        log(log_error, "Number of used blocks must be at least 2! Please add another block (f.e. split function and power)")
+        exit(-1)
     return Pins
 
 
@@ -686,6 +693,7 @@ def main():
 
     sym1 = Symbol(sym_name)
     pins = csv2pins(path)
+
     sym1.add_pins(pins)
     lib1 = Library(lib_name)
     lib1.add_symbols([sym1])
