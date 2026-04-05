@@ -71,7 +71,10 @@ kicad_drivers = ['input','output','unspecified','power_in','power_out',
                 'open_collector','open_emitter','no_connect','free','tri_state','bidirectional']
 
 bus_master = 1
-bus_slave = 0
+bus_slave = 2
+bus_phy = 3
+bus_mac = 4
+bus_conn = 5
 
 class DriverType:
     kicad_drivers = kicad_drivers
@@ -154,6 +157,63 @@ bus_serialwire = [
     DriverType('serialwire_slave[x]_dio',  bus_slave,  'bidirectional', ['serialwire_master[x]_dio'], 1, False),
 ]
 
+bus_rgmii = [
+    DriverType('rgmii_phy[x]_txc',    bus_phy, 'input',  ['rgmii_mac[x]_txc'], 1, False),
+    DriverType('rgmii_phy[x]_tx_ctl', bus_phy, 'input',  ['rgmii_mac[x]_tx_ctl'], 1, False),
+    DriverType('rgmii_phy[x]_txd0',   bus_phy, 'input',  ['rgmii_mac[x]_txd0'], 1, False),
+    DriverType('rgmii_phy[x]_txd1',   bus_phy, 'input',  ['rgmii_mac[x]_txd1'], 1, False),
+    DriverType('rgmii_phy[x]_txd2',   bus_phy, 'input',  ['rgmii_mac[x]_txd2'], 1, False),
+    DriverType('rgmii_phy[x]_txd3',   bus_phy, 'input',  ['rgmii_mac[x]_txd3'], 1, False),
+    DriverType('rgmii_phy[x]_rxc',    bus_phy, 'output', ['rgmii_mac[x]_rxc'], 1, False),
+    DriverType('rgmii_phy[x]_rx_ctl', bus_phy, 'output', ['rgmii_mac[x]_rx_ctl'], 1, False),
+    DriverType('rgmii_phy[x]_rxd0',   bus_phy, 'output', ['rgmii_mac[x]_rxd0'], 1, False),
+    DriverType('rgmii_phy[x]_rxd1',   bus_phy, 'output', ['rgmii_mac[x]_rxd1'], 1, False),
+    DriverType('rgmii_phy[x]_rxd2',   bus_phy, 'output', ['rgmii_mac[x]_rxd2'], 1, False),
+    DriverType('rgmii_phy[x]_rxd3',   bus_phy, 'output', ['rgmii_mac[x]_rxd3'], 1, False),
+
+    DriverType('rgmii_phy[x]_mdio',   bus_phy, 'bidirectional', ['rgmii_mac[x]_mdio'], 1, False),
+    DriverType('rgmii_mac[x]_mdio',   bus_mac, 'bidirectional', ['rgmii_phy[x]_mdio'], 32, False),
+    DriverType('rgmii_mac[x]_mdc',    bus_mac, 'output', ['rgmii_phy[x]_mdc'],  32, False),
+    DriverType('rgmii_phy[x]_mdc',    bus_phy, 'input',  ['rgmii_mac[x]_mdc'],  1, False),
+    DriverType('rgmii_phy[x]_int_n',  bus_phy, 'output', ['rgmii_mac[x]_int_n'], 1, True),
+    DriverType('rgmii_mac[x]_int_n',  bus_mac, 'input',  ['rgmii_phy[x]_int_n'], 1, True),
+    DriverType('rgmii_mac[x]_rst_n',  bus_mac, 'output', ['rgmii_phy[x]_rst_n'], 1, True),
+    DriverType('rgmii_phy[x]_rst_n',  bus_phy, 'input',  ['rgmii_mac[x]_rst_n'], 1, True),
+
+    DriverType('rgmii_mac[x]_txc',    bus_mac, 'output', ['rgmii_phy[x]_txc'], 1, False),
+    DriverType('rgmii_mac[x]_tx_ctl', bus_mac, 'output', ['rgmii_phy[x]_tx_ctl'], 1, False),
+    DriverType('rgmii_mac[x]_txd0',   bus_mac, 'output', ['rgmii_phy[x]_txd0'], 1, False),
+    DriverType('rgmii_mac[x]_txd1',   bus_mac, 'output', ['rgmii_phy[x]_txd1'], 1, False),
+    DriverType('rgmii_mac[x]_txd2',   bus_mac, 'output', ['rgmii_phy[x]_txd2'], 1, False),
+    DriverType('rgmii_mac[x]_txd3',   bus_mac, 'output', ['rgmii_phy[x]_txd3'], 1, False),
+    DriverType('rgmii_mac[x]_rxc',    bus_mac, 'input', ['rgmii_phy[x]_rxc'], 1, False),
+    DriverType('rgmii_mac[x]_rx_ctl', bus_mac, 'input', ['rgmii_phy[x]_rx_ctl'], 1, False),
+    DriverType('rgmii_mac[x]_rxd0',   bus_mac, 'input', ['rgmii_phy[x]_rxd0'], 1, False),
+    DriverType('rgmii_mac[x]_rxd1',   bus_mac, 'input', ['rgmii_phy[x]_rxd1'], 1, False),
+    DriverType('rgmii_mac[x]_rxd2',   bus_mac, 'input', ['rgmii_phy[x]_rxd2'], 1, False),
+    DriverType('rgmii_mac[x]_rxd3',   bus_mac, 'input', ['rgmii_phy[x]_rxd3'], 1, False),
+
+]
+
+bus_mdi1g = [
+    DriverType('mdi1g_phy[x]_dp0', bus_phy, 'bidirectional', ['mdi1g_conn[x]_dp0'], 1, False),
+    DriverType('mdi1g_phy[x]_dm0', bus_phy, 'bidirectional', ['mdi1g_conn[x]_dm0'], 1, False),
+    DriverType('mdi1g_phy[x]_dp1', bus_phy, 'bidirectional', ['mdi1g_conn[x]_dp1'], 1, False),
+    DriverType('mdi1g_phy[x]_dm1', bus_phy, 'bidirectional', ['mdi1g_conn[x]_dm1'], 1, False),
+    DriverType('mdi1g_phy[x]_dp2', bus_phy, 'bidirectional', ['mdi1g_conn[x]_dp2'], 1, False),
+    DriverType('mdi1g_phy[x]_dm2', bus_phy, 'bidirectional', ['mdi1g_conn[x]_dm2'], 1, False),
+    DriverType('mdi1g_phy[x]_dp3', bus_phy, 'bidirectional', ['mdi1g_conn[x]_dp3'], 1, False),
+    DriverType('mdi1g_phy[x]_dm3', bus_phy, 'bidirectional', ['mdi1g_conn[x]_dm3'], 1, False),
+
+    DriverType('mdi1g_conn[x]_dp0', bus_conn, 'bidirectional', ['mdi1g_phy[x]_dp0'], 1, False),
+    DriverType('mdi1g_conn[x]_dm0', bus_conn, 'bidirectional', ['mdi1g_phy[x]_dm0'], 1, False),
+    DriverType('mdi1g_conn[x]_dp1', bus_conn, 'bidirectional', ['mdi1g_phy[x]_dp1'], 1, False),
+    DriverType('mdi1g_conn[x]_dm1', bus_conn, 'bidirectional', ['mdi1g_phy[x]_dm1'], 1, False),
+    DriverType('mdi1g_conn[x]_dp2', bus_conn, 'bidirectional', ['mdi1g_phy[x]_dp2'], 1, False),
+    DriverType('mdi1g_conn[x]_dm2', bus_conn, 'bidirectional', ['mdi1g_phy[x]_dm2'], 1, False),
+    DriverType('mdi1g_conn[x]_dp3', bus_conn, 'bidirectional', ['mdi1g_phy[x]_dp3'], 1, False),
+    DriverType('mdi1g_conn[x]_dm3', bus_conn, 'bidirectional', ['mdi1g_phy[x]_dm3'], 1, False),
+]
 
 bus_list = [
     bus_qspi,
@@ -162,6 +222,8 @@ bus_list = [
     bus_usart,
     bus_i2c,
     bus_serialwire,
+    bus_mdi1g,
+    bus_rgmii,
 ]
 
 bus_pin_drivers = {}
@@ -245,12 +307,11 @@ class SymbolPin:
                 try:
                     tmp, driver= term.lower().split(":")
                     float_raw = tmp[0:-1]
+                    component = tmp[-1]
+                    value = float(float_raw)
                 except:
-                    log(log_error, f"Could not extract data from Termination field: '{term}'. Pin: '{self.ic_pin}'")
+                    log(log_error, f"Could not extract data from Termination field: '{term}'. Pin='{self.ic_pin}', Component={component}, Driver={driver}")
                     exit(-1)
-
-                value = float(float_raw)
-                component = tmp[-1]
 
 
                 # if (component not in ['C', 'L', 'R'])
