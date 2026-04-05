@@ -27,6 +27,19 @@ def parse_label(name, xpos, ypos, rotation, align="right"):
 '''
 	return parsed
 
+
+def parse_wire(name, xpos1, ypos1, xpos2, ypos2):
+	parsed = f'''\
+(wire
+	(pts
+		(xy {xpos1} {ypos1}) (xy {xpos2} {ypos2})
+	)
+	(stroke (width 0) (type default))
+	(uuid "db7b9210-9629-46ea-9e4f-90bda630665f")
+)
+'''
+	return parsed
+
 def parse_symbol(device, xpos, ypos, rotation, value):
 	parsed = f'''\
 (symbol

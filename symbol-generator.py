@@ -203,6 +203,10 @@ class SymbolPin:
         self.name = name
         self.unit = unit
         self.driver = driver
+        self.terminations = []
+        self.connections = []
+
+        ## DRIVER STUFF
 
         # Add substitution for lazy driver keys
         driver = re.sub(r'\[[0-9].*\]', '', driver)
@@ -214,7 +218,9 @@ class SymbolPin:
             exit(1)
         self.driver = driver
         # self.terminations = terminations
-        self.terminations = []
+
+
+        ## TERMINATION STUFF
 
         # For some weird reason there are some ticks in the excel stuff. Goddam excel...
         term_str = termination_str.lower().replace(' ', '').replace('"', '')
@@ -222,35 +228,40 @@ class SymbolPin:
             if term_str.find(k) != -1:
                 log(log_note, f"Replace termination '{k}' with '{v}'")
                 term_str = term_str.replace(k, v)
-
+                log(log_error, "Simple connections are not allowed right now. Please use 0.0R Resistor ect to connect!")
+                exit(-1)
 
         for term in term_str.split(','):
             term = term.strip()
             if term == '':
                 continue
-            # Example: 20.0e+3R:+3v3
-            try:
-                tmp, driver= term.lower().split(":")
-                float_raw = tmp[0:-1]
-            except:
-                log(log_error, f"Could not extract data from Termination field: '{term}'. Pin: '{self.ic_pin}'")
-                exit(-1)
+
+            if term.lower().find(':') == -1:
+                conn = term.lower()
+                self.connections.append(conn)
+
+            else:
+                # Split termination Example: 20.0e+3R:+3v3
+                try:
+                    tmp, driver= term.lower().split(":")
+                    float_raw = tmp[0:-1]
+                except:
+                    log(log_error, f"Could not extract data from Termination field: '{term}'. Pin: '{self.ic_pin}'")
+                    exit(-1)
+
+                value = float(float_raw)
+                component = tmp[-1]
 
 
+                # if (component not in ['C', 'L', 'R'])
+                log(log_note, f"Termination: Type={component}; Value={value}; Driver={driver}")
+                termination = [component, value, driver]
+                if driver.lower() not in self.powersymbols:
+                    log(log_warn, f"Termination unknown: {driver}")
+                    # print(f"Termination driver for pin {self.ic_pin} unkown: {driver}")
 
-            value = float(float_raw)
-            component = tmp[-1]
-
-
-            # if (component not in ['C', 'L', 'R'])
-            log(log_note, f"Termination: Type={component}; Value={value}; Driver={driver}")
-            termination = [component, value, driver]
-            if driver.lower() not in self.powersymbols:
-                log(log_warn, f"Termination unknown: {driver}")
-                # print(f"Termination driver for pin {self.ic_pin} unkown: {driver}")
-
-                # exit(-1)
-            self.terminations.append(termination)
+                    # exit(-1)
+                self.terminations.append(termination)
         if 'self' in termination_str:
             self.hasSelfTermination = True
         else:
@@ -266,6 +277,23 @@ class SymbolPin:
         labelpos = 2.54 * index
         # NOTE: Check, was 'right bottom'
         parsed = parse_label(labelname, 0.0, labelpos, 180, "right")
+        return parsed
+
+    def parse_connection(self, place_position_index, index):
+        driver = self.connections[index].lower()
+
+        if self.hasSelfTermination:
+            label = '_' + self.name
+        else:
+            label = '_' + self.name
+
+        ypos = place_position_index * 2.54
+
+        parsed = ''
+        parsed = parsed + parse_label(driver, 5.08, ypos, 0, "left")
+        parsed = parsed + parse_wire(5.08, ypos, 0.0, ypos)
+        parsed = parsed + parse_label(label, 0.0, ypos, 180, "right")
+
         return parsed
 
     def parse_termination(self, place_position_index, index):
@@ -307,8 +335,6 @@ class SymbolPin:
         # parsed = parsed + parse_hierarchical_label(driver, 5.08, ypos, 0)
         parsed = parsed + parse_symbol(device, 2.54,  ypos, 270, value)
         parsed = parsed + parse_label(label, 0.0, ypos, 180, "right")
-
-
 
         return parsed
 
@@ -370,6 +396,7 @@ class Symbol:
             term_pos_index = i + 4
             for pin in self.pins:
                 term_index = 0
+                conn_index = 0
                 if pin.unit != unit:
                     continue
                 for id in range(0, len(pin.terminations)):
@@ -377,6 +404,10 @@ class Symbol:
                     unit_text  = unit_text + "\n\n" + pin.parse_termination(term_pos_index, term_index)
                     term_pos_index = term_pos_index + 1
                     term_index = term_index + 1
+                for id in range(0, len(pin.connections)):
+                    unit_text  = unit_text + "\n\n" + pin.parse_connection(term_pos_index, conn_index)
+                    term_pos_index = term_pos_index + 1
+                    conn_index = conn_index + 1
 
             log(log_note, f"Write file: {filepath}")
 
