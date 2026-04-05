@@ -94,73 +94,77 @@ class DriverType:
         self.bus_source = bus_driver
 
 bus_qspi = [
-    DriverType('qspi_slave[x]_cs_n', bus_slave, 'input',         ['qspi_master[x]_cs_n'], 1, False),
-    DriverType('qspi_slave[x]_clk',  bus_slave, 'input',         ['qspi_master[x]_clk'], 1, False),
-    DriverType('qspi_slave[x]_io0',  bus_slave, 'bidirectional', ['qspi_master[x]_io0'], 1, False),
-    DriverType('qspi_slave[x]_io1',  bus_slave, 'bidirectional', ['qspi_master[x]_io1'], 1, False),
-    DriverType('qspi_slave[x]_io2',  bus_slave, 'bidirectional', ['qspi_master[x]_io2'], 1, False),
-    DriverType('qspi_slave[x]_io3',  bus_slave, 'bidirectional', ['qspi_master[x]_io3'], 1, False),
-    DriverType('qspi_slave[x]_rst_n', bus_slave, 'input',        ['qspi_master[x]_rst_n'], 1, True),
+    DriverType('qspi_slave[x]_csn[x]', bus_slave, 'input',         ['qspi_master[x]_csn[x]'], 1, False),
+    DriverType('qspi_slave[x]_clk',    bus_slave, 'input',         ['qspi_master[x]_clk'], 1, False),
+    DriverType('qspi_slave[x]_io0',    bus_slave, 'bidirectional', ['qspi_master[x]_io0'], 1, False),
+    DriverType('qspi_slave[x]_io1',    bus_slave, 'bidirectional', ['qspi_master[x]_io1'], 1, False),
+    DriverType('qspi_slave[x]_io2',    bus_slave, 'bidirectional', ['qspi_master[x]_io2'], 1, False),
+    DriverType('qspi_slave[x]_io3',    bus_slave, 'bidirectional', ['qspi_master[x]_io3'], 1, False),
+    DriverType('qspi_slave[x]_rstn',   bus_slave, 'input',         ['qspi_master[x]_rstn'], 1, True),
 
-    DriverType('qspi_master[x]_cs_n',  bus_master, 'output',        ['qspi_slave[x]_cs_n'], 1, False),
-    DriverType('qspi_master[x]_clk',   bus_master, 'output',        ['qspi_slave[x]_clk'], 1, False),
-    DriverType('qspi_master[x]_io0',   bus_master, 'bidirectional', ['qspi_slave[x]_io0'], 1, False),
-    DriverType('qspi_master[x]_io1',   bus_master, 'bidirectional', ['qspi_slave[x]_io1'], 1, False),
-    DriverType('qspi_master[x]_io2',   bus_master, 'bidirectional', ['qspi_slave[x]_io2'], 1, False),
-    DriverType('qspi_master[x]_io3',   bus_master, 'bidirectional', ['qspi_slave[x]_io3'], 1, False),
-    DriverType('qspi_master[x]_rst_n', bus_slave,  'output',        ['qspi_slave[x]_rst_n'], 1, True),
+    DriverType('qspi_master[x]_csn[x]',  bus_master, 'output',        ['qspi_slave[x]_csn[x]'], 1, False),
+    DriverType('qspi_master[x]_clk',     bus_master, 'output',        ['qspi_slave[x]_clk'], 1, False),
+    DriverType('qspi_master[x]_io0',     bus_master, 'bidirectional', ['qspi_slave[x]_io0'], 1, False),
+    DriverType('qspi_master[x]_io1',     bus_master, 'bidirectional', ['qspi_slave[x]_io1'], 1, False),
+    DriverType('qspi_master[x]_io2',     bus_master, 'bidirectional', ['qspi_slave[x]_io2'], 1, False),
+    DriverType('qspi_master[x]_io3',     bus_master, 'bidirectional', ['qspi_slave[x]_io3'], 1, False),
+    DriverType('qspi_master[x]_rstn',    bus_slave,  'output',        ['qspi_slave[x]_rstn'], 1, True),
 ]
 
 bus_octaspi = [
-    DriverType('octaspi_slave[x]_cs_n', bus_slave, 'input',         ['octaspi_master[x]_cs_n'], 1, False),
-    DriverType('octaspi_slave[x]_clk',  bus_slave, 'input',         ['octaspi_master[x]_clk'], 1, False),
-    DriverType('octaspi_slave[x]_io0',  bus_slave, 'bidirectional', ['octaspi_master[x]_io0'], 1, False),
-    DriverType('octaspi_slave[x]_io1',  bus_slave, 'bidirectional', ['octaspi_master[x]_io1'], 1, False),
-    DriverType('octaspi_slave[x]_io2',  bus_slave, 'bidirectional', ['octaspi_master[x]_io2'], 1, False),
-    DriverType('octaspi_slave[x]_io3',  bus_slave, 'bidirectional', ['octaspi_master[x]_io3'], 1, False),
-    DriverType('octaspi_slave[x]_io4',  bus_slave, 'bidirectional', ['octaspi_master[x]_io4'], 1, False),
-    DriverType('octaspi_slave[x]_io5',  bus_slave, 'bidirectional', ['octaspi_master[x]_io5'], 1, False),
-    DriverType('octaspi_slave[x]_io6',  bus_slave, 'bidirectional', ['octaspi_master[x]_io6'], 1, False),
-    DriverType('octaspi_slave[x]_io7',  bus_slave, 'bidirectional', ['octaspi_master[x]_io7'], 1, False),
-    DriverType('octaspi_slave[x]_rst_n', bus_slave, 'input',        ['octaspi_master[x]_rst_n'], 1, True),
+    DriverType('octaspi_slave[x]_csn[x]', bus_slave, 'input',         ['octaspi_master[x]_csn[x]'], 1, False),
+    DriverType('octaspi_slave[x]_clk',    bus_slave, 'input',         ['octaspi_master[x]_clk'], 1, False),
+    DriverType('octaspi_slave[x]_io0',    bus_slave, 'bidirectional', ['octaspi_master[x]_io0'], 1, False),
+    DriverType('octaspi_slave[x]_io1',    bus_slave, 'bidirectional', ['octaspi_master[x]_io1'], 1, False),
+    DriverType('octaspi_slave[x]_io2',    bus_slave, 'bidirectional', ['octaspi_master[x]_io2'], 1, False),
+    DriverType('octaspi_slave[x]_io3',    bus_slave, 'bidirectional', ['octaspi_master[x]_io3'], 1, False),
+    DriverType('octaspi_slave[x]_io4',    bus_slave, 'bidirectional', ['octaspi_master[x]_io4'], 1, False),
+    DriverType('octaspi_slave[x]_io5',    bus_slave, 'bidirectional', ['octaspi_master[x]_io5'], 1, False),
+    DriverType('octaspi_slave[x]_io6',    bus_slave, 'bidirectional', ['octaspi_master[x]_io6'], 1, False),
+    DriverType('octaspi_slave[x]_io7',    bus_slave, 'bidirectional', ['octaspi_master[x]_io7'], 1, False),
+    DriverType('octaspi_slave[x]_rstn',   bus_slave, 'input',         ['octaspi_master[x]_rstn'], 1, True),
 
-    DriverType('octaspi_master[x]_cs_n',  bus_master, 'output',        ['octaspi_slave[x]_cs_n'], 1, False),
-    DriverType('octaspi_master[x]_clk',   bus_master, 'output',        ['octaspi_slave[x]_clk'], 1, False),
-    DriverType('octaspi_master[x]_io0',   bus_master, 'bidirectional', ['octaspi_slave[x]_io0'], 1, False),
-    DriverType('octaspi_master[x]_io1',   bus_master, 'bidirectional', ['octaspi_slave[x]_io1'], 1, False),
-    DriverType('octaspi_master[x]_io2',   bus_master, 'bidirectional', ['octaspi_slave[x]_io2'], 1, False),
-    DriverType('octaspi_master[x]_io3',   bus_master, 'bidirectional', ['octaspi_slave[x]_io3'], 1, False),
-    DriverType('octaspi_master[x]_io4',   bus_master, 'bidirectional', ['octaspi_slave[x]_io4'], 1, False),
-    DriverType('octaspi_master[x]_io5',   bus_master, 'bidirectional', ['octaspi_slave[x]_io5'], 1, False),
-    DriverType('octaspi_master[x]_io6',   bus_master, 'bidirectional', ['octaspi_slave[x]_io6'], 1, False),
-    DriverType('octaspi_master[x]_io7',   bus_master, 'bidirectional', ['octaspi_slave[x]_io7'], 1, False),
-    DriverType('octaspi_master[x]_rst_n', bus_master, 'output',        ['octaspi_slave[x]_rst_n'], 1, True),
+    DriverType('octaspi_master[x]_csn[x]',  bus_master, 'output',        ['octaspi_slave[x]_csn[x]'], 1, False),
+    DriverType('octaspi_master[x]_clk',     bus_master, 'output',        ['octaspi_slave[x]_clk'], 1, False),
+    DriverType('octaspi_master[x]_io0',     bus_master, 'bidirectional', ['octaspi_slave[x]_io0'], 1, False),
+    DriverType('octaspi_master[x]_io1',     bus_master, 'bidirectional', ['octaspi_slave[x]_io1'], 1, False),
+    DriverType('octaspi_master[x]_io2',     bus_master, 'bidirectional', ['octaspi_slave[x]_io2'], 1, False),
+    DriverType('octaspi_master[x]_io3',     bus_master, 'bidirectional', ['octaspi_slave[x]_io3'], 1, False),
+    DriverType('octaspi_master[x]_io4',     bus_master, 'bidirectional', ['octaspi_slave[x]_io4'], 1, False),
+    DriverType('octaspi_master[x]_io5',     bus_master, 'bidirectional', ['octaspi_slave[x]_io5'], 1, False),
+    DriverType('octaspi_master[x]_io6',     bus_master, 'bidirectional', ['octaspi_slave[x]_io6'], 1, False),
+    DriverType('octaspi_master[x]_io7',     bus_master, 'bidirectional', ['octaspi_slave[x]_io7'], 1, False),
+    DriverType('octaspi_master[x]_rstn',    bus_master, 'output',        ['octaspi_slave[x]_rstn'], 1, True),
 ]
 
 bus_spi = [
-    DriverType('spi_master[x]_cs_n', bus_master, 'output', ['spi_slave[x]_cs_n'], 1, False),
-    DriverType('spi_master[x]_miso', bus_master, 'input',  ['spi_slave[x]_miso'], 1, False),
-    DriverType('spi_master[x]_mosi', bus_master, 'output', ['spi_slave[x]_mosi'], 1, False),
-    DriverType('spi_master[x]_sck',  bus_master, 'output', ['spi_slave[x]_sck'],  1, False),
-    DriverType('spi_master[x]_rst_n',bus_master, 'output', ['spi_slave[x]_rst_n'], 1, True),
+    DriverType('spi_master[x]_csn[x]', bus_master, 'output', ['spi_slave[x]_csn[x]'], 1, False),
+    DriverType('spi_master[x]_miso',   bus_master, 'input',  ['spi_slave[x]_miso'], 1, False),
+    DriverType('spi_master[x]_mosi',   bus_master, 'output', ['spi_slave[x]_mosi'], 1, False),
+    DriverType('spi_master[x]_sck',    bus_master, 'output', ['spi_slave[x]_sck'],  1, False),
+    DriverType('spi_master[x]_rstn',   bus_master, 'output', ['spi_slave[x]_rstn'], 1, True),
 
-    DriverType('spi_slave[x]_cs_n', bus_slave, 'input' , ['spi_master[x]_cs_n'], 1, False),
-    DriverType('spi_slave[x]_miso', bus_slave, 'output', ['spi_master[x]_miso'], 1, False),
-    DriverType('spi_slave[x]_mosi', bus_slave, 'input' , ['spi_master[x]_mosi'], 1, False),
-    DriverType('spi_slave[x]_sck',  bus_slave, 'input' , ['spi_master[x]_sck'],  1, False),
-    DriverType('spi_slave[x]_rst_n',bus_slave, 'input',  ['spi_master[x]_rst_n'], 1, True),
+    DriverType('spi_slave[x]_csn[x]', bus_slave, 'input' , ['spi_master[x]_csn[x]'], 1, False),
+    DriverType('spi_slave[x]_miso',   bus_slave, 'output', ['spi_master[x]_miso'], 1, False),
+    DriverType('spi_slave[x]_mosi',   bus_slave, 'input' , ['spi_master[x]_mosi'], 1, False),
+    DriverType('spi_slave[x]_sck',    bus_slave, 'input' , ['spi_master[x]_sck'],  1, False),
+    DriverType('spi_slave[x]_rstn',   bus_slave, 'input',  ['spi_master[x]_rstn'], 1, True),
 ]
 
 bus_jtag = [
-    DriverType('jtag_master[x]_tms',  bus_master, 'output', ['jtag_slave[x]_tms'], 16, False),
-    DriverType('jtag_master[x]_tck',  bus_master, 'output', ['jtag_slave[x]_tck'], 16, False),
-    DriverType('jtag_master[x]_mosi', bus_master, 'output', ['jtag_slave[x]_tdi'], 1, False),
-    DriverType('jtag_master[x]_miso', bus_master, 'input',  ['jtag_slave[x]_tdo'], 1, False),
+    DriverType('jtag_master[x]_tms',       bus_master, 'output', ['jtag_slave[x]_tms'], 16, False),
+    DriverType('jtag_master[x]_tck',       bus_master, 'output', ['jtag_slave[x]_tck'], 16, False),
+    DriverType('jtag_master[x]_mosi',      bus_master, 'output', ['jtag_slave[x]_tdi'], 1, False),
+    DriverType('jtag_master[x]_miso',      bus_master, 'input',  ['jtag_slave[x]_tdo'], 1, False),
+    DriverType('jtag_master[x]_trst_n',    bus_master, 'output', ['jtag_slave[x]_trst_n'], 1, False),
+    DriverType('jtag_master[x]_sysrst_n',  bus_master, 'output', ['jtag_slave[x]_sysrst_n'], 1, False),
 
-    DriverType('jtag_slave[x]_tms',  bus_slave, 'input',  ['jtag_master[x]_tms'],  1, False),
-    DriverType('jtag_slave[x]_tck',  bus_slave, 'input',  ['jtag_master[x]_tck'],  1, False),
-    DriverType('jtag_slave[x]_tdo',  bus_slave, 'output', ['jtag_master[x]_miso'], 1, False),
-    DriverType('jtag_slave[x]_tdi',  bus_slave, 'input',  ['jtag_master[x]_mosi'], 1, False),
+    DriverType('jtag_slave[x]_tms',     bus_slave, 'input',  ['jtag_master[x]_tms'],  1, False),
+    DriverType('jtag_slave[x]_tck',     bus_slave, 'input',  ['jtag_master[x]_tck'],  1, False),
+    DriverType('jtag_slave[x]_tdo',     bus_slave, 'output', ['jtag_master[x]_miso'], 1, False),
+    DriverType('jtag_slave[x]_tdi',     bus_slave, 'input',  ['jtag_master[x]_mosi'], 1, False),
+    DriverType('jtag_slave[x]_trstn',   bus_slave, 'input',  ['jtag_master[x]_trstn'], 1, False),
+    DriverType('jtag_slave[x]_sysrstn', bus_slave, 'output', ['jtag_master[x]_sysrstn'], 1, False),
 ]
 
 # NOTE:
@@ -358,18 +362,18 @@ class SymbolPin:
         'gr:':'e9r:',
     }
 
-    def __init__(self, ic_pin, unit, name, driver, termination_str):
+    def __init__(self, ic_pin, unit, name, driver_raw, termination_str):
         self.ic_pin = ic_pin
         self.name = name
         self.unit = unit
-        self.driver = driver
+        self.driver = driver_raw
         self.terminations = []
         self.connections = []
 
         ## DRIVER STUFF
 
         # Add substitution for lazy driver keys
-        driver = re.sub(r'\[[0-9].*\]', '', driver)
+        driver = re.sub(r'\[[0-9]\]', '', driver_raw)
         if driver.lower() in self.driver_subst.keys():
             driver = self.driver_subst[driver]
 
