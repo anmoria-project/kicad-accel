@@ -171,10 +171,6 @@ bus_rgmii = [
     DriverType('rgmii_phy[x]_rxd2',   bus_phy, 'output', ['rgmii_mac[x]_rxd2'], 1, False),
     DriverType('rgmii_phy[x]_rxd3',   bus_phy, 'output', ['rgmii_mac[x]_rxd3'], 1, False),
 
-    DriverType('rgmii_phy[x]_mdio',   bus_phy, 'bidirectional', ['rgmii_mac[x]_mdio'], 1, False),
-    DriverType('rgmii_mac[x]_mdio',   bus_mac, 'bidirectional', ['rgmii_phy[x]_mdio'], 32, False),
-    DriverType('rgmii_mac[x]_mdc',    bus_mac, 'output', ['rgmii_phy[x]_mdc'],  32, False),
-    DriverType('rgmii_phy[x]_mdc',    bus_phy, 'input',  ['rgmii_mac[x]_mdc'],  1, False),
     DriverType('rgmii_phy[x]_int_n',  bus_phy, 'output', ['rgmii_mac[x]_int_n'], 1, True),
     DriverType('rgmii_mac[x]_int_n',  bus_mac, 'input',  ['rgmii_phy[x]_int_n'], 1, True),
     DriverType('rgmii_mac[x]_rst_n',  bus_mac, 'output', ['rgmii_phy[x]_rst_n'], 1, True),
@@ -193,6 +189,13 @@ bus_rgmii = [
     DriverType('rgmii_mac[x]_rxd2',   bus_mac, 'input', ['rgmii_phy[x]_rxd2'], 1, False),
     DriverType('rgmii_mac[x]_rxd3',   bus_mac, 'input', ['rgmii_phy[x]_rxd3'], 1, False),
 
+]
+
+bus_mdio = [
+    DriverType('mdio_slave[x]_mdc',       bus_phy, 'input',         ['mdio_master[x]_mdc'],  1, False),
+    DriverType('mdio_slave[x]_mdio',      bus_phy, 'bidirectional', ['mdio_master[x]_mdio'], 1, False),
+    DriverType('mdio_master[x]_mdio',     bus_mac, 'bidirectional', ['mdio_slave[x]_mdio'], 32, False),
+    DriverType('mdio_master[x]_mdc',      bus_mac, 'output',        ['mdio_slave[x]_mdc'],  32, False),
 ]
 
 bus_mdi1g = [
@@ -215,6 +218,67 @@ bus_mdi1g = [
     DriverType('mdi1g_conn[x]_dm3', bus_conn, 'bidirectional', ['mdi1g_phy[x]_dm3'], 1, False),
 ]
 
+bus_mdi100m = [
+    DriverType('mdi100m_phy[x]_rxp', bus_phy, 'bidirectional', ['mdi100m_conn[x]_rxp'], 1, False),
+    DriverType('mdi100m_phy[x]_rxm', bus_phy, 'bidirectional', ['mdi100m_conn[x]_rxm'], 1, False),
+    DriverType('mdi100m_phy[x]_txp', bus_phy, 'bidirectional', ['mdi100m_conn[x]_txp'], 1, False),
+    DriverType('mdi100m_phy[x]_txm', bus_phy, 'bidirectional', ['mdi100m_conn[x]_txm'], 1, False),
+
+    DriverType('mdi100m_conn[x]_rxp', bus_conn, 'bidirectional', ['mdi100m_phy[x]_rxp'], 1, False),
+    DriverType('mdi100m_conn[x]_rxm', bus_conn, 'bidirectional', ['mdi100m_phy[x]_rxm'], 1, False),
+    DriverType('mdi100m_conn[x]_txp', bus_conn, 'bidirectional', ['mdi100m_phy[x]_txp'], 1, False),
+    DriverType('mdi100m_conn[x]_txm', bus_conn, 'bidirectional', ['mdi100m_phy[x]_txm'], 1, False),
+
+]
+
+# bus_mii = [
+#     DriverType('mii_phy[x]_rxd0',   bus_phy, 'output', ['mii_mac[x]_rxd0'], 1, False),
+#     DriverType('mii_phy[x]_rxd1',   bus_phy, 'output', ['mii_mac[x]_rxd1'], 1, False),
+#     DriverType('mii_phy[x]_rxd2',   bus_phy, 'output', ['mii_mac[x]_rxd2'], 1, False),
+#     DriverType('mii_phy[x]_rxd3',   bus_phy, 'output', ['mii_mac[x]_rxd3'], 1, False),
+#     DriverType('mii_phy[x]_rx_dv',  bus_phy, 'output', ['mii_mac[x]_rx_dv'], 1, False),
+#     DriverType('mii_phy[x]_rx_er',  bus_phy, 'output', ['mii_mac[x]_rx_er'], 1, False),
+#     DriverType('mii_phy[x]_crs',    bus_phy, 'output', ['mii_mac[x]_crs'], 1, False),
+#     DriverType('mii_phy[x]_col',    bus_phy, 'output', ['mii_mac[x]_col'], 1, False),
+#     DriverType('mii_phy[x]_rx_clk', bus_phy, 'output', ['mii_mac[x]_rx_clk'], 1, False),
+#     DriverType('mii_phy[x]_tx_clk', bus_phy, 'output', ['mii_mac[x]_tx_clk'], 1, False), # Both clocks in same direction?!
+
+#     DriverType('mii_phy[x]_txd0',  bus_phy, 'input', ['mii_mac[x]_txd0'], 1, False),
+#     DriverType('mii_phy[x]_txd1',  bus_phy, 'input', ['mii_mac[x]_txd1'], 1, False),
+#     DriverType('mii_phy[x]_txd2',  bus_phy, 'input', ['mii_mac[x]_txd2'], 1, False),
+#     DriverType('mii_phy[x]_txd3',  bus_phy, 'input', ['mii_mac[x]_txd3'], 1, False),
+#     DriverType('mii_phy[x]_tx_en', bus_phy, 'input', ['mii_mac[x]_tx_en'], 1, False),
+#     DriverType('mii_phy[x]_tx_er', bus_phy, 'input', ['mii_mac[x]_tx_er'], 1, True),
+# ]
+
+bus_rmii = [
+    DriverType('rmii_phy[x]_rxd0',      bus_phy, 'output', ['rmii_mac[x]_rxd0'], 1, False),
+    DriverType('rmii_phy[x]_rxd1',      bus_phy, 'output', ['rmii_mac[x]_rxd1'], 1, False),
+    DriverType('rmii_phy[x]_rx_er',     bus_phy, 'output', ['rmii_mac[x]_rx_er'], 1, False),
+    DriverType('rmii_phy[x]_crs_rx_dv', bus_phy, 'output', ['rmii_mac[x]_crs'], 1, False),
+    DriverType('rmii_phy[x]_rx_clk',    bus_phy, 'output', ['rmii_mac[x]_rx_clk'], 1, True),
+    DriverType('rmii_phy[x]_int_n',     bus_phy, 'output', ['rmii_mac[x]_int_n'], 1, True),
+
+    DriverType('rmii_phy[x]_txd0',  bus_phy, 'input', ['rmii_mac[x]_txd0'], 1, False),
+    DriverType('rmii_phy[x]_txd1',  bus_phy, 'input', ['rmii_mac[x]_txd1'], 1, False),
+    DriverType('rmii_phy[x]_tx_en', bus_phy, 'input', ['rmii_mac[x]_tx_en'], 1, False),
+
+    DriverType('rmii_mac[x]_rxd0',      bus_mac, 'input', ['rmii_phy[x]_rxd0'], 1, False),
+    DriverType('rmii_mac[x]_rxd1',      bus_mac, 'input', ['rmii_phy[x]_rxd1'], 1, False),
+    DriverType('rmii_mac[x]_rx_er',     bus_mac, 'input', ['rmii_phy[x]_rx_er'], 1, False),
+    DriverType('rmii_mac[x]_crs_rx_dv', bus_mac, 'input', ['rmii_phy[x]_crs'], 1, False),
+    DriverType('rmii_mac[x]_rx_clk',    bus_mac, 'input', ['rmii_phy[x]_rx_clk'], 1, True),
+    DriverType('rmii_mac[x]_int_n',     bus_mac, 'input', ['rmii_phy[x]_int_n'], 1, True),
+
+    DriverType('rmii_mac[x]_txd0',  bus_mac, 'output', ['rmii_phy[x]_txd0'], 1, False),
+    DriverType('rmii_mac[x]_txd1',  bus_mac, 'output', ['rmii_phy[x]_txd1'], 1, False),
+    DriverType('rmii_mac[x]_tx_en', bus_mac, 'output', ['rmii_phy[x]_tx_en'], 1, False),
+
+    DriverType('rmii_phy[x]_rst_n', bus_phy, 'input', ['rmii_mac[x]_rst_n'], 1, True),
+    DriverType('rmii_mac[x]_rst_n', bus_mac, 'input', ['rmii_phy[x]_rst_n'], 1, True),
+
+]
+
 bus_list = [
     bus_qspi,
     bus_spi,
@@ -223,7 +287,10 @@ bus_list = [
     bus_i2c,
     bus_serialwire,
     bus_mdi1g,
+    bus_rmii,
+    bus_mdio,
     bus_rgmii,
+    bus_mdi100m,
 ]
 
 bus_pin_drivers = {}
@@ -290,8 +357,7 @@ class SymbolPin:
             if term_str.find(k) != -1:
                 log(log_note, f"Replace termination '{k}' with '{v}'")
                 term_str = term_str.replace(k, v)
-                log(log_error, "Simple connections are not allowed right now. Please use 0.0R Resistor ect to connect!")
-                exit(-1)
+
 
         for term in term_str.split(','):
             term = term.strip()
@@ -301,7 +367,8 @@ class SymbolPin:
             if term.lower().find(':') == -1:
                 conn = term.lower()
                 self.connections.append(conn)
-
+                log(log_error, f"Simple connections are not allowed right now. Please use 0.0R Resistor ect to connect! Pin={self.ic_pin}")
+                exit(-1)
             else:
                 # Split termination Example: 20.0e+3R:+3v3
                 try:
@@ -318,7 +385,7 @@ class SymbolPin:
                 log(log_note, f"Termination: Type={component}; Value={value}; Driver={driver}")
                 termination = [component, value, driver]
                 if driver.lower() not in self.powersymbols:
-                    log(log_warn, f"Termination unknown: {driver}")
+                    log(log_note, f"Termination unknown: {driver}")
                     # print(f"Termination driver for pin {self.ic_pin} unkown: {driver}")
 
                     # exit(-1)
