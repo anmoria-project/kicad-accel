@@ -100,6 +100,7 @@ bus_qspi = [
     DriverType('qspi_slave[x]_io1',  bus_slave, 'bidirectional', ['qspi_master[x]_io1'], 1, False),
     DriverType('qspi_slave[x]_io2',  bus_slave, 'bidirectional', ['qspi_master[x]_io2'], 1, False),
     DriverType('qspi_slave[x]_io3',  bus_slave, 'bidirectional', ['qspi_master[x]_io3'], 1, False),
+    DriverType('qspi_slave[x]_rst_n', bus_slave, 'input',        ['qspi_master[x]_rst_n'], 1, True),
 
     DriverType('qspi_master[x]_cs_n',  bus_master, 'output',        ['qspi_slave[x]_cs_n'], 1, False),
     DriverType('qspi_master[x]_clk',   bus_master, 'output',        ['qspi_slave[x]_clk'], 1, False),
@@ -107,6 +108,33 @@ bus_qspi = [
     DriverType('qspi_master[x]_io1',   bus_master, 'bidirectional', ['qspi_slave[x]_io1'], 1, False),
     DriverType('qspi_master[x]_io2',   bus_master, 'bidirectional', ['qspi_slave[x]_io2'], 1, False),
     DriverType('qspi_master[x]_io3',   bus_master, 'bidirectional', ['qspi_slave[x]_io3'], 1, False),
+    DriverType('qspi_master[x]_rst_n', bus_slave,  'output',        ['qspi_slave[x]_rst_n'], 1, True),
+]
+
+bus_octaspi = [
+    DriverType('octaspi_slave[x]_cs_n', bus_slave, 'input',         ['octaspi_master[x]_cs_n'], 1, False),
+    DriverType('octaspi_slave[x]_clk',  bus_slave, 'input',         ['octaspi_master[x]_clk'], 1, False),
+    DriverType('octaspi_slave[x]_io0',  bus_slave, 'bidirectional', ['octaspi_master[x]_io0'], 1, False),
+    DriverType('octaspi_slave[x]_io1',  bus_slave, 'bidirectional', ['octaspi_master[x]_io1'], 1, False),
+    DriverType('octaspi_slave[x]_io2',  bus_slave, 'bidirectional', ['octaspi_master[x]_io2'], 1, False),
+    DriverType('octaspi_slave[x]_io3',  bus_slave, 'bidirectional', ['octaspi_master[x]_io3'], 1, False),
+    DriverType('octaspi_slave[x]_io4',  bus_slave, 'bidirectional', ['octaspi_master[x]_io4'], 1, False),
+    DriverType('octaspi_slave[x]_io5',  bus_slave, 'bidirectional', ['octaspi_master[x]_io5'], 1, False),
+    DriverType('octaspi_slave[x]_io6',  bus_slave, 'bidirectional', ['octaspi_master[x]_io6'], 1, False),
+    DriverType('octaspi_slave[x]_io7',  bus_slave, 'bidirectional', ['octaspi_master[x]_io7'], 1, False),
+    DriverType('octaspi_slave[x]_rst_n', bus_slave, 'input',        ['octaspi_master[x]_rst_n'], 1, True),
+
+    DriverType('octaspi_master[x]_cs_n',  bus_master, 'output',        ['octaspi_slave[x]_cs_n'], 1, False),
+    DriverType('octaspi_master[x]_clk',   bus_master, 'output',        ['octaspi_slave[x]_clk'], 1, False),
+    DriverType('octaspi_master[x]_io0',   bus_master, 'bidirectional', ['octaspi_slave[x]_io0'], 1, False),
+    DriverType('octaspi_master[x]_io1',   bus_master, 'bidirectional', ['octaspi_slave[x]_io1'], 1, False),
+    DriverType('octaspi_master[x]_io2',   bus_master, 'bidirectional', ['octaspi_slave[x]_io2'], 1, False),
+    DriverType('octaspi_master[x]_io3',   bus_master, 'bidirectional', ['octaspi_slave[x]_io3'], 1, False),
+    DriverType('octaspi_master[x]_io4',   bus_master, 'bidirectional', ['octaspi_slave[x]_io4'], 1, False),
+    DriverType('octaspi_master[x]_io5',   bus_master, 'bidirectional', ['octaspi_slave[x]_io5'], 1, False),
+    DriverType('octaspi_master[x]_io6',   bus_master, 'bidirectional', ['octaspi_slave[x]_io6'], 1, False),
+    DriverType('octaspi_master[x]_io7',   bus_master, 'bidirectional', ['octaspi_slave[x]_io7'], 1, False),
+    DriverType('octaspi_master[x]_rst_n', bus_master, 'output',        ['octaspi_slave[x]_rst_n'], 1, True),
 ]
 
 bus_spi = [
@@ -114,11 +142,13 @@ bus_spi = [
     DriverType('spi_master[x]_miso', bus_master, 'input',  ['spi_slave[x]_miso'], 1, False),
     DriverType('spi_master[x]_mosi', bus_master, 'output', ['spi_slave[x]_mosi'], 1, False),
     DriverType('spi_master[x]_sck',  bus_master, 'output', ['spi_slave[x]_sck'],  1, False),
+    DriverType('spi_master[x]_rst_n',bus_master, 'output', ['spi_slave[x]_rst_n'], 1, True),
 
     DriverType('spi_slave[x]_cs_n', bus_slave, 'input' , ['spi_master[x]_cs_n'], 1, False),
     DriverType('spi_slave[x]_miso', bus_slave, 'output', ['spi_master[x]_miso'], 1, False),
     DriverType('spi_slave[x]_mosi', bus_slave, 'input' , ['spi_master[x]_mosi'], 1, False),
     DriverType('spi_slave[x]_sck',  bus_slave, 'input' , ['spi_master[x]_sck'],  1, False),
+    DriverType('spi_slave[x]_rst_n',bus_slave, 'input',  ['spi_master[x]_rst_n'], 1, True),
 ]
 
 bus_jtag = [
@@ -291,6 +321,7 @@ bus_list = [
     bus_mdio,
     bus_rgmii,
     bus_mdi100m,
+    bus_octaspi,
 ]
 
 bus_pin_drivers = {}
@@ -377,7 +408,7 @@ class SymbolPin:
                     component = tmp[-1]
                     value = float(float_raw)
                 except:
-                    log(log_error, f"Could not extract data from Termination field: '{term}'. Pin='{self.ic_pin}', Component={component}, Driver={driver}")
+                    log(log_error, f"Could not extract data from Termination field: '{term}'. Pin='{self.ic_pin}', Driver={driver}")
                     exit(-1)
 
 
