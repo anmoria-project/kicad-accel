@@ -265,6 +265,33 @@ bus_mdi100m = [
 
 ]
 
+bus_usbc = [
+
+    DriverType('usbc_conn[x]_txp',  bus_conn,   'bidirectional', ['usbc_master[x]_txp'], 2, False),
+    DriverType('usbc_conn[x]_txm',  bus_conn,   'bidirectional', ['usbc_master[x]_txm'], 2, False),
+    DriverType('usbc_conn[x]_vbus', bus_conn,   'bidirectional', ['usbc_master[x]_vbus'], 2, False),
+    DriverType('usbc_conn[x]_cc',   bus_conn,   'bidirectional', ['usbc_master[x]_cc'], 2, False),
+    DriverType('usbc_conn[x]_dp',   bus_conn,   'bidirectional', ['usbc_master[x]_dp'], 2, False),
+    DriverType('usbc_conn[x]_dm',   bus_conn,   'bidirectional', ['usbc_master[x]_dm'], 2, False),
+    DriverType('usbc_conn[x]_sbu',  bus_conn,   'bidirectional', ['usbc_master[x]_sbu'], 2, False),
+    DriverType('usbc_conn[x]_vbus', bus_conn,   'bidirectional', ['usbc_master[x]_vbus'], 2, False),
+    DriverType('usbc_conn[x]_rxm',  bus_conn,   'bidirectional', ['usbc_master[x]_rxm'], 2, False),
+    DriverType('usbc_conn[x]_rxp',  bus_conn,   'bidirectional', ['usbc_master[x]_rxp'], 2, False),
+
+    DriverType('usbc_master[x]_txp',  bus_master,   'bidirectional', ['usbc_conn[x]_txp'],  2, False),
+    DriverType('usbc_master[x]_txm',  bus_master,   'bidirectional', ['usbc_conn[x]_txm'],  2, False),
+    DriverType('usbc_master[x]_vbus', bus_master,   'bidirectional', ['usbc_conn[x]_vbus'], 2, False),
+    DriverType('usbc_master[x]_cc',   bus_master,   'bidirectional', ['usbc_conn[x]_cc'],  2, False),
+    DriverType('usbc_master[x]_dp',   bus_master,   'bidirectional', ['usbc_conn[x]_dp'],  2, False),
+    DriverType('usbc_master[x]_dm',   bus_master,   'bidirectional', ['usbc_conn[x]_dm'],  2, False),
+    DriverType('usbc_master[x]_sbu',  bus_master,   'bidirectional', ['usbc_conn[x]_sbux'], 2, False),
+    DriverType('usbc_master[x]_vbus', bus_master,   'bidirectional', ['usbc_conn[x]_vbus'], 2, False),
+    DriverType('usbc_master[x]_rxm',  bus_master,   'bidirectional', ['usbc_conn[x]_rxm'],  2, False),
+    DriverType('usbc_master[x]_rxp',  bus_master,   'bidirectional', ['usbc_conn[x]_rxp'],  2, False),
+
+
+]
+
 # bus_mii = [
 #     DriverType('mii_phy[x]_rxd0',   bus_phy, 'output', ['mii_mac[x]_rxd0'], 1, False),
 #     DriverType('mii_phy[x]_rxd1',   bus_phy, 'output', ['mii_mac[x]_rxd1'], 1, False),
@@ -326,6 +353,8 @@ bus_list = [
     bus_rgmii,
     bus_mdi100m,
     bus_octaspi,
+    bus_usbc,
+    # bus_rj45_conn,
 ]
 
 bus_pin_drivers = {}
