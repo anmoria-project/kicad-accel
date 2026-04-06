@@ -466,15 +466,21 @@ class SymbolPin:
 
                     # exit(-1)
                 self.terminations.append(termination)
-        if 'self' in termination_str:
+        if ':self' in termination_str:
             self.hasSelfTermination = True
         else:
             self.hasSelfTermination = False
 
+        if ':ext' in termination_str:
+            self.hasExtTermination = True
+        else:
+            self.hasExtTermination = False
+
     def parse_label(self, index):
-        if self.hasSelfTermination:
+
+        if self.hasSelfTermination and self.hasExtTermination:
             labelname = '__' + self.name
-        elif len(self.terminations) > 0:
+        elif self.hasExtTermination or self.hasSelfTermination:
             labelname = '_' + self.name
         else:
             labelname = self.name
@@ -486,6 +492,7 @@ class SymbolPin:
     def parse_connection(self, place_position_index, index):
         driver = self.connections[index].lower()
 
+        # TODO: Recheck here. This might be wrong now...
         if self.hasSelfTermination:
             label = '_' + self.name
         else:
@@ -505,19 +512,25 @@ class SymbolPin:
         value = self.terminations[index][1]
         device = "UNDEFINED"
 
-        if self.hasSelfTermination:
+        if self.hasExtTermination:
             label = '_' + self.name
         else:
-            label = '_' + self.name
+            label = self.name
 
-        if (driver == 'self'):
+
+
+        if (driver == 'self') and self.hasExtTermination:
             driver = '__' + self.name
+        elif (driver == 'self'):
+            driver = '_' + self.name
         elif (driver == 'ext'):
             driver = self.name
         else:
             driver = self.terminations[index][2]
 
         component = self.terminations[index][0].upper()
+
+
 
         # if (component == "short"):
         #     device = "W_Small"
