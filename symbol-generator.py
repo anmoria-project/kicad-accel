@@ -401,7 +401,8 @@ class SymbolPin:
         self.ic_pin = ic_pin
         self.name = name
         self.unit = unit
-        self.driver = driver_raw
+        self.driver = ''
+        self.driver_raw = driver_raw
         self.terminations = []
         self.connections = []
 
@@ -597,6 +598,37 @@ class Symbol:
             if pin.unit not in self.unit_names:
                 self.unit_names.append(pin.unit)
             self.pins.append(pin)
+
+    def parse_busses(self, prefix):
+        # for unit in self.unit_names:
+            i = 0
+            unit_text = ""
+            filepath = f"./build/{prefix}.kicad_busses"
+
+            term_pos_index = i + 4
+            bus_drivers = {}
+            for pin in self.pins:
+                bus_pin_offset = 0
+                for bus in bus_list:
+                    for drivertype in bus:
+                        busdriver = drivertype.name.replace('[x]', '').lower().replace('.', '_')
+                        pindriver = re.sub(r'\[[0-9]\]', '', pin.driver_raw).lower().replace('.', '_')
+                        if pindriver == busdriver:
+                            bus_drivers[pin.driver_raw] = pin.name
+                            print(f"Found")
+                        else:
+                            # print(f"Missmatch: {pindriver}:{busdriver}")
+                            pass
+            for buspin, signal in bus_drivers.items():
+                print(f'Found bus-pin: {buspin.replace('[', '').replace(']', '')} with signal {signal}')
+
+            # log(log_note, f"Write file: {filepath}")
+
+            # # filepath = f'./build/{filename}.kicad_labels'
+            # fd = open(filepath, 'w+', encoding='utf-8')
+            # fd.write(unit_text)
+            # fd.flush()
+            # fd.close()
 
 
     def parse_labels(self, prefix):
@@ -800,6 +832,7 @@ class Library:
     def parse_labels(self):
         for symbol in self.symbols:
             symbol.parse_labels(self.name)
+            symbol.parse_busses(self.name)
 
     def parse(self):
 
