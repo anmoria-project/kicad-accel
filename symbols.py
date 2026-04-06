@@ -105,3 +105,38 @@ def parse_symbol(device, xpos, ypos, rotation, value):
 '''
 	return parsed
 
+def parse_busentry(xpos, ypos):
+	parsed = f'''\
+(bus_entry
+	(at {xpos} {ypos})
+	(size 2.54 2.54)
+	(stroke (width 0) (type default))
+	(uuid "6f5e384e-5a9e-4fdc-8642-9701db9306b8")
+)
+'''
+
+def parse_hierarchical_label(label, xpos, ypos, rotation = 180):
+	parsed = '''\
+(hierarchical_label "{label}"
+	(shape input)
+	(at {xpos} {ypos} {rotation})
+	(effects
+		(font (size 1.27 1.27))
+		(justify right)
+	)
+	(uuid "4c0bf617-3b88-48c0-8c27-7bef631db9a0")
+)
+'''
+	return parsed
+
+def parse_bus(xpos1, ypos1, xpos2, ypos2):
+	parsed = '''\
+(bus
+	(pts
+		(xy {xpos1} {ypos1}) (xy {xpos2} {ypos2})
+	)
+	(stroke (width 0) (type default))
+	(uuid "90fa7227-5737-479c-9573-d260690ffe83")
+)
+'''
+	return parsed
