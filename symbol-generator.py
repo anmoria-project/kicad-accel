@@ -376,7 +376,8 @@ class SymbolPin:
         'bidir' : 'bidirectional',
         'dio' : 'bidirectional',
         'ci' : 'input',
-        'co': 'output'
+        'co': 'output',
+        'cio' : 'bidirectional',
     } | bus_pin_drivers
 
     powersymbols = ['+3v3', 'gnd', 'self', 'ext']
