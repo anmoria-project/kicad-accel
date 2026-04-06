@@ -94,200 +94,205 @@ class DriverType:
         self.bus_source = bus_driver
 
 bus_qspi = [
-    DriverType('qspi_slave[x]_csn[x]', bus_slave, 'input',         ['qspi_master[x]_csn[x]'], 1, False),
-    DriverType('qspi_slave[x]_clk',    bus_slave, 'input',         ['qspi_master[x]_clk'], 1, False),
-    DriverType('qspi_slave[x]_io0',    bus_slave, 'bidirectional', ['qspi_master[x]_io0'], 1, False),
-    DriverType('qspi_slave[x]_io1',    bus_slave, 'bidirectional', ['qspi_master[x]_io1'], 1, False),
-    DriverType('qspi_slave[x]_io2',    bus_slave, 'bidirectional', ['qspi_master[x]_io2'], 1, False),
-    DriverType('qspi_slave[x]_io3',    bus_slave, 'bidirectional', ['qspi_master[x]_io3'], 1, False),
-    DriverType('qspi_slave[x]_rstn',   bus_slave, 'input',         ['qspi_master[x]_rstn'], 1, True),
+    DriverType('qspi_slave[x].csn[x]', bus_slave, 'input',         ['qspi_master[x].csn[x]'], 1, False),
+    DriverType('qspi_slave[x].clk',    bus_slave, 'input',         ['qspi_master[x].clk'], 1, False),
+    DriverType('qspi_slave[x].io0',    bus_slave, 'bidirectional', ['qspi_master[x].io0'], 1, False),
+    DriverType('qspi_slave[x].io1',    bus_slave, 'bidirectional', ['qspi_master[x].io1'], 1, False),
+    DriverType('qspi_slave[x].io2',    bus_slave, 'bidirectional', ['qspi_master[x].io2'], 1, False),
+    DriverType('qspi_slave[x].io3',    bus_slave, 'bidirectional', ['qspi_master[x].io3'], 1, False),
+    DriverType('qspi_slave[x].rstn',   bus_slave, 'input',         ['qspi_master[x].rstn'], 1, True),
+    DriverType('qspi_slave[x].wpn',    bus_slave, 'input',         ['qspi_master[x].wpn'], 1, True),
 
-    DriverType('qspi_master[x]_csn[x]',  bus_master, 'output',        ['qspi_slave[x]_csn[x]'], 1, False),
-    DriverType('qspi_master[x]_clk',     bus_master, 'output',        ['qspi_slave[x]_clk'], 1, False),
-    DriverType('qspi_master[x]_io0',     bus_master, 'bidirectional', ['qspi_slave[x]_io0'], 1, False),
-    DriverType('qspi_master[x]_io1',     bus_master, 'bidirectional', ['qspi_slave[x]_io1'], 1, False),
-    DriverType('qspi_master[x]_io2',     bus_master, 'bidirectional', ['qspi_slave[x]_io2'], 1, False),
-    DriverType('qspi_master[x]_io3',     bus_master, 'bidirectional', ['qspi_slave[x]_io3'], 1, False),
-    DriverType('qspi_master[x]_rstn',    bus_slave,  'output',        ['qspi_slave[x]_rstn'], 1, True),
+
+    DriverType('qspi_master[x].csn[x]',  bus_master, 'output',        ['qspi_slave[x].csn[x]'], 1, False),
+    DriverType('qspi_master[x].clk',     bus_master, 'output',        ['qspi_slave[x].clk'], 1, False),
+    DriverType('qspi_master[x].io0',     bus_master, 'bidirectional', ['qspi_slave[x].io0'], 1, False),
+    DriverType('qspi_master[x].io1',     bus_master, 'bidirectional', ['qspi_slave[x].io1'], 1, False),
+    DriverType('qspi_master[x].io2',     bus_master, 'bidirectional', ['qspi_slave[x].io2'], 1, False),
+    DriverType('qspi_master[x].io3',     bus_master, 'bidirectional', ['qspi_slave[x].io3'], 1, False),
+    DriverType('qspi_master[x].rstn',    bus_slave,  'output',        ['qspi_slave[x].rstn'], 1, True),
+    DriverType('qspi_master[x].wpn',     bus_slave,  'output',        ['qspi_slave[x].wpn'], 1, True),
 ]
 
 bus_octaspi = [
-    DriverType('octaspi_slave[x]_csn[x]', bus_slave, 'input',         ['octaspi_master[x]_csn[x]'], 1, False),
-    DriverType('octaspi_slave[x]_clk',    bus_slave, 'input',         ['octaspi_master[x]_clk'], 1, False),
-    DriverType('octaspi_slave[x]_io0',    bus_slave, 'bidirectional', ['octaspi_master[x]_io0'], 1, False),
-    DriverType('octaspi_slave[x]_io1',    bus_slave, 'bidirectional', ['octaspi_master[x]_io1'], 1, False),
-    DriverType('octaspi_slave[x]_io2',    bus_slave, 'bidirectional', ['octaspi_master[x]_io2'], 1, False),
-    DriverType('octaspi_slave[x]_io3',    bus_slave, 'bidirectional', ['octaspi_master[x]_io3'], 1, False),
-    DriverType('octaspi_slave[x]_io4',    bus_slave, 'bidirectional', ['octaspi_master[x]_io4'], 1, False),
-    DriverType('octaspi_slave[x]_io5',    bus_slave, 'bidirectional', ['octaspi_master[x]_io5'], 1, False),
-    DriverType('octaspi_slave[x]_io6',    bus_slave, 'bidirectional', ['octaspi_master[x]_io6'], 1, False),
-    DriverType('octaspi_slave[x]_io7',    bus_slave, 'bidirectional', ['octaspi_master[x]_io7'], 1, False),
-    DriverType('octaspi_slave[x]_rstn',   bus_slave, 'input',         ['octaspi_master[x]_rstn'], 1, True),
+    DriverType('octaspi_slave[x].csn[x]', bus_slave, 'input',         ['octaspi_master[x].csn[x]'], 1, False),
+    DriverType('octaspi_slave[x].dqs',    bus_slave, 'input',         ['octaspi_master[x].dqs'], 1, False),
+    DriverType('octaspi_slave[x].clk',    bus_slave, 'input',         ['octaspi_master[x].clk'], 1, False),
+    DriverType('octaspi_slave[x].io0',    bus_slave, 'bidirectional', ['octaspi_master[x].io0'], 1, False),
+    DriverType('octaspi_slave[x].io1',    bus_slave, 'bidirectional', ['octaspi_master[x].io1'], 1, False),
+    DriverType('octaspi_slave[x].io2',    bus_slave, 'bidirectional', ['octaspi_master[x].io2'], 1, False),
+    DriverType('octaspi_slave[x].io3',    bus_slave, 'bidirectional', ['octaspi_master[x].io3'], 1, False),
+    DriverType('octaspi_slave[x].io4',    bus_slave, 'bidirectional', ['octaspi_master[x].io4'], 1, False),
+    DriverType('octaspi_slave[x].io5',    bus_slave, 'bidirectional', ['octaspi_master[x].io5'], 1, False),
+    DriverType('octaspi_slave[x].io6',    bus_slave, 'bidirectional', ['octaspi_master[x].io6'], 1, False),
+    DriverType('octaspi_slave[x].io7',    bus_slave, 'bidirectional', ['octaspi_master[x].io7'], 1, False),
+    DriverType('octaspi_slave[x].rstn',   bus_slave, 'input',         ['octaspi_master[x].rstn'], 1, True),
 
-    DriverType('octaspi_master[x]_csn[x]',  bus_master, 'output',        ['octaspi_slave[x]_csn[x]'], 1, False),
-    DriverType('octaspi_master[x]_clk',     bus_master, 'output',        ['octaspi_slave[x]_clk'], 1, False),
-    DriverType('octaspi_master[x]_io0',     bus_master, 'bidirectional', ['octaspi_slave[x]_io0'], 1, False),
-    DriverType('octaspi_master[x]_io1',     bus_master, 'bidirectional', ['octaspi_slave[x]_io1'], 1, False),
-    DriverType('octaspi_master[x]_io2',     bus_master, 'bidirectional', ['octaspi_slave[x]_io2'], 1, False),
-    DriverType('octaspi_master[x]_io3',     bus_master, 'bidirectional', ['octaspi_slave[x]_io3'], 1, False),
-    DriverType('octaspi_master[x]_io4',     bus_master, 'bidirectional', ['octaspi_slave[x]_io4'], 1, False),
-    DriverType('octaspi_master[x]_io5',     bus_master, 'bidirectional', ['octaspi_slave[x]_io5'], 1, False),
-    DriverType('octaspi_master[x]_io6',     bus_master, 'bidirectional', ['octaspi_slave[x]_io6'], 1, False),
-    DriverType('octaspi_master[x]_io7',     bus_master, 'bidirectional', ['octaspi_slave[x]_io7'], 1, False),
-    DriverType('octaspi_master[x]_rstn',    bus_master, 'output',        ['octaspi_slave[x]_rstn'], 1, True),
+    DriverType('octaspi_master[x].csn[x]',  bus_master, 'output',        ['octaspi_slave[x].csn[x]'], 1, False),
+    DriverType('octaspi_master[x].dqs',     bus_master, 'output',        ['octaspi_slave[x].dqs'], 1, False),
+    DriverType('octaspi_master[x].clk',     bus_master, 'output',        ['octaspi_slave[x].clk'], 1, False),
+    DriverType('octaspi_master[x].io0',     bus_master, 'bidirectional', ['octaspi_slave[x].io0'], 1, False),
+    DriverType('octaspi_master[x].io1',     bus_master, 'bidirectional', ['octaspi_slave[x].io1'], 1, False),
+    DriverType('octaspi_master[x].io2',     bus_master, 'bidirectional', ['octaspi_slave[x].io2'], 1, False),
+    DriverType('octaspi_master[x].io3',     bus_master, 'bidirectional', ['octaspi_slave[x].io3'], 1, False),
+    DriverType('octaspi_master[x].io4',     bus_master, 'bidirectional', ['octaspi_slave[x].io4'], 1, False),
+    DriverType('octaspi_master[x].io5',     bus_master, 'bidirectional', ['octaspi_slave[x].io5'], 1, False),
+    DriverType('octaspi_master[x].io6',     bus_master, 'bidirectional', ['octaspi_slave[x].io6'], 1, False),
+    DriverType('octaspi_master[x].io7',     bus_master, 'bidirectional', ['octaspi_slave[x].io7'], 1, False),
+    DriverType('octaspi_master[x].rstn',    bus_master, 'output',        ['octaspi_slave[x].rstn'], 1, True),
 ]
 
 bus_spi = [
-    DriverType('spi_master[x]_csn[x]', bus_master, 'output', ['spi_slave[x]_csn[x]'], 1, False),
-    DriverType('spi_master[x]_miso',   bus_master, 'input',  ['spi_slave[x]_miso'], 1, False),
-    DriverType('spi_master[x]_mosi',   bus_master, 'output', ['spi_slave[x]_mosi'], 1, False),
-    DriverType('spi_master[x]_sck',    bus_master, 'output', ['spi_slave[x]_sck'],  1, False),
-    DriverType('spi_master[x]_rstn',   bus_master, 'output', ['spi_slave[x]_rstn'], 1, True),
+    DriverType('spi_master[x].csn[x]', bus_master, 'output', ['spi_slave[x].csn[x]'], 1, False),
+    DriverType('spi_master[x].miso',   bus_master, 'input',  ['spi_slave[x].miso'], 1, False),
+    DriverType('spi_master[x].mosi',   bus_master, 'output', ['spi_slave[x].mosi'], 1, False),
+    DriverType('spi_master[x].sck',    bus_master, 'output', ['spi_slave[x].sck'],  1, False),
+    DriverType('spi_master[x].rstn',   bus_master, 'output', ['spi_slave[x].rstn'], 1, True),
 
-    DriverType('spi_slave[x]_csn[x]', bus_slave, 'input' , ['spi_master[x]_csn[x]'], 1, False),
-    DriverType('spi_slave[x]_miso',   bus_slave, 'output', ['spi_master[x]_miso'], 1, False),
-    DriverType('spi_slave[x]_mosi',   bus_slave, 'input' , ['spi_master[x]_mosi'], 1, False),
-    DriverType('spi_slave[x]_sck',    bus_slave, 'input' , ['spi_master[x]_sck'],  1, False),
-    DriverType('spi_slave[x]_rstn',   bus_slave, 'input',  ['spi_master[x]_rstn'], 1, True),
+    DriverType('spi_slave[x].csn[x]', bus_slave, 'input' , ['spi_master[x].csn[x]'], 1, False),
+    DriverType('spi_slave[x].miso',   bus_slave, 'output', ['spi_master[x].miso'], 1, False),
+    DriverType('spi_slave[x].mosi',   bus_slave, 'input' , ['spi_master[x].mosi'], 1, False),
+    DriverType('spi_slave[x].sck',    bus_slave, 'input' , ['spi_master[x].sck'],  1, False),
+    DriverType('spi_slave[x].rstn',   bus_slave, 'input',  ['spi_master[x].rstn'], 1, True),
 ]
 
 bus_jtag = [
-    DriverType('jtag_master[x]_tms',       bus_master, 'output', ['jtag_slave[x]_tms'], 16, False),
-    DriverType('jtag_master[x]_tck',       bus_master, 'output', ['jtag_slave[x]_tck'], 16, False),
-    DriverType('jtag_master[x]_mosi',      bus_master, 'output', ['jtag_slave[x]_tdi'], 1, False),
-    DriverType('jtag_master[x]_miso',      bus_master, 'input',  ['jtag_slave[x]_tdo'], 1, False),
-    DriverType('jtag_master[x]_trst_n',    bus_master, 'output', ['jtag_slave[x]_trst_n'], 1, False),
-    DriverType('jtag_master[x]_sysrst_n',  bus_master, 'output', ['jtag_slave[x]_sysrst_n'], 1, False),
+    DriverType('jtag_master[x].tms',       bus_master, 'output', ['jtag_slave[x].tms'], 16, False),
+    DriverType('jtag_master[x].tck',       bus_master, 'output', ['jtag_slave[x].tck'], 16, False),
+    DriverType('jtag_master[x].mosi',      bus_master, 'output', ['jtag_slave[x].tdi'], 1, False),
+    DriverType('jtag_master[x].miso',      bus_master, 'input',  ['jtag_slave[x].tdo'], 1, False),
+    DriverType('jtag_master[x].trst_n',    bus_master, 'output', ['jtag_slave[x].trst_n'], 1, False),
+    DriverType('jtag_master[x].sysrst_n',  bus_master, 'output', ['jtag_slave[x].sysrst_n'], 1, False),
 
-    DriverType('jtag_slave[x]_tms',     bus_slave, 'input',  ['jtag_master[x]_tms'],  1, False),
-    DriverType('jtag_slave[x]_tck',     bus_slave, 'input',  ['jtag_master[x]_tck'],  1, False),
-    DriverType('jtag_slave[x]_tdo',     bus_slave, 'output', ['jtag_master[x]_miso'], 1, False),
-    DriverType('jtag_slave[x]_tdi',     bus_slave, 'input',  ['jtag_master[x]_mosi'], 1, False),
-    DriverType('jtag_slave[x]_trstn',   bus_slave, 'input',  ['jtag_master[x]_trstn'], 1, False),
-    DriverType('jtag_slave[x]_sysrstn', bus_slave, 'output', ['jtag_master[x]_sysrstn'], 1, False),
+    DriverType('jtag_slave[x].tms',     bus_slave, 'input',  ['jtag_master[x].tms'],  1, False),
+    DriverType('jtag_slave[x].tck',     bus_slave, 'input',  ['jtag_master[x].tck'],  1, False),
+    DriverType('jtag_slave[x].tdo',     bus_slave, 'output', ['jtag_master[x].miso'], 1, False),
+    DriverType('jtag_slave[x].tdi',     bus_slave, 'input',  ['jtag_master[x].mosi'], 1, False),
+    DriverType('jtag_slave[x].trstn',   bus_slave, 'input',  ['jtag_master[x].trstn'], 1, False),
+    DriverType('jtag_slave[x].sysrstn', bus_slave, 'output', ['jtag_master[x].sysrstn'], 1, False),
 ]
 
 # NOTE:
 bus_usart = [
-    DriverType('usart_master[x]_tx', bus_master, 'output', ['usart_slave[x]_rx'], 32, False),
-    DriverType('usart_master[x]_rx', bus_master, 'input',  ['usart_slave[x]_tx'], 32, True),
+    DriverType('usart_master[x].tx', bus_master, 'output', ['usart_slave[x].rx'], 32, False),
+    DriverType('usart_master[x].rx', bus_master, 'input',  ['usart_slave[x].tx'], 32, True),
 
-    DriverType('usart_slave[x]_rx',  bus_slave,  'input',  ['usart_master[x]_tx'], 1, False),
-    DriverType('usart_slave[x]_tx',  bus_slave,  'output', ['usart_master[x]_rx'], 1, True),
+    DriverType('usart_slave[x].rx',  bus_slave,  'input',  ['usart_master[x].tx'], 1, False),
+    DriverType('usart_slave[x].tx',  bus_slave,  'output', ['usart_master[x].rx'], 1, True),
     # TODO: Missing drivers
 ]
 
 bus_i2c = [
-    DriverType('i2c_master[x]_sda', bus_master, 'bidirectional', ['i2c_slave[x]_sda'], 32, False),
-    DriverType('i2c_master[x]_scl', bus_master, 'output',        ['i2c_slave[x]_scl'], 32, False),
-    DriverType('i2c_slave[x]_sda',  bus_slave,  'bidirectional', ['i2c_master[x]_sda'], 1, False),
-    DriverType('i2c_slave[x]_scl',  bus_slave,  'output',        ['i2c_master[x]_scl'], 1, False),
+    DriverType('i2c_master[x].sda', bus_master, 'bidirectional', ['i2c_slave[x].sda'], 32, False),
+    DriverType('i2c_master[x].scl', bus_master, 'output',        ['i2c_slave[x].scl'], 32, False),
+    DriverType('i2c_slave[x].sda',  bus_slave,  'bidirectional', ['i2c_master[x].sda'], 1, False),
+    DriverType('i2c_slave[x].scl',  bus_slave,  'output',        ['i2c_master[x].scl'], 1, False),
 ]
 
 bus_serialwire = [
-    DriverType('serialwire_master[x]_clk', bus_master, 'output',        ['serialwire_slave[x]_clk'],  1, False),
-    DriverType('serialwire_master[x]_dio', bus_master, 'bidirectional', ['serialwire_slave[x]_dio'],  1, False),
-    DriverType('serialwire_slave[x]_clk',  bus_slave,  'input',         ['serialwire_master[x]_clk'], 1, False),
-    DriverType('serialwire_slave[x]_dio',  bus_slave,  'bidirectional', ['serialwire_master[x]_dio'], 1, False),
+    DriverType('serialwire_master[x].clk', bus_master, 'output',        ['serialwire_slave[x].clk'],  1, False),
+    DriverType('serialwire_master[x].dio', bus_master, 'bidirectional', ['serialwire_slave[x].dio'],  1, False),
+    DriverType('serialwire_slave[x].clk',  bus_slave,  'input',         ['serialwire_master[x].clk'], 1, False),
+    DriverType('serialwire_slave[x].dio',  bus_slave,  'bidirectional', ['serialwire_master[x].dio'], 1, False),
 ]
 
 bus_rgmii = [
-    DriverType('rgmii_phy[x]_txc',    bus_phy, 'input',  ['rgmii_mac[x]_txc'], 1, False),
-    DriverType('rgmii_phy[x]_tx_ctl', bus_phy, 'input',  ['rgmii_mac[x]_tx_ctl'], 1, False),
-    DriverType('rgmii_phy[x]_txd0',   bus_phy, 'input',  ['rgmii_mac[x]_txd0'], 1, False),
-    DriverType('rgmii_phy[x]_txd1',   bus_phy, 'input',  ['rgmii_mac[x]_txd1'], 1, False),
-    DriverType('rgmii_phy[x]_txd2',   bus_phy, 'input',  ['rgmii_mac[x]_txd2'], 1, False),
-    DriverType('rgmii_phy[x]_txd3',   bus_phy, 'input',  ['rgmii_mac[x]_txd3'], 1, False),
-    DriverType('rgmii_phy[x]_rxc',    bus_phy, 'output', ['rgmii_mac[x]_rxc'], 1, False),
-    DriverType('rgmii_phy[x]_rx_ctl', bus_phy, 'output', ['rgmii_mac[x]_rx_ctl'], 1, False),
-    DriverType('rgmii_phy[x]_rxd0',   bus_phy, 'output', ['rgmii_mac[x]_rxd0'], 1, False),
-    DriverType('rgmii_phy[x]_rxd1',   bus_phy, 'output', ['rgmii_mac[x]_rxd1'], 1, False),
-    DriverType('rgmii_phy[x]_rxd2',   bus_phy, 'output', ['rgmii_mac[x]_rxd2'], 1, False),
-    DriverType('rgmii_phy[x]_rxd3',   bus_phy, 'output', ['rgmii_mac[x]_rxd3'], 1, False),
+    DriverType('rgmii_phy[x].txc',    bus_phy, 'input',  ['rgmii_mac[x].txc'], 1, False),
+    DriverType('rgmii_phy[x].tx_ctl', bus_phy, 'input',  ['rgmii_mac[x].tx_ctl'], 1, False),
+    DriverType('rgmii_phy[x].txd0',   bus_phy, 'input',  ['rgmii_mac[x].txd0'], 1, False),
+    DriverType('rgmii_phy[x].txd1',   bus_phy, 'input',  ['rgmii_mac[x].txd1'], 1, False),
+    DriverType('rgmii_phy[x].txd2',   bus_phy, 'input',  ['rgmii_mac[x].txd2'], 1, False),
+    DriverType('rgmii_phy[x].txd3',   bus_phy, 'input',  ['rgmii_mac[x].txd3'], 1, False),
+    DriverType('rgmii_phy[x].rxc',    bus_phy, 'output', ['rgmii_mac[x].rxc'], 1, False),
+    DriverType('rgmii_phy[x].rx_ctl', bus_phy, 'output', ['rgmii_mac[x].rx_ctl'], 1, False),
+    DriverType('rgmii_phy[x].rxd0',   bus_phy, 'output', ['rgmii_mac[x].rxd0'], 1, False),
+    DriverType('rgmii_phy[x].rxd1',   bus_phy, 'output', ['rgmii_mac[x].rxd1'], 1, False),
+    DriverType('rgmii_phy[x].rxd2',   bus_phy, 'output', ['rgmii_mac[x].rxd2'], 1, False),
+    DriverType('rgmii_phy[x].rxd3',   bus_phy, 'output', ['rgmii_mac[x].rxd3'], 1, False),
 
-    DriverType('rgmii_phy[x]_int_n',  bus_phy, 'output', ['rgmii_mac[x]_int_n'], 1, True),
-    DriverType('rgmii_mac[x]_int_n',  bus_mac, 'input',  ['rgmii_phy[x]_int_n'], 1, True),
-    DriverType('rgmii_mac[x]_rst_n',  bus_mac, 'output', ['rgmii_phy[x]_rst_n'], 1, True),
-    DriverType('rgmii_phy[x]_rst_n',  bus_phy, 'input',  ['rgmii_mac[x]_rst_n'], 1, True),
+    DriverType('rgmii_phy[x].intn',  bus_phy, 'output', ['rgmii_mac[x].intn'], 1, True),
+    DriverType('rgmii_mac[x].intn',  bus_mac, 'input',  ['rgmii_phy[x].intn'], 1, True),
+    DriverType('rgmii_mac[x].rstn',  bus_mac, 'output', ['rgmii_phy[x].rstn'], 1, True),
+    DriverType('rgmii_phy[x].rstn',  bus_phy, 'input',  ['rgmii_mac[x].rstn'], 1, True),
 
-    DriverType('rgmii_mac[x]_txc',    bus_mac, 'output', ['rgmii_phy[x]_txc'], 1, False),
-    DriverType('rgmii_mac[x]_tx_ctl', bus_mac, 'output', ['rgmii_phy[x]_tx_ctl'], 1, False),
-    DriverType('rgmii_mac[x]_txd0',   bus_mac, 'output', ['rgmii_phy[x]_txd0'], 1, False),
-    DriverType('rgmii_mac[x]_txd1',   bus_mac, 'output', ['rgmii_phy[x]_txd1'], 1, False),
-    DriverType('rgmii_mac[x]_txd2',   bus_mac, 'output', ['rgmii_phy[x]_txd2'], 1, False),
-    DriverType('rgmii_mac[x]_txd3',   bus_mac, 'output', ['rgmii_phy[x]_txd3'], 1, False),
-    DriverType('rgmii_mac[x]_rxc',    bus_mac, 'input', ['rgmii_phy[x]_rxc'], 1, False),
-    DriverType('rgmii_mac[x]_rx_ctl', bus_mac, 'input', ['rgmii_phy[x]_rx_ctl'], 1, False),
-    DriverType('rgmii_mac[x]_rxd0',   bus_mac, 'input', ['rgmii_phy[x]_rxd0'], 1, False),
-    DriverType('rgmii_mac[x]_rxd1',   bus_mac, 'input', ['rgmii_phy[x]_rxd1'], 1, False),
-    DriverType('rgmii_mac[x]_rxd2',   bus_mac, 'input', ['rgmii_phy[x]_rxd2'], 1, False),
-    DriverType('rgmii_mac[x]_rxd3',   bus_mac, 'input', ['rgmii_phy[x]_rxd3'], 1, False),
+    DriverType('rgmii_mac[x].txc',    bus_mac, 'output', ['rgmii_phy[x].txc'], 1, False),
+    DriverType('rgmii_mac[x].tx_ctl', bus_mac, 'output', ['rgmii_phy[x].tx_ctl'], 1, False),
+    DriverType('rgmii_mac[x].txd0',   bus_mac, 'output', ['rgmii_phy[x].txd0'], 1, False),
+    DriverType('rgmii_mac[x].txd1',   bus_mac, 'output', ['rgmii_phy[x].txd1'], 1, False),
+    DriverType('rgmii_mac[x].txd2',   bus_mac, 'output', ['rgmii_phy[x].txd2'], 1, False),
+    DriverType('rgmii_mac[x].txd3',   bus_mac, 'output', ['rgmii_phy[x].txd3'], 1, False),
+    DriverType('rgmii_mac[x].rxc',    bus_mac, 'input',  ['rgmii_phy[x].rxc'], 1, False),
+    DriverType('rgmii_mac[x].rx_ctl', bus_mac, 'input',  ['rgmii_phy[x].rx_ctl'], 1, False),
+    DriverType('rgmii_mac[x].rxd0',   bus_mac, 'input',  ['rgmii_phy[x].rxd0'], 1, False),
+    DriverType('rgmii_mac[x].rxd1',   bus_mac, 'input',  ['rgmii_phy[x].rxd1'], 1, False),
+    DriverType('rgmii_mac[x].rxd2',   bus_mac, 'input',  ['rgmii_phy[x].rxd2'], 1, False),
+    DriverType('rgmii_mac[x].rxd3',   bus_mac, 'input',  ['rgmii_phy[x].rxd3'], 1, False),
 
 ]
 
 bus_mdio = [
-    DriverType('mdio_slave[x]_mdc',       bus_phy, 'input',         ['mdio_master[x]_mdc'],  1, False),
-    DriverType('mdio_slave[x]_mdio',      bus_phy, 'bidirectional', ['mdio_master[x]_mdio'], 1, False),
-    DriverType('mdio_master[x]_mdio',     bus_mac, 'bidirectional', ['mdio_slave[x]_mdio'], 32, False),
-    DriverType('mdio_master[x]_mdc',      bus_mac, 'output',        ['mdio_slave[x]_mdc'],  32, False),
+    DriverType('mdio_slave[x].mdc',       bus_phy, 'input',         ['mdio_master[x].mdc'],  1, False),
+    DriverType('mdio_slave[x].mdio',      bus_phy, 'bidirectional', ['mdio_master[x].mdio'], 1, False),
+    DriverType('mdio_master[x].mdio',     bus_mac, 'bidirectional', ['mdio_slave[x].mdio'], 32, False),
+    DriverType('mdio_master[x].mdc',      bus_mac, 'output',        ['mdio_slave[x].mdc'],  32, False),
 ]
 
 bus_mdi1g = [
-    DriverType('mdi1g_phy[x]_dp0', bus_phy, 'bidirectional', ['mdi1g_conn[x]_dp0'], 1, False),
-    DriverType('mdi1g_phy[x]_dm0', bus_phy, 'bidirectional', ['mdi1g_conn[x]_dm0'], 1, False),
-    DriverType('mdi1g_phy[x]_dp1', bus_phy, 'bidirectional', ['mdi1g_conn[x]_dp1'], 1, False),
-    DriverType('mdi1g_phy[x]_dm1', bus_phy, 'bidirectional', ['mdi1g_conn[x]_dm1'], 1, False),
-    DriverType('mdi1g_phy[x]_dp2', bus_phy, 'bidirectional', ['mdi1g_conn[x]_dp2'], 1, False),
-    DriverType('mdi1g_phy[x]_dm2', bus_phy, 'bidirectional', ['mdi1g_conn[x]_dm2'], 1, False),
-    DriverType('mdi1g_phy[x]_dp3', bus_phy, 'bidirectional', ['mdi1g_conn[x]_dp3'], 1, False),
-    DriverType('mdi1g_phy[x]_dm3', bus_phy, 'bidirectional', ['mdi1g_conn[x]_dm3'], 1, False),
+    DriverType('mdi1g_phy[x].dp0', bus_phy, 'bidirectional', ['mdi1g_conn[x].dp0'], 1, False),
+    DriverType('mdi1g_phy[x].dm0', bus_phy, 'bidirectional', ['mdi1g_conn[x].dm0'], 1, False),
+    DriverType('mdi1g_phy[x].dp1', bus_phy, 'bidirectional', ['mdi1g_conn[x].dp1'], 1, False),
+    DriverType('mdi1g_phy[x].dm1', bus_phy, 'bidirectional', ['mdi1g_conn[x].dm1'], 1, False),
+    DriverType('mdi1g_phy[x].dp2', bus_phy, 'bidirectional', ['mdi1g_conn[x].dp2'], 1, False),
+    DriverType('mdi1g_phy[x].dm2', bus_phy, 'bidirectional', ['mdi1g_conn[x].dm2'], 1, False),
+    DriverType('mdi1g_phy[x].dp3', bus_phy, 'bidirectional', ['mdi1g_conn[x].dp3'], 1, False),
+    DriverType('mdi1g_phy[x].dm3', bus_phy, 'bidirectional', ['mdi1g_conn[x].dm3'], 1, False),
 
-    DriverType('mdi1g_conn[x]_dp0', bus_conn, 'bidirectional', ['mdi1g_phy[x]_dp0'], 1, False),
-    DriverType('mdi1g_conn[x]_dm0', bus_conn, 'bidirectional', ['mdi1g_phy[x]_dm0'], 1, False),
-    DriverType('mdi1g_conn[x]_dp1', bus_conn, 'bidirectional', ['mdi1g_phy[x]_dp1'], 1, False),
-    DriverType('mdi1g_conn[x]_dm1', bus_conn, 'bidirectional', ['mdi1g_phy[x]_dm1'], 1, False),
-    DriverType('mdi1g_conn[x]_dp2', bus_conn, 'bidirectional', ['mdi1g_phy[x]_dp2'], 1, False),
-    DriverType('mdi1g_conn[x]_dm2', bus_conn, 'bidirectional', ['mdi1g_phy[x]_dm2'], 1, False),
-    DriverType('mdi1g_conn[x]_dp3', bus_conn, 'bidirectional', ['mdi1g_phy[x]_dp3'], 1, False),
-    DriverType('mdi1g_conn[x]_dm3', bus_conn, 'bidirectional', ['mdi1g_phy[x]_dm3'], 1, False),
+    DriverType('mdi1g_conn[x].dp0', bus_conn, 'bidirectional', ['mdi1g_phy[x].dp0'], 1, False),
+    DriverType('mdi1g_conn[x].dm0', bus_conn, 'bidirectional', ['mdi1g_phy[x].dm0'], 1, False),
+    DriverType('mdi1g_conn[x].dp1', bus_conn, 'bidirectional', ['mdi1g_phy[x].dp1'], 1, False),
+    DriverType('mdi1g_conn[x].dm1', bus_conn, 'bidirectional', ['mdi1g_phy[x].dm1'], 1, False),
+    DriverType('mdi1g_conn[x].dp2', bus_conn, 'bidirectional', ['mdi1g_phy[x].dp2'], 1, False),
+    DriverType('mdi1g_conn[x].dm2', bus_conn, 'bidirectional', ['mdi1g_phy[x].dm2'], 1, False),
+    DriverType('mdi1g_conn[x].dp3', bus_conn, 'bidirectional', ['mdi1g_phy[x].dp3'], 1, False),
+    DriverType('mdi1g_conn[x].dm3', bus_conn, 'bidirectional', ['mdi1g_phy[x].dm3'], 1, False),
 ]
 
 bus_mdi100m = [
-    DriverType('mdi100m_phy[x]_rxp', bus_phy, 'bidirectional', ['mdi100m_conn[x]_rxp'], 1, False),
-    DriverType('mdi100m_phy[x]_rxm', bus_phy, 'bidirectional', ['mdi100m_conn[x]_rxm'], 1, False),
-    DriverType('mdi100m_phy[x]_txp', bus_phy, 'bidirectional', ['mdi100m_conn[x]_txp'], 1, False),
-    DriverType('mdi100m_phy[x]_txm', bus_phy, 'bidirectional', ['mdi100m_conn[x]_txm'], 1, False),
+    DriverType('mdi100m.phy[x]_rxp', bus_phy, 'bidirectional', ['mdi100m_conn[x].rxp'], 1, False),
+    DriverType('mdi100m.phy[x]_rxm', bus_phy, 'bidirectional', ['mdi100m_conn[x].rxm'], 1, False),
+    DriverType('mdi100m.phy[x]_txp', bus_phy, 'bidirectional', ['mdi100m_conn[x].txp'], 1, False),
+    DriverType('mdi100m.phy[x]_txm', bus_phy, 'bidirectional', ['mdi100m_conn[x].txm'], 1, False),
 
-    DriverType('mdi100m_conn[x]_rxp', bus_conn, 'bidirectional', ['mdi100m_phy[x]_rxp'], 1, False),
-    DriverType('mdi100m_conn[x]_rxm', bus_conn, 'bidirectional', ['mdi100m_phy[x]_rxm'], 1, False),
-    DriverType('mdi100m_conn[x]_txp', bus_conn, 'bidirectional', ['mdi100m_phy[x]_txp'], 1, False),
-    DriverType('mdi100m_conn[x]_txm', bus_conn, 'bidirectional', ['mdi100m_phy[x]_txm'], 1, False),
+    DriverType('mdi100m.conn[x]_rxp', bus_conn, 'bidirectional', ['mdi100m_phy[x].rxp'], 1, False),
+    DriverType('mdi100m.conn[x]_rxm', bus_conn, 'bidirectional', ['mdi100m_phy[x].rxm'], 1, False),
+    DriverType('mdi100m.conn[x]_txp', bus_conn, 'bidirectional', ['mdi100m_phy[x].txp'], 1, False),
+    DriverType('mdi100m.conn[x]_txm', bus_conn, 'bidirectional', ['mdi100m_phy[x].txm'], 1, False),
 
 ]
 
 bus_usbc = [
 
-    DriverType('usbc_conn[x]_txp',  bus_conn,   'bidirectional', ['usbc_master[x]_txp'], 2, False),
-    DriverType('usbc_conn[x]_txm',  bus_conn,   'bidirectional', ['usbc_master[x]_txm'], 2, False),
-    DriverType('usbc_conn[x]_vbus', bus_conn,   'bidirectional', ['usbc_master[x]_vbus'], 2, False),
-    DriverType('usbc_conn[x]_cc',   bus_conn,   'bidirectional', ['usbc_master[x]_cc'], 2, False),
-    DriverType('usbc_conn[x]_dp',   bus_conn,   'bidirectional', ['usbc_master[x]_dp'], 2, False),
-    DriverType('usbc_conn[x]_dm',   bus_conn,   'bidirectional', ['usbc_master[x]_dm'], 2, False),
-    DriverType('usbc_conn[x]_sbu',  bus_conn,   'bidirectional', ['usbc_master[x]_sbu'], 2, False),
-    DriverType('usbc_conn[x]_vbus', bus_conn,   'bidirectional', ['usbc_master[x]_vbus'], 2, False),
-    DriverType('usbc_conn[x]_rxm',  bus_conn,   'bidirectional', ['usbc_master[x]_rxm'], 2, False),
-    DriverType('usbc_conn[x]_rxp',  bus_conn,   'bidirectional', ['usbc_master[x]_rxp'], 2, False),
+    DriverType('usbc_conn[x].txp',  bus_conn,   'bidirectional', ['usbc_master[x].txp'], 2, False),
+    DriverType('usbc_conn[x].txm',  bus_conn,   'bidirectional', ['usbc_master[x].txm'], 2, False),
+    DriverType('usbc_conn[x].vbus', bus_conn,   'bidirectional', ['usbc_master[x].vbus'], 2, False),
+    DriverType('usbc_conn[x].cc',   bus_conn,   'bidirectional', ['usbc_master[x].cc'], 2, False),
+    DriverType('usbc_conn[x].dp',   bus_conn,   'bidirectional', ['usbc_master[x].dp'], 2, False),
+    DriverType('usbc_conn[x].dm',   bus_conn,   'bidirectional', ['usbc_master[x].dm'], 2, False),
+    DriverType('usbc_conn[x].sbu',  bus_conn,   'bidirectional', ['usbc_master[x].sbu'], 2, False),
+    DriverType('usbc_conn[x].vbus', bus_conn,   'bidirectional', ['usbc_master[x].vbus'], 2, False),
+    DriverType('usbc_conn[x].rxm',  bus_conn,   'bidirectional', ['usbc_master[x].rxm'], 2, False),
+    DriverType('usbc_conn[x].rxp',  bus_conn,   'bidirectional', ['usbc_master[x].rxp'], 2, False),
 
-    DriverType('usbc_master[x]_txp',  bus_master,   'bidirectional', ['usbc_conn[x]_txp'],  2, False),
-    DriverType('usbc_master[x]_txm',  bus_master,   'bidirectional', ['usbc_conn[x]_txm'],  2, False),
-    DriverType('usbc_master[x]_vbus', bus_master,   'bidirectional', ['usbc_conn[x]_vbus'], 2, False),
-    DriverType('usbc_master[x]_cc',   bus_master,   'bidirectional', ['usbc_conn[x]_cc'],  2, False),
-    DriverType('usbc_master[x]_dp',   bus_master,   'bidirectional', ['usbc_conn[x]_dp'],  2, False),
-    DriverType('usbc_master[x]_dm',   bus_master,   'bidirectional', ['usbc_conn[x]_dm'],  2, False),
-    DriverType('usbc_master[x]_sbu',  bus_master,   'bidirectional', ['usbc_conn[x]_sbux'], 2, False),
-    DriverType('usbc_master[x]_vbus', bus_master,   'bidirectional', ['usbc_conn[x]_vbus'], 2, False),
-    DriverType('usbc_master[x]_rxm',  bus_master,   'bidirectional', ['usbc_conn[x]_rxm'],  2, False),
-    DriverType('usbc_master[x]_rxp',  bus_master,   'bidirectional', ['usbc_conn[x]_rxp'],  2, False),
+    DriverType('usbc_master[x].txp',  bus_master,   'bidirectional', ['usbc_conn[x].txp'],  2, False),
+    DriverType('usbc_master[x].txm',  bus_master,   'bidirectional', ['usbc_conn[x].txm'],  2, False),
+    DriverType('usbc_master[x].vbus', bus_master,   'bidirectional', ['usbc_conn[x].vbus'], 2, False),
+    DriverType('usbc_master[x].cc',   bus_master,   'bidirectional', ['usbc_conn[x].cc'],  2, False),
+    DriverType('usbc_master[x].dp',   bus_master,   'bidirectional', ['usbc_conn[x].dp'],  2, False),
+    DriverType('usbc_master[x].dm',   bus_master,   'bidirectional', ['usbc_conn[x].dm'],  2, False),
+    DriverType('usbc_master[x].sbu',  bus_master,   'bidirectional', ['usbc_conn[x].sbux'], 2, False),
+    DriverType('usbc_master[x].vbus', bus_master,   'bidirectional', ['usbc_conn[x].vbus'], 2, False),
+    DriverType('usbc_master[x].rxm',  bus_master,   'bidirectional', ['usbc_conn[x].rxm'],  2, False),
+    DriverType('usbc_master[x].rxp',  bus_master,   'bidirectional', ['usbc_conn[x].rxp'],  2, False),
 
 
 ]
@@ -313,30 +318,30 @@ bus_usbc = [
 # ]
 
 bus_rmii = [
-    DriverType('rmii_phy[x]_rxd0',      bus_phy, 'output', ['rmii_mac[x]_rxd0'], 1, False),
-    DriverType('rmii_phy[x]_rxd1',      bus_phy, 'output', ['rmii_mac[x]_rxd1'], 1, False),
-    DriverType('rmii_phy[x]_rx_er',     bus_phy, 'output', ['rmii_mac[x]_rx_er'], 1, False),
-    DriverType('rmii_phy[x]_crs_rx_dv', bus_phy, 'output', ['rmii_mac[x]_crs'], 1, False),
-    DriverType('rmii_phy[x]_rx_clk',    bus_phy, 'output', ['rmii_mac[x]_rx_clk'], 1, True),
-    DriverType('rmii_phy[x]_int_n',     bus_phy, 'output', ['rmii_mac[x]_int_n'], 1, True),
+    DriverType('rmii_phy[x].rxd0',      bus_phy, 'output', ['rmii_mac[x].rxd0'], 1, False),
+    DriverType('rmii_phy[x].rxd1',      bus_phy, 'output', ['rmii_mac[x].rxd1'], 1, False),
+    DriverType('rmii_phy[x].rx_er',     bus_phy, 'output', ['rmii_mac[x].rx_er'], 1, False),
+    DriverType('rmii_phy[x].crs_rx_dv', bus_phy, 'output', ['rmii_mac[x].crs'], 1, False),
+    DriverType('rmii_phy[x].rx_clk',    bus_phy, 'output', ['rmii_mac[x].rx_clk'], 1, True),
+    DriverType('rmii_phy[x].intn',      bus_phy, 'output', ['rmii_mac[x].intn'], 1, True),
 
-    DriverType('rmii_phy[x]_txd0',  bus_phy, 'input', ['rmii_mac[x]_txd0'], 1, False),
-    DriverType('rmii_phy[x]_txd1',  bus_phy, 'input', ['rmii_mac[x]_txd1'], 1, False),
-    DriverType('rmii_phy[x]_tx_en', bus_phy, 'input', ['rmii_mac[x]_tx_en'], 1, False),
+    DriverType('rmii_phy[x].txd0',  bus_phy, 'input', ['rmii_mac[x].txd0'], 1, False),
+    DriverType('rmii_phy[x].txd1',  bus_phy, 'input', ['rmii_mac[x].txd1'], 1, False),
+    DriverType('rmii_phy[x].tx_en', bus_phy, 'input', ['rmii_mac[x].tx_en'], 1, False),
 
-    DriverType('rmii_mac[x]_rxd0',      bus_mac, 'input', ['rmii_phy[x]_rxd0'], 1, False),
-    DriverType('rmii_mac[x]_rxd1',      bus_mac, 'input', ['rmii_phy[x]_rxd1'], 1, False),
-    DriverType('rmii_mac[x]_rx_er',     bus_mac, 'input', ['rmii_phy[x]_rx_er'], 1, False),
-    DriverType('rmii_mac[x]_crs_rx_dv', bus_mac, 'input', ['rmii_phy[x]_crs'], 1, False),
-    DriverType('rmii_mac[x]_rx_clk',    bus_mac, 'input', ['rmii_phy[x]_rx_clk'], 1, True),
-    DriverType('rmii_mac[x]_int_n',     bus_mac, 'input', ['rmii_phy[x]_int_n'], 1, True),
+    DriverType('rmii_mac[x].rxd0',      bus_mac, 'input', ['rmii_phy[x].rxd0'], 1, False),
+    DriverType('rmii_mac[x].rxd1',      bus_mac, 'input', ['rmii_phy[x].rxd1'], 1, False),
+    DriverType('rmii_mac[x].rx_er',     bus_mac, 'input', ['rmii_phy[x].rx_er'], 1, False),
+    DriverType('rmii_mac[x].crs_rx_dv', bus_mac, 'input', ['rmii_phy[x].crs'], 1, False),
+    DriverType('rmii_mac[x].rx_clk',    bus_mac, 'input', ['rmii_phy[x].rx_clk'], 1, True),
+    DriverType('rmii_mac[x].intn',      bus_mac, 'input', ['rmii_phy[x].intn'], 1, True),
 
-    DriverType('rmii_mac[x]_txd0',  bus_mac, 'output', ['rmii_phy[x]_txd0'], 1, False),
-    DriverType('rmii_mac[x]_txd1',  bus_mac, 'output', ['rmii_phy[x]_txd1'], 1, False),
-    DriverType('rmii_mac[x]_tx_en', bus_mac, 'output', ['rmii_phy[x]_tx_en'], 1, False),
+    DriverType('rmii_mac[x].txd0',  bus_mac, 'output', ['rmii_phy[x].txd0'], 1, False),
+    DriverType('rmii_mac[x].txd1',  bus_mac, 'output', ['rmii_phy[x].txd1'], 1, False),
+    DriverType('rmii_mac[x].tx_en', bus_mac, 'output', ['rmii_phy[x].tx_en'], 1, False),
 
-    DriverType('rmii_phy[x]_rst_n', bus_phy, 'input', ['rmii_mac[x]_rst_n'], 1, True),
-    DriverType('rmii_mac[x]_rst_n', bus_mac, 'input', ['rmii_phy[x]_rst_n'], 1, True),
+    DriverType('rmii_phy[x].rstn', bus_phy, 'input', ['rmii_mac[x]_rstn'], 1, True),
+    DriverType('rmii_mac[x].rstn', bus_mac, 'input', ['rmii_phy[x]_rstn'], 1, True),
 
 ]
 
@@ -403,11 +408,17 @@ class SymbolPin:
         ## DRIVER STUFF
 
         # Add substitution for lazy driver keys
-        driver = re.sub(r'\[[0-9]\]', '', driver_raw)
-        if driver.lower() in self.driver_subst.keys():
-            driver = self.driver_subst[driver]
+        # TODO: Remove backwards compatibility when finished with this here...
+        driver = re.sub(r'\[[0-9]\]', '', driver_raw).lower().replace('.', '_')
+        found = False
+        for key in self.driver_subst.keys():
+            key_legacy = key.replace('.', '_')
+            if driver == key_legacy:
+                driver = self.driver_subst[key]
+                found = True
+                break
 
-        if driver not in self.pindrivers:
+        if driver not in kicad_drivers:
             log(log_error, f"Undefined or missing PinDriver: '{driver}'! Name={name}; Block={unit}; PIN={ic_pin}")
             exit(1)
         self.driver = driver
