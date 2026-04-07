@@ -20,7 +20,7 @@
 import json
 import os, sys
 import re
-from symbols import *
+from parser_lib import *
 from logger import *
 from bus_defines import *
 
@@ -38,13 +38,7 @@ class TreeNode:
         self.sub.append(node)
         self.lastID = self.lastID + 1
 
-class Vec3:
-    def __init__(self, x, y, z=0):
-        self.x = x
-        self.y = y
-        self.z = z
-    def parse(self):
-        return f'{self.x} {self.y} {self.z}'
+
 
 
 
@@ -233,40 +227,14 @@ class SymbolPin:
         parsed = ''
         parsed = parsed + parse_label(driver, 5.08, ypos, 0, "left")
         # parsed = parsed + parse_hierarchical_label(driver, 5.08, ypos, 0)
-        parsed = parsed + parse_symbol(device, 2.54,  ypos, 270, value)
+        parsed = parsed + parse_schematic_symbol(device, 2.54,  ypos, 270, value)
         parsed = parsed + parse_label(label, 0.0, ypos, 180, "right")
 
         return parsed
 
-
     def parse(self, pos):
-        parsed = f'\
-(pin {self.driver} line\n\
-\t(at {pos.parse()})\n\
-\t(length 5.04)\n\
-\t(name "{self.name}"\n\
-\t\t(effects\n\
-\t\t\t(font\n\
-\t\t\t\t(size 1.27 1.27)\n\
-\t\t\t)\n\
-\t\t)\n\
-\t)\n\
-\t(number "{self.ic_pin}"\n\
-\t\t(effects\n\
-\t\t\t(font\n\
-\t\t\t\t(size 1.27 1.27)\n\
-\t\t\t)\n\
-\t\t)\n\
-\t)\n\
-)\n\
-'
-        return parsed
+        return parse_pin(self.name, self.driver, pos, self.ic_pin)
 
-def indent(string, num_spaces):
-    ret_str = ""
-    for line in string.splitlines() :
-        ret_str = ret_str + '\t' * num_spaces + line + '\n'
-    return ret_str
 
 class Symbol:
 
@@ -351,154 +319,7 @@ class Symbol:
 
     def parse(self):
 
-        max_char = 0
-        for pin in self.pins:
-            if max_char < len(pin.name):
-                max_char = len(pin.name)
-
-        rect_x = max_char * 2.54 * 0.7
-
-        parsed = f'''
-(symbol "{self.name}"
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(property "Reference" "U"
-			(at {rect_x} -1.27 0)
-			(do_not_autoplace)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(symbol "{self.name}_0_1"
-			(text "{self.name}"
-				(at {rect_x} -3.81 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(justify left)
-				)
-			)
-		)
-		(property "Value" "value-text"
-			(at {rect_x} -8.89 0)
-			(do_not_autoplace)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "footprint-text"
-			(at {rect_x} -11.43 0)
-			(do_not_autoplace)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Description" "description-text"
-			(at {rect_x} -13.97 0)
-			(do_not_autoplace)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "datasheet-text"
-			(at {rect_x} -16.51 0)
-			(do_not_autoplace)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-
-'''
-
-# TODO: Fix this...
-#         if len(self.unit_names) == 1:
-#             num_pins = len(self.pins)
-
-#             parsed = parsed + f'''
-#         (symbol "{self.name}_0_1"
-#             (rectangle
-#                 (start 5.04 0)
-#                 (end {rect_x} {-num_pins*2.54})
-#                 (stroke
-#                     (width 0)
-#                     (type default)
-#                 )
-#                 (fill
-#                     (type none)
-#                 )
-#             )
-#         )
-#         (symbol "{self.name}_1_1"
-# '''
-#             unit_pin_id = 0
-#             for pin in self.pins:
-#                 pin_pos = Vec3(0, -1.27 + unit_pin_id * -2.54, 0)
-#                 parsed = parsed + indent(pin.parse(pin_pos), 2)
-#                 unit_pin_id = unit_pin_id + 1
-#             parsed = parsed + '\t)'
-
-
-        if len(self.unit_names) > 1:
-            unit_id = 0
-            for unit_name in self.unit_names:
-                num_unit_pins = 0
-                for pin in self.pins:
-                    if pin.unit == unit_name:
-                        num_unit_pins = num_unit_pins + 1
-                unit_id = unit_id + 1
-                parsed = parsed + f'''
-        (symbol "{self.name}_{unit_id}_1"
-            (rectangle
-                (start 5.04 0)
-                (end {rect_x} {-num_unit_pins*2.54 - 0.0})
-                (stroke
-                    (width 0)
-                    (type default)
-                )
-                (fill
-                    (type none)
-                )
-            )
-			(text "{unit_name}"
-				(at {rect_x} -6.35 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(justify left)
-				)
-			)
-'''
-                unit_pin_id = 0
-                for pin in self.pins:
-                    if unit_name != pin.unit:
-                        continue
-                    pin_pos = Vec3(0, -1.27 + unit_pin_id * -2.54, 0)
-                    parsed = parsed + indent(pin.parse(pin_pos), 2)
-                    unit_pin_id = unit_pin_id + 1
-                parsed = parsed + '\t)'
-
-        return parsed
+        return parse_symboleditor_symbol(self.name, self.unit_names, self.pins)
 
 
 
@@ -517,22 +338,7 @@ class Library:
             symbol.parse_busses(self.name)
 
     def parse(self):
-
-        parsed = ""
-        parsed = f'''
-(kicad_symbol_lib
-	(version 20241209)
-	(generator "kicad_symbol_editor")
-	(generator_version "9.0")
-'''
-        for symbol in self.symbols:
-            parsed = parsed + indent(symbol.parse(), 1)
-        parsed = parsed + f'\
-\t\t(embedded_fonts no)\n\
-\t)\n\
-)\n\
-\n'
-        return parsed
+        return parse_library(self.symbols)
 
     def gen_file(self):
         filepath = f'./build/{self.name}.kicad_sym'
