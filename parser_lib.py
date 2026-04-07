@@ -63,7 +63,7 @@ def parse_label(name, xpos, ypos, rotation, align="right"):
 	return parsed
 
 
-def parse_wire(name, xpos1, ypos1, xpos2, ypos2):
+def parse_wire(xpos1, ypos1, xpos2, ypos2):
 	parsed = f'''\
 (wire
 	(pts

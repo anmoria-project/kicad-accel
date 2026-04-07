@@ -291,6 +291,11 @@ class Symbol:
             parsed = parsed + parse_bus(xpos-2.54, ypos2, xpos-2.54, ypos2+2.54)
             parsed = parsed + parse_busentry(xpos-2.54, ypos2)
 
+            # Also generate the wire mapping of the target bus and real signal name
+            parsed = parsed + parse_label(signal, xpos - 16 * 2.54, ypos1, 180, 'right')
+            parsed = parsed + parse_wire(xpos - 15 * 2.54, ypos1, xpos - 16 * 2.54, ypos1)
+            parsed = parsed + parse_label(buskey, xpos - 15 * 2.54, ypos1, 0, 'left')
+
             ypos1 = ypos2
             ypos2 = ypos1 + 2.54
             busname_tmp = busname
