@@ -39,7 +39,7 @@ def parse_hierarchical_label(name, xpos, ypos, rotation):
 	parsed = f'''\
 (hierarchical_label "{name}"
 	(shape input)
-	(at {xpos} {ypos} {rotation})
+	(at {xpos:.2f} {ypos:.2f} {rotation})
 	(effects
 		(font (size 1.27 1.27))
 		(justify left)
@@ -52,7 +52,7 @@ def parse_hierarchical_label(name, xpos, ypos, rotation):
 def parse_label(name, xpos, ypos, rotation, align="right"):
 	parsed = f'''\
 (label "{name}"
-	(at {xpos} {ypos} {rotation})
+	(at {xpos:.2f} {ypos:.2f} {rotation})
 	(effects
 		(font (size 1.27 1.27))
 		(justify {align})
@@ -67,7 +67,7 @@ def parse_wire(name, xpos1, ypos1, xpos2, ypos2):
 	parsed = f'''\
 (wire
 	(pts
-		(xy {xpos1} {ypos1}) (xy {xpos2} {ypos2})
+		(xy {xpos1:.2f} {ypos1:.2f}) (xy {xpos2:.2f} {ypos2:.2f})
 	)
 	(stroke (width 0) (type default))
 	(uuid "db7b9210-9629-46ea-9e4f-90bda630665f")
@@ -79,7 +79,7 @@ def parse_schematic_symbol(device, xpos, ypos, rotation, value):
 	parsed = f'''\
 (symbol
 	(lib_id "Device:{device}")
-	(at {xpos} {ypos} {rotation})
+	(at {xpos:.2f} {ypos:.2f} {rotation})
 	(unit 1)
 	(exclude_from_sim no)
 	(in_bom yes)
@@ -88,35 +88,35 @@ def parse_schematic_symbol(device, xpos, ypos, rotation, value):
 	(fields_autoplaced yes)
 	(uuid "24b36077-41b9-424d-9cfb-461eded128a1")
 	(property "Reference" "R2"
-		(at {xpos} {ypos} 90)
+		(at {xpos:.2f} {ypos:.2f} 90)
 		(effects
 			(font (size 1.016 1.016))
 			(hide yes)
 		)
 	)
 	(property "Value" "{value}"
-		(at {xpos} {ypos} 90)
+		(at {xpos:.2f} {ypos:.2f} 90)
 		(effects
 			(font (size 1.27 1.27))
 			(hide yes)
 		)
 	)
 	(property "Footprint" ""
-		(at {xpos} {ypos} 0)
+		(at {xpos:.2f} {ypos:.2f} 0)
 		(effects
 			(font (size 1.27 1.27))
 			(hide yes)
 		)
 	)
 	(property "Datasheet" "~"
-		(at {xpos} {ypos} 0)
+		(at {xpos:.2f} {ypos:.2f} 0)
 		(effects
 			(font (size 1.27 1.27))
 			(hide yes)
 		)
 	)
 	(property "Description" ""
-		(at {xpos} {ypos} 0)
+		(at {xpos:.2f} {ypos:.2f} 0)
 		(effects
 			(font (size 1.27 1.27))
 			(hide yes)
@@ -143,18 +143,20 @@ def parse_schematic_symbol(device, xpos, ypos, rotation, value):
 def parse_busentry(xpos, ypos):
 	parsed = f'''\
 (bus_entry
-	(at {xpos} {ypos})
+	(at {xpos:.2f} {ypos:.2f})
 	(size 2.54 2.54)
+	(size 2.54 -2.54)
 	(stroke (width 0) (type default))
 	(uuid "6f5e384e-5a9e-4fdc-8642-9701db9306b8")
 )
 '''
+	return parsed
 
 def parse_hierarchical_label(label, xpos, ypos, rotation = 180):
-	parsed = '''\
+	parsed = f'''\
 (hierarchical_label "{label}"
 	(shape input)
-	(at {xpos} {ypos} {rotation})
+	(at {xpos:.2f} {ypos:.2f} {rotation})
 	(effects
 		(font (size 1.27 1.27))
 		(justify right)
@@ -165,10 +167,10 @@ def parse_hierarchical_label(label, xpos, ypos, rotation = 180):
 	return parsed
 
 def parse_bus(xpos1, ypos1, xpos2, ypos2):
-	parsed = '''\
+	parsed = f'''\
 (bus
 	(pts
-		(xy {xpos1} {ypos1}) (xy {xpos2} {ypos2})
+		(xy {xpos1:.2f} {ypos1:.2f}) (xy {xpos2:.2f} {ypos2:.2f})
 	)
 	(stroke (width 0) (type default))
 	(uuid "90fa7227-5737-479c-9573-d260690ffe83")

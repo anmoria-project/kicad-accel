@@ -13,7 +13,7 @@ def log(lvl, msg):
     if log_debug == lvl:
         prefix = "DEBUG: " + msg
     if log_note == lvl:
-        prefix = "NOTES: " + msg
+        prefix = "NOTE: " + msg
     if log_warn == lvl:
         prefix = "WARN: " + msg
     if log_error == lvl:

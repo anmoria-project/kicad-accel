@@ -250,35 +250,62 @@ class Symbol:
             self.pins.append(pin)
 
     def parse_busses(self, prefix):
-        # for unit in self.unit_names:
-            i = 0
-            unit_text = ""
-            filepath = f"./build/{prefix}.kicad_busses"
+        # TODO: Add some error check for double define bus signals ect.
+        bus_drivers = {}
+        for pin in self.pins:
+            for bus in bus_list:
+                for drivertype in bus:
+                    busdriver = drivertype.name.replace('[x]', '').lower().replace('.', '_')
+                    pindriver = re.sub(r'\[[0-9]\]', '', pin.driver_raw).lower().replace('.', '_')
+                    if pindriver == busdriver:
+                        bus_drivers[pin.driver_raw] = pin.name
+                    else:
+                        # print(f"Missmatch: {pindriver}:{busdriver}")
+                        pass
 
-            term_pos_index = i + 4
-            bus_drivers = {}
-            for pin in self.pins:
-                bus_pin_offset = 0
-                for bus in bus_list:
-                    for drivertype in bus:
-                        busdriver = drivertype.name.replace('[x]', '').lower().replace('.', '_')
-                        pindriver = re.sub(r'\[[0-9]\]', '', pin.driver_raw).lower().replace('.', '_')
-                        if pindriver == busdriver:
-                            bus_drivers[pin.driver_raw] = pin.name
-                            print(f"Found")
-                        else:
-                            # print(f"Missmatch: {pindriver}:{busdriver}")
-                            pass
-            for buspin, signal in bus_drivers.items():
-                print(f'Found bus-pin: {buspin.replace('[', '').replace(']', '')} with signal {signal}')
+        xpos = 2.54 * 20
+        ypos1 = 0 # actual
+        ypos2 = 2.54 # next
+        busname_tmp = ''
+        bussignals = ''
+        bus_drivers = dict(sorted(bus_drivers.items()))
+        parsed=''
+        for buskey_raw, signal in bus_drivers.items():
+            buskey = buskey_raw.replace('[', '').replace(']', '')
+            busname, bussignal = buskey.split('.')
 
-            # log(log_note, f"Write file: {filepath}")
+            log(log_debug, f'Found bus: {busname} with pin {bussignal} with signal {signal}')
 
-            # # filepath = f'./build/{filename}.kicad_labels'
-            # fd = open(filepath, 'w+', encoding='utf-8')
-            # fd.write(unit_text)
-            # fd.flush()
-            # fd.close()
+            is_new_bus = (busname != busname_tmp and not busname_tmp == '')
+            if is_new_bus:
+                busname_full = busname_tmp + f'{{{bussignals.lstrip()}}} '
+                parsed = parsed + parse_hierarchical_label(busname_full, xpos-2.54, ypos2, 180)
+                bussignals = ''
+                ypos1 = ypos2 + 4*2.54
+                ypos2 = ypos1 + 2.54
+
+
+            bussignals = bussignals + ' ' + bussignal
+
+            parsed = parsed + parse_label(buskey, xpos, ypos1, 0, 'left')
+            parsed = parsed + parse_bus(xpos-2.54, ypos2, xpos-2.54, ypos2+2.54)
+            parsed = parsed + parse_busentry(xpos-2.54, ypos2)
+
+            ypos1 = ypos2
+            ypos2 = ypos1 + 2.54
+            busname_tmp = busname
+
+        busname_full = busname + f'{{{bussignals.lstrip()}}} '
+        parsed = parsed + parse_hierarchical_label(busname_full, xpos-2.54, ypos2, 180)
+
+        # print(parsed)
+        filepath = f"./build/{prefix}.kicad_busses"
+        log(log_note, f"Write file: {filepath}")
+
+        fd = open(filepath, 'w+', encoding='utf-8')
+        fd.write(parsed)
+        fd.flush()
+        fd.close()
 
 
     def parse_labels(self, prefix):
