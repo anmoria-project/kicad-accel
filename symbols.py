@@ -1,3 +1,27 @@
+import random
+
+
+def get_rand():
+    # Example: 98da213c-75d0-49c4-be2f-abf6ce88cee6
+	rand_str = ''
+	for i in range(0, 6):
+		num = random.randint(0, 2**32-1)
+		if i == 0:
+			rand_str = f"{num:08x}"[-9:-1]
+		elif i == 1:
+			rand_str = rand_str + "-" + f"{num:04x}"[-5:-1]
+		elif i == 2:
+			rand_str = rand_str + "-" + f"{num:04x}"[-5:-1]
+		elif i == 3:
+			rand_str = rand_str + "-" + f"{num:04x}"[-5:-1]
+		elif i == 4:
+			rand_str = rand_str + "-de" + f"{num:08x}"[-9:-1]
+	return rand_str
+	
+    	
+
+
+
 
 
 def parse_hierarchical_label(name, xpos, ypos, rotation):

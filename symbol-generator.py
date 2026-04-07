@@ -1058,6 +1058,10 @@ def main():
     # DO NOT REMOVE!
     print("Symbol-generator: For version or license use '--version'. For help use '--help'")
 
+
+    rand = get_rand()
+
+
     if '-v' in sys.argv or '--version' in sys.argv:
         print_license_short()
         exit(0)
