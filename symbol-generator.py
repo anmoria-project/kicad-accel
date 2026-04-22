@@ -273,7 +273,7 @@ class Symbol:
         number_found_busses = 0
         for buskey_raw, signal in bus_drivers.items():
             buskey = buskey_raw.replace('[', '').replace(']', '')
-            print(buskey)
+            # print(buskey)
             busname, bussignal = buskey.split('.')
 
             log(log_debug, f'Found bus: {busname} with pin {bussignal} with signal {signal}')
