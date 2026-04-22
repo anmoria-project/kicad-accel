@@ -270,14 +270,17 @@ class Symbol:
         bussignals = ''
         bus_drivers = dict(sorted(bus_drivers.items()))
         parsed=''
+        number_found_busses = 0
         for buskey_raw, signal in bus_drivers.items():
             buskey = buskey_raw.replace('[', '').replace(']', '')
+            print(buskey)
             busname, bussignal = buskey.split('.')
 
             log(log_debug, f'Found bus: {busname} with pin {bussignal} with signal {signal}')
 
             is_new_bus = (busname != busname_tmp and not busname_tmp == '')
             if is_new_bus:
+                number_found_busses = number_found_busses + 1
                 busname_full = busname_tmp + f'{{{bussignals.lstrip()}}} '
                 parsed = parsed + parse_hierarchical_label(busname_full, xpos-2.54, ypos2, 180)
                 bussignals = ''
@@ -300,6 +303,8 @@ class Symbol:
             ypos2 = ypos1 + 2.54
             busname_tmp = busname
 
+        if number_found_busses == 0:
+            return
         busname_full = busname + f'{{{bussignals.lstrip()}}} '
         parsed = parsed + parse_hierarchical_label(busname_full, xpos-2.54, ypos2, 180)
 
