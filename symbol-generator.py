@@ -475,7 +475,7 @@ def csv2pins(filepath):
 
     used_function_keys = []
     for k, v in col_ids.items():
-        if k.startswith('function'):
+        if k.startswith('function') and v > 0:
             used_function_keys.append(k)
     used_function_keys.sort()
 
@@ -502,7 +502,9 @@ def csv2pins(filepath):
         name = pin_prefix if pin_prefix != '' else ''
 
         # Lets add the function0 stuff on the back, so main functionality is centered!
-        for fkt in used_function_keys[1:-1]:
+        for fkt in used_function_keys:
+            if fkt == 'function0':
+                continue
             subfkt = splits[col_ids[fkt]].strip()
             if subfkt == '':
                 continue
