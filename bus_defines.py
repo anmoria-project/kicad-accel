@@ -6,6 +6,8 @@ bus_slave = 2
 bus_phy = 3
 bus_mac = 4
 bus_conn = 5
+bus_adapter = 6
+bus_som = 7
 
 
 kicad_drivers = ['input','output','unspecified','power_in','power_out',
@@ -107,6 +109,35 @@ bus_jtag = [
     DriverType('jtag_slave[x].tdi',     bus_slave, 'input',  ['jtag_master[x].mosi'], 1, False),
     DriverType('jtag_slave[x].trstn',   bus_slave, 'input',  ['jtag_master[x].trstn'], 1, False),
     DriverType('jtag_slave[x].sysrstn', bus_slave, 'output', ['jtag_master[x].sysrstn'], 1, False),
+]
+
+bus_adapter40p = [
+    DriverType('adapter40p_adapter.dp0',     bus_adapter, 'bidirectional', ['adapter40p_som.dp0'], 1, False),
+    DriverType('adapter40p_adapter.dp1',     bus_adapter, 'bidirectional', ['adapter40p_som.dp1'], 1, False),
+    DriverType('adapter40p_adapter.dp2',     bus_adapter, 'bidirectional', ['adapter40p_som.dp2'], 1, False),
+    DriverType('adapter40p_adapter.dp3',     bus_adapter, 'bidirectional', ['adapter40p_som.dp3'], 1, False),
+    DriverType('adapter40p_adapter.dn0',     bus_adapter, 'bidirectional', ['adapter40p_som.dn0'], 1, False),
+    DriverType('adapter40p_adapter.dn1',     bus_adapter, 'bidirectional', ['adapter40p_som.dn1'], 1, False),
+    DriverType('adapter40p_adapter.dn2',     bus_adapter, 'bidirectional', ['adapter40p_som.dn2'], 1, False),
+    DriverType('adapter40p_adapter.dn3',     bus_adapter, 'bidirectional', ['adapter40p_som.dn3'], 1, False),
+    DriverType('adapter40p_adapter.a2s_irq', bus_adapter, 'output',        ['adapter40p_som.a2s_irq'], 1, False),
+    DriverType('adapter40p_adapter.s2a_irq', bus_adapter, 'input',         ['adapter40p_som.s2a_irq'], 1, False),
+    DriverType('adapter40p_adapter.clkp',    bus_adapter, 'bidirectional', ['adapter40p_som.clkp'   ], 1, False),
+    DriverType('adapter40p_adapter.clkn',    bus_adapter, 'bidirectional', ['adapter40p_som.clkn'   ], 1, False),
+
+    DriverType('adapter40p_som.dp0',     bus_som, 'bidirectional', ['adapter40p_adapter.dp0'], 1, False),
+    DriverType('adapter40p_som.dp1',     bus_som, 'bidirectional', ['adapter40p_adapter.dp1'], 1, False),
+    DriverType('adapter40p_som.dp2',     bus_som, 'bidirectional', ['adapter40p_adapter.dp2'], 1, False),
+    DriverType('adapter40p_som.dp3',     bus_som, 'bidirectional', ['adapter40p_adapter.dp3'], 1, False),
+    DriverType('adapter40p_som.dn0',     bus_som, 'bidirectional', ['adapter40p_adapter.dn0'], 1, False),
+    DriverType('adapter40p_som.dn1',     bus_som, 'bidirectional', ['adapter40p_adapter.dn1'], 1, False),
+    DriverType('adapter40p_som.dn2',     bus_som, 'bidirectional', ['adapter40p_adapter.dn2'], 1, False),
+    DriverType('adapter40p_som.dn3',     bus_som, 'bidirectional', ['adapter40p_adapter.dn3'], 1, False),
+    DriverType('adapter40p_som.a2s_irq', bus_som, 'input',         ['adapter40p_adapter.a2s_irq'], 1, False),
+    DriverType('adapter40p_som.s2a_irq', bus_som, 'output',        ['adapter40p_adapter.s2a_irq'], 1, False),
+    DriverType('adapter40p_som.clkp',    bus_som, 'bidirectional', ['adapter40p_adapter.clkp'   ], 1, False),
+    DriverType('adapter40p_som.clkn',    bus_som, 'bidirectional', ['adapter40p_adapter.clkn'   ], 1, False),
+
 ]
 
 # NOTE:
@@ -296,6 +327,7 @@ bus_list = [
     bus_mdi100m,
     bus_octaspi,
     bus_usbc,
+    bus_adapter40p,
     # bus_rj45_conn,
 ]
 

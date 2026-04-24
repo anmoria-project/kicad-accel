@@ -184,8 +184,8 @@ def parse_symboleditor_symbol(symbol_name, unit_names, pins):
 	for pin in pins:
 		if max_char < len(pin.name):
 			max_char = len(pin.name)
-	if max_char < 5: max_char = 5
-	rect_x = (max_char + 1) * 2.54 * 0.6
+	if max_char < 10: max_char = 10
+	rect_x = (max_char + 1) * 2.54 * 0.7
 	
 	parsed = f'''\
 (symbol "{symbol_name}"

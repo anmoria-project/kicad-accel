@@ -271,7 +271,11 @@ class Symbol:
         bus_drivers = dict(sorted(bus_drivers.items()))
         parsed=''
         number_found_busses = 0
+        last = False
+        last_cnt = 0
         for buskey_raw, signal in bus_drivers.items():
+            last_cnt  = last_cnt + 1
+            if (last_cnt == len(bus_drivers)): last = True
             buskey = buskey_raw.replace('[', '').replace(']', '')
             # print(buskey)
             busname, bussignal = buskey.split('.')
@@ -286,6 +290,8 @@ class Symbol:
                 bussignals = ''
                 ypos1 = ypos2 + 4*2.54
                 ypos2 = ypos1 + 2.54
+            if last:
+                number_found_busses = number_found_busses + 1
 
 
             bussignals = bussignals + ' ' + bussignal
