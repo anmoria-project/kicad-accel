@@ -86,7 +86,7 @@ class SymbolPin:
 
         # Add substitution for lazy driver keys
         # TODO: Remove backwards compatibility when finished with this here...
-        driver = re.sub(r'\[[0-9]\]', '', driver_raw).lower().replace('.', '_')
+        driver = re.sub(r'\[[0-9]+\]', '', driver_raw).lower().replace('.', '_')
         found = False
         for key in self.driver_subst.keys():
             key_legacy = key.replace('.', '_')
