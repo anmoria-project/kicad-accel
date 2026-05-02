@@ -265,6 +265,86 @@ bus_usbc = [
 
 ]
 
+
+bus_lvds = [
+
+    DriverType('lvds_rx[x].dpx_clkp', bus_slave, 'input', ['lvds_tx[x].dn0'], 1, False),
+    DriverType('lvds_rx[x].dnx_clkn', bus_slave, 'input', ['lvds_tx[x].dn0'], 1, False),
+    DriverType('lvds_rx[x].clkp', bus_slave, 'input', ['lvds_tx[x].dn0'], 1, False),
+    DriverType('lvds_rx[x].clkn', bus_slave, 'input', ['lvds_tx[x].dp0'], 1, False),
+
+    DriverType('lvds_rx[x].dn0', bus_slave, 'input', ['lvds_tx[x].dn0'], 1, False),
+    DriverType('lvds_rx[x].dn1', bus_slave, 'input', ['lvds_tx[x].dn1'], 1, False),
+    DriverType('lvds_rx[x].dn2', bus_slave, 'input', ['lvds_tx[x].dn2'], 1, False),
+    DriverType('lvds_rx[x].dn3', bus_slave, 'input', ['lvds_tx[x].dn3'], 1, False),
+    DriverType('lvds_rx[x].dn4', bus_slave, 'input', ['lvds_tx[x].dn4'], 1, False),
+    DriverType('lvds_rx[x].dn5', bus_slave, 'input', ['lvds_tx[x].dn5'], 1, False),
+    DriverType('lvds_rx[x].dn6', bus_slave, 'input', ['lvds_tx[x].dn6'], 1, False),
+    DriverType('lvds_rx[x].dn7', bus_slave, 'input', ['lvds_tx[x].dn7'], 1, False),
+    DriverType('lvds_rx[x].dn8', bus_slave, 'input', ['lvds_tx[x].dn8'], 1, False),
+    DriverType('lvds_rx[x].dn9', bus_slave, 'input', ['lvds_tx[x].dn9'], 1, False),
+
+    DriverType('lvds_rx[x].dp0', bus_slave, 'input', ['lvds_tx[x].dp0'], 1, False),
+    DriverType('lvds_rx[x].dp1', bus_slave, 'input', ['lvds_tx[x].dp1'], 1, False),
+    DriverType('lvds_rx[x].dp2', bus_slave, 'input', ['lvds_tx[x].dp2'], 1, False),
+    DriverType('lvds_rx[x].dp3', bus_slave, 'input', ['lvds_tx[x].dp3'], 1, False),
+    DriverType('lvds_rx[x].dp4', bus_slave, 'input', ['lvds_tx[x].dp4'], 1, False),
+    DriverType('lvds_rx[x].dp5', bus_slave, 'input', ['lvds_tx[x].dp5'], 1, False),
+    DriverType('lvds_rx[x].dp6', bus_slave, 'input', ['lvds_tx[x].dp6'], 1, False),
+    DriverType('lvds_rx[x].dp7', bus_slave, 'input', ['lvds_tx[x].dp7'], 1, False),
+    DriverType('lvds_rx[x].dp8', bus_slave, 'input', ['lvds_tx[x].dp8'], 1, False),
+    DriverType('lvds_rx[x].dp9', bus_slave, 'input', ['lvds_tx[x].dp9'], 1, False),
+
+    DriverType('lvds_tx[x].dn0', bus_master, 'output', ['lvds_rx[x].dn0'], 1, False),
+    DriverType('lvds_tx[x].dn1', bus_master, 'output', ['lvds_rx[x].dn1'], 1, False),
+    DriverType('lvds_tx[x].dn2', bus_master, 'output', ['lvds_rx[x].dn2'], 1, False),
+    DriverType('lvds_tx[x].dn3', bus_master, 'output', ['lvds_rx[x].dn3'], 1, False),
+    DriverType('lvds_tx[x].dn4', bus_master, 'output', ['lvds_rx[x].dn4'], 1, False),
+    DriverType('lvds_tx[x].dn5', bus_master, 'output', ['lvds_rx[x].dn5'], 1, False),
+    DriverType('lvds_tx[x].dn6', bus_master, 'output', ['lvds_rx[x].dn6'], 1, False),
+    DriverType('lvds_tx[x].dn7', bus_master, 'output', ['lvds_rx[x].dn7'], 1, False),
+    DriverType('lvds_tx[x].dn8', bus_master, 'output', ['lvds_rx[x].dn8'], 1, False),
+    DriverType('lvds_tx[x].dn9', bus_master, 'output', ['lvds_rx[x].dn9'], 1, False),
+
+    DriverType('lvds_tx[x].dp0', bus_slave, 'output', ['lvds_rx[x].dp0'], 1, False),
+    DriverType('lvds_tx[x].dp1', bus_slave, 'output', ['lvds_rx[x].dp1'], 1, False),
+    DriverType('lvds_tx[x].dp2', bus_slave, 'output', ['lvds_rx[x].dp2'], 1, False),
+    DriverType('lvds_tx[x].dp3', bus_slave, 'output', ['lvds_rx[x].dp3'], 1, False),
+    DriverType('lvds_tx[x].dp4', bus_slave, 'output', ['lvds_rx[x].dp4'], 1, False),
+    DriverType('lvds_tx[x].dp5', bus_slave, 'output', ['lvds_rx[x].dp5'], 1, False),
+    DriverType('lvds_tx[x].dp6', bus_slave, 'output', ['lvds_rx[x].dp6'], 1, False),
+    DriverType('lvds_tx[x].dp7', bus_slave, 'output', ['lvds_rx[x].dp7'], 1, False),
+    DriverType('lvds_tx[x].dp8', bus_slave, 'output', ['lvds_rx[x].dp8'], 1, False),
+    DriverType('lvds_tx[x].dp9', bus_slave, 'output', ['lvds_rx[x].dp9'], 1, False),
+]
+
+bus_mipi = [
+    DriverType('mipi_tx[x].dp0', bus_master, 'output', ['mipi_rx[x].dp0'], 1, False),
+    DriverType('mipi_tx[x].dp1', bus_master, 'output', ['mipi_rx[x].dp1'], 1, False),
+    DriverType('mipi_tx[x].dp2', bus_master, 'output', ['mipi_rx[x].dp2'], 1, False),
+    DriverType('mipi_tx[x].dp3', bus_master, 'output', ['mipi_rx[x].dp3'], 1, False),
+    DriverType('mipi_tx[x].dp4', bus_master, 'output', ['mipi_rx[x].dp4'], 1, False),
+
+    DriverType('mipi_tx[x].dn0', bus_master, 'output', ['mipi_rx[x].dn0'], 1, False),
+    DriverType('mipi_tx[x].dn1', bus_master, 'output', ['mipi_rx[x].dn1'], 1, False),
+    DriverType('mipi_tx[x].dn2', bus_master, 'output', ['mipi_rx[x].dn2'], 1, False),
+    DriverType('mipi_tx[x].dn3', bus_master, 'output', ['mipi_rx[x].dn3'], 1, False),
+    DriverType('mipi_tx[x].dn4', bus_master, 'output', ['mipi_rx[x].dn4'], 1, False),
+
+    DriverType('mipi_rx[x].dp0', bus_slave, 'output', ['mipi_tx[x].dp0'], 1, False),
+    DriverType('mipi_rx[x].dp1', bus_slave, 'output', ['mipi_tx[x].dp1'], 1, False),
+    DriverType('mipi_rx[x].dp2', bus_slave, 'output', ['mipi_tx[x].dp2'], 1, False),
+    DriverType('mipi_rx[x].dp3', bus_slave, 'output', ['mipi_tx[x].dp3'], 1, False),
+    DriverType('mipi_rx[x].dp4', bus_slave, 'output', ['mipi_tx[x].dp4'], 1, False),
+
+    DriverType('mipi_rx[x].dn0', bus_slave, 'output', ['mipi_tx[x].dn0'], 1, False),
+    DriverType('mipi_rx[x].dn1', bus_slave, 'output', ['mipi_tx[x].dn1'], 1, False),
+    DriverType('mipi_rx[x].dn2', bus_slave, 'output', ['mipi_tx[x].dn2'], 1, False),
+    DriverType('mipi_rx[x].dn3', bus_slave, 'output', ['mipi_tx[x].dn3'], 1, False),
+    DriverType('mipi_rx[x].dn4', bus_slave, 'output', ['mipi_tx[x].dn4'], 1, False),
+
+]
+
 # bus_mii = [
 #     DriverType('mii_phy[x]_rxd0',   bus_phy, 'output', ['mii_mac[x]_rxd0'], 1, False),
 #     DriverType('mii_phy[x]_rxd1',   bus_phy, 'output', ['mii_mac[x]_rxd1'], 1, False),
@@ -328,6 +408,8 @@ bus_list = [
     bus_octaspi,
     bus_usbc,
     bus_adapter40p,
+    bus_lvds,
+    bus_mipi,
     # bus_rj45_conn,
 ]
 
