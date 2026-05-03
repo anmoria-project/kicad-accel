@@ -256,7 +256,7 @@ class Symbol:
             for bus in bus_list:
                 for drivertype in bus:
                     busdriver = drivertype.name.replace('[x]', '').lower().replace('.', '_')
-                    pindriver = re.sub(r'\[[0-9]\]', '', pin.driver_raw).lower().replace('.', '_')
+                    pindriver = re.sub(r'\[[0-9]+\]', '', pin.driver_raw).lower().replace('.', '_')
                     if pindriver == busdriver:
                         bus_drivers[pin.driver_raw] = pin.name
                     else:
