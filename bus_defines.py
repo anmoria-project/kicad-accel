@@ -1,14 +1,24 @@
 from logger import *
 import re
 
+# Master/Slave
 bus_master = 1
 bus_slave = 2
+# Targets
 bus_phy = 3
 bus_mac = 4
 bus_conn = 5
 bus_adapter = 6
 bus_som = 7
+# Special
 bus_gpio = 8 # No counterpart, can self assign...
+# Power
+bus_powerout = 9
+bus_powerin = 10
+# Driver/Sink/Source
+bus_sink = 11
+bus_source = 12
+
 
 
 kicad_drivers = ['input','output','unspecified','power_in','power_out',
@@ -346,6 +356,45 @@ bus_mipi = [
 
 ]
 
+bus_system = [
+    DriverType('system_master.rstn',    bus_master,   'output',    ['system_slave.rstn'], 1, False),
+    DriverType('system_master.en',      bus_master,   'output',    ['system_slave.en'], 1, False),
+    DriverType('system_master.gnd',     bus_powerout, 'power_out', ['system_slave.gnd'], 1, False),
+    DriverType('system_master.gnd1',    bus_powerout, 'power_out', ['system_slave.gnd1'], 1, False),
+    DriverType('system_master.gnd2',    bus_powerout, 'power_out', ['system_slave.gnd2'], 1, False),
+
+    DriverType('system_master.vcc_id0',  bus_powerout, 'power_out', ['system_slave.vcc_id0'], 1, False),
+    DriverType('system_master.vcc_id1',  bus_powerout, 'power_out', ['system_slave.vcc_id1'], 1, False),
+    DriverType('system_master.vcc_id2',  bus_powerout, 'power_out', ['system_slave.vcc_id2'], 1, False),
+    DriverType('system_master.vcc_id3',  bus_powerout, 'power_out', ['system_slave.vcc_id3'], 1, False),
+    DriverType('system_master.vcc_id4',  bus_powerout, 'power_out', ['system_slave.vcc_id4'], 1, False),
+
+    DriverType('system_master.vcc1v8',  bus_powerout, 'power_out', ['system_slave.vcc1v8'], 1, False),
+    DriverType('system_master.vcc2v5',  bus_powerout, 'power_out', ['system_slave.vcc2v5'], 1, False),
+    DriverType('system_master.vcc3v3',  bus_powerout, 'power_out', ['system_slave.vcc3v3'], 1, False),
+    DriverType('system_master.vcc5v0',  bus_powerout, 'power_out', ['system_slave.vcc5v0'], 1, False),
+    DriverType('system_master.vcc12v0', bus_powerout, 'power_out', ['system_slave.vcc12v0'], 1, False),
+
+    DriverType('system_slave.rstn',    bus_slave,   'input',    ['system_master.rstn'], 1, False),
+    DriverType('system_slave.en',      bus_slave,   'input',    ['system_master.en'], 1, False),
+    DriverType('system_slave.gnd',     bus_powerin, 'power_in', ['system_master.gnd'], 1, False),
+    DriverType('system_slave.gnd1',    bus_powerin, 'power_in', ['system_master.gnd1'], 1, False),
+    DriverType('system_slave.gnd2',    bus_powerin, 'power_in', ['system_master.gnd2'], 1, False),
+
+    DriverType('system_slave.vcc_id0',  bus_powerin, 'power_in', ['system_master.vcc_id0'], 1, False),
+    DriverType('system_slave.vcc_id1',  bus_powerin, 'power_in', ['system_master.vcc_id1'], 1, False),
+    DriverType('system_slave.vcc_id2',  bus_powerin, 'power_in', ['system_master.vcc_id2'], 1, False),
+    DriverType('system_slave.vcc_id3',  bus_powerin, 'power_in', ['system_master.vcc_id3'], 1, False),
+    DriverType('system_slave.vcc_id4',  bus_powerin, 'power_in', ['system_master.vcc_id4'], 1, False),
+
+    DriverType('system_slave.vcc1v8',  bus_powerin, 'power_in', ['system_master.vcc1v8'], 1, False),
+    DriverType('system_slave.vcc2v5',  bus_powerin, 'power_in', ['system_master.vcc2v5'], 1, False),
+    DriverType('system_slave.vcc3v3',  bus_powerin, 'power_in', ['system_master.vcc3v3'], 1, False),
+    DriverType('system_slave.vcc5v0',  bus_powerin, 'power_in', ['system_master.vcc5v0'], 1, False),
+    DriverType('system_slave.vcc12v0', bus_powerin, 'power_in', ['system_master.vcc12v0'], 1, False),
+
+]
+
 # bus_mii = [
 #     DriverType('mii_phy[x]_rxd0',   bus_phy, 'output', ['mii_mac[x]_rxd0'], 1, False),
 #     DriverType('mii_phy[x]_rxd1',   bus_phy, 'output', ['mii_mac[x]_rxd1'], 1, False),
@@ -464,6 +513,7 @@ bus_list = [
     bus_mipi,
     bus_gpio,
     bus_adc,
+    bus_system,
     # bus_rj45_conn,
 ]
 
