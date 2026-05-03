@@ -8,6 +8,7 @@ bus_mac = 4
 bus_conn = 5
 bus_adapter = 6
 bus_som = 7
+bus_gpio = 8 # No counterpart, can self assign...
 
 
 kicad_drivers = ['input','output','unspecified','power_in','power_out',
@@ -393,6 +394,57 @@ bus_rmii = [
 
 ]
 
+bus_gpio = [
+    DriverType('gpio[x].dio0', bus_gpio, 'bidirectional', ['gpio[x].dio0'], 1, True),
+    DriverType('gpio[x].dio1', bus_gpio, 'bidirectional', ['gpio[x].dio1'], 1, True),
+    DriverType('gpio[x].dio2', bus_gpio, 'bidirectional', ['gpio[x].dio2'], 1, True),
+    DriverType('gpio[x].dio3', bus_gpio, 'bidirectional', ['gpio[x].dio3'], 1, True),
+    DriverType('gpio[x].dio4', bus_gpio, 'bidirectional', ['gpio[x].dio4'], 1, True),
+    DriverType('gpio[x].dio5', bus_gpio, 'bidirectional', ['gpio[x].dio5'], 1, True),
+    DriverType('gpio[x].dio6', bus_gpio, 'bidirectional', ['gpio[x].dio6'], 1, True),
+    DriverType('gpio[x].dio7', bus_gpio, 'bidirectional', ['gpio[x].dio7'], 1, True),
+
+    DriverType('gpio[x].do0', bus_gpio, 'output', ['gpio[x].di0'], 1, True),
+    DriverType('gpio[x].do1', bus_gpio, 'output', ['gpio[x].di1'], 1, True),
+    DriverType('gpio[x].do2', bus_gpio, 'output', ['gpio[x].di2'], 1, True),
+    DriverType('gpio[x].do3', bus_gpio, 'output', ['gpio[x].di3'], 1, True),
+    DriverType('gpio[x].do4', bus_gpio, 'output', ['gpio[x].di4'], 1, True),
+    DriverType('gpio[x].do5', bus_gpio, 'output', ['gpio[x].di5'], 1, True),
+    DriverType('gpio[x].do6', bus_gpio, 'output', ['gpio[x].di6'], 1, True),
+    DriverType('gpio[x].do7', bus_gpio, 'output', ['gpio[x].di7'], 1, True),
+
+    DriverType('gpio[x].di0', bus_gpio, 'input', ['gpio[x].do0'], 1, True),
+    DriverType('gpio[x].di1', bus_gpio, 'input', ['gpio[x].do1'], 1, True),
+    DriverType('gpio[x].di2', bus_gpio, 'input', ['gpio[x].do2'], 1, True),
+    DriverType('gpio[x].di3', bus_gpio, 'input', ['gpio[x].do3'], 1, True),
+    DriverType('gpio[x].di4', bus_gpio, 'input', ['gpio[x].do4'], 1, True),
+    DriverType('gpio[x].di5', bus_gpio, 'input', ['gpio[x].do5'], 1, True),
+    DriverType('gpio[x].di6', bus_gpio, 'input', ['gpio[x].do6'], 1, True),
+    DriverType('gpio[x].di7', bus_gpio, 'input', ['gpio[x].do7'], 1, True),
+
+]
+
+bus_adc = [
+    DriverType('adc_master[x].a0', bus_master, 'input', ['adc_slave[x].a0'], 1, True),
+    DriverType('adc_master[x].a1', bus_master, 'input', ['adc_slave[x].a1'], 1, True),
+    DriverType('adc_master[x].a2', bus_master, 'input', ['adc_slave[x].a2'], 1, True),
+    DriverType('adc_master[x].a3', bus_master, 'input', ['adc_slave[x].a3'], 1, True),
+    DriverType('adc_master[x].a4', bus_master, 'input', ['adc_slave[x].a4'], 1, True),
+    DriverType('adc_master[x].a5', bus_master, 'input', ['adc_slave[x].a5'], 1, True),
+    DriverType('adc_master[x].a6', bus_master, 'input', ['adc_slave[x].a6'], 1, True),
+    DriverType('adc_master[x].a7', bus_master, 'input', ['adc_slave[x].a7'], 1, True),
+
+    DriverType('adc_slave[x].a0', bus_slave, 'output', ['adc_master[x].a0'], 1, True),
+    DriverType('adc_slave[x].a1', bus_slave, 'output', ['adc_master[x].a1'], 1, True),
+    DriverType('adc_slave[x].a2', bus_slave, 'output', ['adc_master[x].a2'], 1, True),
+    DriverType('adc_slave[x].a3', bus_slave, 'output', ['adc_master[x].a3'], 1, True),
+    DriverType('adc_slave[x].a4', bus_slave, 'output', ['adc_master[x].a4'], 1, True),
+    DriverType('adc_slave[x].a5', bus_slave, 'output', ['adc_master[x].a5'], 1, True),
+    DriverType('adc_slave[x].a6', bus_slave, 'output', ['adc_master[x].a6'], 1, True),
+    DriverType('adc_slave[x].a7', bus_slave, 'output', ['adc_master[x].a7'], 1, True),
+]
+
+
 bus_list = [
     bus_qspi,
     bus_spi,
@@ -410,6 +462,8 @@ bus_list = [
     bus_adapter40p,
     bus_lvds,
     bus_mipi,
+    bus_gpio,
+    bus_adc,
     # bus_rj45_conn,
 ]
 
