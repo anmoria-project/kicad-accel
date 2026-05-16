@@ -369,6 +369,7 @@ bus_system = [
     DriverType('system_master.vcc_id3',  bus_powerout, 'power_out', ['system_slave.vcc_id3'], 1, False),
     DriverType('system_master.vcc_id4',  bus_powerout, 'power_out', ['system_slave.vcc_id4'], 1, False),
 
+    DriverType('system_master.vcc1v2',  bus_powerout, 'power_out', ['system_slave.vcc1v2'], 1, False),
     DriverType('system_master.vcc1v8',  bus_powerout, 'power_out', ['system_slave.vcc1v8'], 1, False),
     DriverType('system_master.vcc2v5',  bus_powerout, 'power_out', ['system_slave.vcc2v5'], 1, False),
     DriverType('system_master.vcc3v3',  bus_powerout, 'power_out', ['system_slave.vcc3v3'], 1, False),
@@ -387,6 +388,7 @@ bus_system = [
     DriverType('system_slave.vcc_id3',  bus_powerin, 'power_in', ['system_master.vcc_id3'], 1, False),
     DriverType('system_slave.vcc_id4',  bus_powerin, 'power_in', ['system_master.vcc_id4'], 1, False),
 
+    DriverType('system_slave.vcc1v2',  bus_powerin, 'power_in', ['system_master.vcc1v2'], 1, False),
     DriverType('system_slave.vcc1v8',  bus_powerin, 'power_in', ['system_master.vcc1v8'], 1, False),
     DriverType('system_slave.vcc2v5',  bus_powerin, 'power_in', ['system_master.vcc2v5'], 1, False),
     DriverType('system_slave.vcc3v3',  bus_powerin, 'power_in', ['system_master.vcc3v3'], 1, False),
