@@ -166,7 +166,7 @@ class SymbolPin:
         parsed = parse_label(labelname, 0.0, labelpos, 180, "right")
         return parsed
 
-    def parse_connection(self, place_position_index, index):
+    def parse_connection(self, place_position_index, index, xoff):
         driver = self.connections[index].lower()
 
         # TODO: Recheck here. This might be wrong now...
@@ -178,13 +178,13 @@ class SymbolPin:
         ypos = place_position_index * 2.54
 
         parsed = ''
-        parsed = parsed + parse_label(driver, 5.08, ypos, 0, "left")
-        parsed = parsed + parse_wire(5.08, ypos, 0.0, ypos)
-        parsed = parsed + parse_label(label, 0.0, ypos, 180, "right")
+        parsed = parsed + parse_label(driver, 5.08 + xoff, ypos, 0, "left")
+        parsed = parsed + parse_wire(5.08 + xoff, ypos, 0.0, ypos)
+        parsed = parsed + parse_label(label, 0.0 + xoff, ypos, 180, "right")
 
         return parsed
 
-    def parse_termination(self, place_position_index, index):
+    def parse_termination(self, place_position_index, index, xoff = 0.0):
         driver = self.terminations[index][2].lower()
         value = self.terminations[index][1]
         device = "UNDEFINED"
@@ -225,10 +225,10 @@ class SymbolPin:
         ypos = place_position_index * 2.54
 
         parsed = ''
-        parsed = parsed + parse_label(driver, 5.08, ypos, 0, "left")
+        parsed = parsed + parse_label(driver, 5.08 + xoff, ypos, 0, "left")
         # parsed = parsed + parse_hierarchical_label(driver, 5.08, ypos, 0)
-        parsed = parsed + parse_schematic_symbol(device, 2.54,  ypos, 270, value)
-        parsed = parsed + parse_label(label, 0.0, ypos, 180, "right")
+        parsed = parsed + parse_schematic_symbol(device, 2.54 + xoff,  ypos, 270, value)
+        parsed = parsed + parse_label(label, 0.0 + xoff, ypos, 180, "right")
 
         return parsed
 
@@ -325,6 +325,7 @@ class Symbol:
 
 
     def parse_labels(self, prefix):
+        unit_text_all = ""
         for unit in self.unit_names:
             i = 0
             unit_text = ""
@@ -335,7 +336,7 @@ class Symbol:
                 i = i + 1
                 unit_text  = unit_text + "\n\n" + pin.parse_label(i)
 
-            term_pos_index = i + 4
+            term_pos_index = 0
             for pin in self.pins:
                 term_index = 0
                 conn_index = 0
@@ -343,7 +344,7 @@ class Symbol:
                     continue
                 for id in range(0, len(pin.terminations)):
                     #     def parse_termination(self, place_position_index, index, label):
-                    unit_text  = unit_text + "\n\n" + pin.parse_termination(term_pos_index, term_index)
+                    unit_text  = unit_text + "\n\n" + pin.parse_termination(term_pos_index, term_index, -30 * 2.54)
                     term_pos_index = term_pos_index + 1
                     term_index = term_index + 1
                 for id in range(0, len(pin.connections)):
@@ -358,7 +359,12 @@ class Symbol:
             fd.write(unit_text)
             fd.flush()
             fd.close()
-
+            unit_text_all = unit_text_all + unit_text
+        filepath = f"./build/{prefix}_allblocks.kicad_labels"
+        fd = open(filepath, 'w+', encoding='utf-8')
+        fd.write(unit_text_all)
+        fd.flush()
+        fd.close()
 
     def parse(self):
 
