@@ -326,17 +326,26 @@ class Symbol:
 
     def parse_labels(self, prefix):
         unit_text_all = ""
+        i_all = 0
+        term_pos_index_all = 0
+        term_index_all = 0
+        conn_index_all = 0
         for unit in self.unit_names:
             i = 0
+            if (term_pos_index_all < i_all) :
+                term_pos_index_all = i_all
             unit_text = ""
             filepath = f"./build/{prefix}_{unit}.kicad_labels"
             for pin in self.pins:
                 if pin.unit != unit:
                     continue
                 i = i + 1
+                i_all = i_all + 1
                 unit_text  = unit_text + "\n\n" + pin.parse_label(i)
+                unit_text_all  = unit_text_all + "\n\n" + pin.parse_label(i_all)
 
             term_pos_index = 0
+
             for pin in self.pins:
                 term_index = 0
                 conn_index = 0
@@ -345,12 +354,18 @@ class Symbol:
                 for id in range(0, len(pin.terminations)):
                     #     def parse_termination(self, place_position_index, index, label):
                     unit_text  = unit_text + "\n\n" + pin.parse_termination(term_pos_index, term_index, -30 * 2.54)
+                    unit_text_all = unit_text_all + "\n\n" + pin.parse_termination(term_pos_index_all, term_index, -30 * 2.54)
                     term_pos_index = term_pos_index + 1
+                    term_pos_index_all = term_pos_index_all + 1
+                    term_index_all = term_index_all + 1
                     term_index = term_index + 1
                 for id in range(0, len(pin.connections)):
                     unit_text  = unit_text + "\n\n" + pin.parse_connection(term_pos_index, conn_index)
+                    unit_text_all  = unit_text_all + "\n\n" + pin.parse_connection(term_pos_index_all, conn_index_all)
                     term_pos_index = term_pos_index + 1
+                    term_pos_index_all = term_pos_index_all + 1
                     conn_index = conn_index + 1
+                    conn_index_all = conn_index_all + 1
 
             log(log_note, f"Write file: {filepath}")
 
@@ -359,7 +374,7 @@ class Symbol:
             fd.write(unit_text)
             fd.flush()
             fd.close()
-            unit_text_all = unit_text_all + unit_text
+            # unit_text_all = unit_text_all + unit_text
         filepath = f"./build/{prefix}_allblocks.kicad_labels"
         fd = open(filepath, 'w+', encoding='utf-8')
         fd.write(unit_text_all)
