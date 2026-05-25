@@ -209,6 +209,9 @@ bus_rgmii = [
 
 ]
 
+
+
+
 bus_mdio = [
     DriverType('mdio_slave[x].mdc',       bus_phy, 'input',         ['mdio_master[x].mdc'],  1, False),
     DriverType('mdio_slave[x].mdio',      bus_phy, 'bidirectional', ['mdio_master[x].mdio'], 1, False),
@@ -226,6 +229,9 @@ bus_mdi1g = [
     DriverType('mdi1g_phy[x].dp3', bus_phy, 'bidirectional', ['mdi1g_conn[x].dp3'], 1, False),
     DriverType('mdi1g_phy[x].dm3', bus_phy, 'bidirectional', ['mdi1g_conn[x].dm3'], 1, False),
 
+    DriverType('mdi1g_phy[x].ledn_green', bus_phy, 'bidirectional', ['mdi1g_conn[x].ledn_green'], 1, False),
+    DriverType('mdi1g_phy[x].ledn_yellow', bus_phy, 'bidirectional', ['mdi1g_conn[x].ledn_yellow'], 1, False),
+
     DriverType('mdi1g_conn[x].dp0', bus_conn, 'bidirectional', ['mdi1g_phy[x].dp0'], 1, False),
     DriverType('mdi1g_conn[x].dm0', bus_conn, 'bidirectional', ['mdi1g_phy[x].dm0'], 1, False),
     DriverType('mdi1g_conn[x].dp1', bus_conn, 'bidirectional', ['mdi1g_phy[x].dp1'], 1, False),
@@ -234,6 +240,10 @@ bus_mdi1g = [
     DriverType('mdi1g_conn[x].dm2', bus_conn, 'bidirectional', ['mdi1g_phy[x].dm2'], 1, False),
     DriverType('mdi1g_conn[x].dp3', bus_conn, 'bidirectional', ['mdi1g_phy[x].dp3'], 1, False),
     DriverType('mdi1g_conn[x].dm3', bus_conn, 'bidirectional', ['mdi1g_phy[x].dm3'], 1, False),
+
+    DriverType('mdi1g_conn[x].ledn_green', bus_phy, 'bidirectional', ['mdi1g_phy[x].ledn_green'], 1, False),
+    DriverType('mdi1g_conn[x].ledn_yellow', bus_phy, 'bidirectional', ['mdi1g_phy[x].ledn_yellow'], 1, False),
+
 ]
 
 bus_mdi100m = [
@@ -335,24 +345,35 @@ bus_mipi = [
     DriverType('mipi_tx[x].dp2', bus_master, 'output', ['mipi_rx[x].dp2'], 1, False),
     DriverType('mipi_tx[x].dp3', bus_master, 'output', ['mipi_rx[x].dp3'], 1, False),
     DriverType('mipi_tx[x].dp4', bus_master, 'output', ['mipi_rx[x].dp4'], 1, False),
+    DriverType('mipi_tx[x].clkp', bus_master, 'output', ['mipi_rx[x].clkp'], 1, False),
+
+    DriverType('mipi_tx[x].i2c_sda', bus_master, 'output', ['mipi_rx[x].i2c_sda'], 1, False),
+    DriverType('mipi_tx[x].i2c_scl', bus_master, 'output', ['mipi_rx[x].i2c_scl'], 1, False),
 
     DriverType('mipi_tx[x].dn0', bus_master, 'output', ['mipi_rx[x].dn0'], 1, False),
     DriverType('mipi_tx[x].dn1', bus_master, 'output', ['mipi_rx[x].dn1'], 1, False),
     DriverType('mipi_tx[x].dn2', bus_master, 'output', ['mipi_rx[x].dn2'], 1, False),
     DriverType('mipi_tx[x].dn3', bus_master, 'output', ['mipi_rx[x].dn3'], 1, False),
     DriverType('mipi_tx[x].dn4', bus_master, 'output', ['mipi_rx[x].dn4'], 1, False),
+    DriverType('mipi_tx[x].clkn', bus_master, 'output', ['mipi_rx[x].clkn'], 1, False),
+
+
+    DriverType('mipi_rx[x].i2c_sda', bus_master, 'output', ['mipi_tx[x].i2c_sda'], 1, False),
+    DriverType('mipi_rx[x].i2c_scl', bus_master, 'output', ['mipi_tx[x].i2c_scl'], 1, False),
 
     DriverType('mipi_rx[x].dp0', bus_slave, 'output', ['mipi_tx[x].dp0'], 1, False),
     DriverType('mipi_rx[x].dp1', bus_slave, 'output', ['mipi_tx[x].dp1'], 1, False),
     DriverType('mipi_rx[x].dp2', bus_slave, 'output', ['mipi_tx[x].dp2'], 1, False),
     DriverType('mipi_rx[x].dp3', bus_slave, 'output', ['mipi_tx[x].dp3'], 1, False),
     DriverType('mipi_rx[x].dp4', bus_slave, 'output', ['mipi_tx[x].dp4'], 1, False),
+    DriverType('mipi_rx[x].clkp', bus_slave, 'output', ['mipi_tx[x].clkp'], 1, False),
 
     DriverType('mipi_rx[x].dn0', bus_slave, 'output', ['mipi_tx[x].dn0'], 1, False),
     DriverType('mipi_rx[x].dn1', bus_slave, 'output', ['mipi_tx[x].dn1'], 1, False),
     DriverType('mipi_rx[x].dn2', bus_slave, 'output', ['mipi_tx[x].dn2'], 1, False),
     DriverType('mipi_rx[x].dn3', bus_slave, 'output', ['mipi_tx[x].dn3'], 1, False),
     DriverType('mipi_rx[x].dn4', bus_slave, 'output', ['mipi_tx[x].dn4'], 1, False),
+    DriverType('mipi_rx[x].clkn', bus_slave, 'output', ['mipi_tx[x].clkn'], 1, False),
 
 ]
 
@@ -495,6 +516,164 @@ bus_adc = [
     DriverType('adc_slave[x].a7', bus_slave, 'output', ['adc_master[x].a7'], 1, True),
 ]
 
+bus_pcie = [
+    DriverType('pcie_phy[x].clkp',    bus_phy, 'input', ['pcie_conn[x].clkp'],   1, True),
+    DriverType('pcie_phy[x].clkn',    bus_phy, 'input', ['pcie_conn[x].clkn'],   1, True),
+    DriverType('pcie_phy[x].rstn',    bus_phy, 'input', ['pcie_conn[x].rstn' ],  1, True),
+    DriverType('pcie_phy[x].clkreqn', bus_phy, 'input', ['pcie_conn[x].clkreqn'], 1, True),
+    DriverType('pcie_phy[x].waken',   bus_phy, 'input', ['pcie_conn[x].waken'  ], 1, True),
+    DriverType('pcie_phy[x].smb_clk', bus_phy, 'input', ['pcie_conn[x].smb_clk'], 1, True),
+    DriverType('pcie_phy[x].smb_dat', bus_phy, 'input', ['pcie_conn[x].smb_dat'], 1, True),
+    DriverType('pcie_phy[x].prsnt',   bus_phy, 'input', ['pcie_conn[x].prsnt'  ], 1, True),
+    DriverType('pcie_phy[x].pwr_en',  bus_phy, 'input', ['pcie_conn[x].pwr_en'  ], 1, True),
+
+
+    DriverType('pcie_phy[x].txp0', bus_phy, 'input', ['pcie_conn[x].rxp0'], 1, True),
+    DriverType('pcie_phy[x].txp1', bus_phy, 'input', ['pcie_conn[x].rxp1'], 1, True),
+    DriverType('pcie_phy[x].txp2', bus_phy, 'input', ['pcie_conn[x].rxp2'], 1, True),
+    DriverType('pcie_phy[x].txp3', bus_phy, 'input', ['pcie_conn[x].rxp3'], 1, True),
+    DriverType('pcie_phy[x].txp4', bus_phy, 'input', ['pcie_conn[x].rxp4'], 1, True),
+    DriverType('pcie_phy[x].txp5', bus_phy, 'input', ['pcie_conn[x].rxp5'], 1, True),
+    DriverType('pcie_phy[x].txp6', bus_phy, 'input', ['pcie_conn[x].rxp6'], 1, True),
+    DriverType('pcie_phy[x].txp7', bus_phy, 'input', ['pcie_conn[x].rxp7'], 1, True),
+
+    DriverType('pcie_phy[x].txn0', bus_phy, 'input', ['pcie_conn[x].rxn0'], 1, True),
+    DriverType('pcie_phy[x].txn1', bus_phy, 'input', ['pcie_conn[x].rxn1'], 1, True),
+    DriverType('pcie_phy[x].txn2', bus_phy, 'input', ['pcie_conn[x].rxn2'], 1, True),
+    DriverType('pcie_phy[x].txn3', bus_phy, 'input', ['pcie_conn[x].rxn3'], 1, True),
+    DriverType('pcie_phy[x].txn4', bus_phy, 'input', ['pcie_conn[x].rxn4'], 1, True),
+    DriverType('pcie_phy[x].txn5', bus_phy, 'input', ['pcie_conn[x].rxn5'], 1, True),
+    DriverType('pcie_phy[x].txn6', bus_phy, 'input', ['pcie_conn[x].rxn6'], 1, True),
+    DriverType('pcie_phy[x].txn7', bus_phy, 'input', ['pcie_conn[x].rxn7'], 1, True),
+
+    DriverType('pcie_phy[x].rxp0', bus_phy, 'input', ['pcie_conn[x].txp0'], 1, True),
+    DriverType('pcie_phy[x].rxp1', bus_phy, 'input', ['pcie_conn[x].txp1'], 1, True),
+    DriverType('pcie_phy[x].rxp2', bus_phy, 'input', ['pcie_conn[x].txp2'], 1, True),
+    DriverType('pcie_phy[x].rxp3', bus_phy, 'input', ['pcie_conn[x].txp3'], 1, True),
+    DriverType('pcie_phy[x].rxp4', bus_phy, 'input', ['pcie_conn[x].txp4'], 1, True),
+    DriverType('pcie_phy[x].rxp5', bus_phy, 'input', ['pcie_conn[x].txp5'], 1, True),
+    DriverType('pcie_phy[x].rxp6', bus_phy, 'input', ['pcie_conn[x].txp6'], 1, True),
+    DriverType('pcie_phy[x].rxp7', bus_phy, 'input', ['pcie_conn[x].txp7'], 1, True),
+
+    DriverType('pcie_phy[x].rxn0', bus_phy, 'input', ['pcie_conn[x].txn0'], 1, True),
+    DriverType('pcie_phy[x].rxn1', bus_phy, 'input', ['pcie_conn[x].txn1'], 1, True),
+    DriverType('pcie_phy[x].rxn2', bus_phy, 'input', ['pcie_conn[x].txn2'], 1, True),
+    DriverType('pcie_phy[x].rxn3', bus_phy, 'input', ['pcie_conn[x].txn3'], 1, True),
+    DriverType('pcie_phy[x].rxn4', bus_phy, 'input', ['pcie_conn[x].txn4'], 1, True),
+    DriverType('pcie_phy[x].rxn5', bus_phy, 'input', ['pcie_conn[x].txn5'], 1, True),
+    DriverType('pcie_phy[x].rxn6', bus_phy, 'input', ['pcie_conn[x].txn6'], 1, True),
+    DriverType('pcie_phy[x].rxn7', bus_phy, 'input', ['pcie_conn[x].txn7'], 1, True),
+
+    DriverType('pcie_conn[x].clkp',    bus_conn, 'input', ['pcie_phy[x].clkp'],    1, True),
+    DriverType('pcie_conn[x].clkn',    bus_conn, 'input', ['pcie_phy[x].clkn'],    1, True),
+    DriverType('pcie_conn[x].rstn',    bus_conn, 'input', ['pcie_phy[x].rstn' ], 1, True),
+    DriverType('pcie_conn[x].clkreqn', bus_conn, 'input', ['pcie_phy[x].clkreqn'], 1, True),
+    DriverType('pcie_conn[x].waken',   bus_conn, 'input', ['pcie_phy[x].waken'  ], 1, True),
+    DriverType('pcie_conn[x].smb_clk', bus_conn, 'input', ['pcie_phy[x].smb_clk'], 1, True),
+    DriverType('pcie_conn[x].smb_dat', bus_conn, 'input', ['pcie_phy[x].smb_dat'], 1, True),
+    DriverType('pcie_conn[x].prsnt',   bus_conn, 'input', ['pcie_phy[x].prsnt'  ], 1, True),
+    DriverType('pcie_conn[x].pwr_en',  bus_conn, 'input', ['pcie_phy[x].pwr_en'  ], 1, True),
+
+    DriverType('pcie_conn[x].rxp0', bus_conn, 'input', ['pcie_phy[x].txp0'], 1, True),
+    DriverType('pcie_conn[x].rxp1', bus_conn, 'input', ['pcie_phy[x].txp1'], 1, True),
+    DriverType('pcie_conn[x].rxp2', bus_conn, 'input', ['pcie_phy[x].txp2'], 1, True),
+    DriverType('pcie_conn[x].rxp3', bus_conn, 'input', ['pcie_phy[x].txp3'], 1, True),
+    DriverType('pcie_conn[x].rxp4', bus_conn, 'input', ['pcie_phy[x].txp4'], 1, True),
+    DriverType('pcie_conn[x].rxp5', bus_conn, 'input', ['pcie_phy[x].txp5'], 1, True),
+    DriverType('pcie_conn[x].rxp6', bus_conn, 'input', ['pcie_phy[x].txp6'], 1, True),
+    DriverType('pcie_conn[x].rxp7', bus_conn, 'input', ['pcie_phy[x].txp7'], 1, True),
+
+    DriverType('pcie_conn[x].rxn0', bus_conn, 'input', ['pcie_phy[x].txn0'], 1, True),
+    DriverType('pcie_conn[x].rxn1', bus_conn, 'input', ['pcie_phy[x].txn1'], 1, True),
+    DriverType('pcie_conn[x].rxn2', bus_conn, 'input', ['pcie_phy[x].txn2'], 1, True),
+    DriverType('pcie_conn[x].rxn3', bus_conn, 'input', ['pcie_phy[x].txn3'], 1, True),
+    DriverType('pcie_conn[x].rxn4', bus_conn, 'input', ['pcie_phy[x].txn4'], 1, True),
+    DriverType('pcie_conn[x].rxn5', bus_conn, 'input', ['pcie_phy[x].txn5'], 1, True),
+    DriverType('pcie_conn[x].rxn6', bus_conn, 'input', ['pcie_phy[x].txn6'], 1, True),
+    DriverType('pcie_conn[x].rxn7', bus_conn, 'input', ['pcie_phy[x].txn7'], 1, True),
+
+    DriverType('pcie_conn[x].txp0', bus_conn, 'input', ['pcie_phy[x].rxp0'], 1, True),
+    DriverType('pcie_conn[x].txp1', bus_conn, 'input', ['pcie_phy[x].rxp1'], 1, True),
+    DriverType('pcie_conn[x].txp2', bus_conn, 'input', ['pcie_phy[x].rxp2'], 1, True),
+    DriverType('pcie_conn[x].txp3', bus_conn, 'input', ['pcie_phy[x].rxp3'], 1, True),
+    DriverType('pcie_conn[x].txp4', bus_conn, 'input', ['pcie_phy[x].rxp4'], 1, True),
+    DriverType('pcie_conn[x].txp5', bus_conn, 'input', ['pcie_phy[x].rxp5'], 1, True),
+    DriverType('pcie_conn[x].txp6', bus_conn, 'input', ['pcie_phy[x].rxp6'], 1, True),
+    DriverType('pcie_conn[x].txp7', bus_conn, 'input', ['pcie_phy[x].rxp7'], 1, True),
+
+    DriverType('pcie_conn[x].txn0', bus_conn, 'input', ['pcie_phy[x].rxn0'], 1, True),
+    DriverType('pcie_conn[x].txn1', bus_conn, 'input', ['pcie_phy[x].rxn1'], 1, True),
+    DriverType('pcie_conn[x].txn2', bus_conn, 'input', ['pcie_phy[x].rxn2'], 1, True),
+    DriverType('pcie_conn[x].txn3', bus_conn, 'input', ['pcie_phy[x].rxn3'], 1, True),
+    DriverType('pcie_conn[x].txn4', bus_conn, 'input', ['pcie_phy[x].rxn4'], 1, True),
+    DriverType('pcie_conn[x].txn5', bus_conn, 'input', ['pcie_phy[x].rxn5'], 1, True),
+    DriverType('pcie_conn[x].txn6', bus_conn, 'input', ['pcie_phy[x].rxn6'], 1, True),
+    DriverType('pcie_conn[x].txn7', bus_conn, 'input', ['pcie_phy[x].rxn7'], 1, True),
+
+
+]
+
+bus_hdmi = [
+    DriverType('hdmi_phy[x].dp0',        bus_phy, 'output', ['hdmi_conn[x].dp0'],      1, False),
+    DriverType('hdmi_phy[x].dp1',        bus_phy, 'output', ['hdmi_conn[x].dp1'],      1, False),
+    DriverType('hdmi_phy[x].dp2',        bus_phy, 'output', ['hdmi_conn[x].dp2'],      1, False),
+    DriverType('hdmi_phy[x].dp3',        bus_phy, 'output', ['hdmi_conn[x].dp3'],      1, False),
+    DriverType('hdmi_phy[x].i2c_sda',    bus_phy, 'output', ['hdmi_conn[x].i2c_sda'],  1, False),
+    DriverType('hdmi_phy[x].i2c_scl',    bus_phy, 'output', ['hdmi_conn[x].i2c_scl'],  1, False),
+    DriverType('hdmi_phy[x].cec',        bus_phy, 'output', ['hdmi_conn[x].cec'],      1, False),
+    DriverType('hdmi_phy[x].hotplug',    bus_phy, 'output', ['hdmi_conn[x].hotplug'],  1, False),
+    DriverType('hdmi_phy[x].clkp',       bus_phy, 'output', ['hdmi_conn[x].clkp'],     1, False),
+    DriverType('hdmi_phy[x].clkn',       bus_phy, 'output', ['hdmi_conn[x].clkn'],     1, False),
+    DriverType('hdmi_phy[x].dn0',        bus_phy, 'input',  ['hdmi_conn[x].dn0'],      1, False),
+    DriverType('hdmi_phy[x].dn1',        bus_phy, 'input',  ['hdmi_conn[x].dn1'],      1, False),
+    DriverType('hdmi_phy[x].dn2',        bus_phy, 'input',  ['hdmi_conn[x].dn2'],      1, False),
+    DriverType('hdmi_phy[x].dn3',        bus_phy, 'input',  ['hdmi_conn[x].dn3'],      1, False),
+
+    DriverType('hdmi_conn[x].dp0',       bus_phy, 'output', ['hdmi_phy[x].dp0'],     1, False),
+    DriverType('hdmi_conn[x].dp1',       bus_phy, 'output', ['hdmi_phy[x].dp1'],     1, False),
+    DriverType('hdmi_conn[x].dp2',       bus_phy, 'output', ['hdmi_phy[x].dp2'],     1, False),
+    DriverType('hdmi_conn[x].dp3',       bus_phy, 'output', ['hdmi_phy[x].dp3'],     1, False),
+    DriverType('hdmi_conn[x].i2c_sda',   bus_phy, 'output', ['hdmi_phy[x].i2c_sda'],  1, False),
+    DriverType('hdmi_conn[x].i2c_scl',   bus_phy, 'output', ['hdmi_phy[x].i2c_scl'],  1, False),
+    DriverType('hdmi_conn[x].cec',       bus_phy, 'output', ['hdmi_phy[x].cec'],      1, False),
+    DriverType('hdmi_conn[x].hotplug',   bus_phy, 'output', ['hdmi_phy[x].hotplug'],  1, False),
+    DriverType('hdmi_conn[x].clkp',      bus_phy, 'output', ['hdmi_phy[x].clkp'],     1, False),
+    DriverType('hdmi_conn[x].clkn',      bus_phy, 'output', ['hdmi_phy[x].clkn'],     1, False),
+    DriverType('hdmi_conn[x].dn0',       bus_phy, 'input',  ['hdmi_phy[x].dn0'],     1, False),
+    DriverType('hdmi_conn[x].dn1',       bus_phy, 'input',  ['hdmi_phy[x].dn1'],     1, False),
+    DriverType('hdmi_conn[x].dn2',       bus_phy, 'input',  ['hdmi_phy[x].dn2'],     1, False),
+    DriverType('hdmi_conn[x].dn3',       bus_phy, 'input',  ['hdmi_phy[x].dn3'],     1, False),
+]
+
+bus_sdmmc = [
+    DriverType('sdmmc_phy[x].clk',       bus_phy, 'output', ['sdmmc_conn[x].clk', ],      1, False),
+    DriverType('sdmmc_phy[x].cmd',       bus_phy, 'output', ['sdmmc_conn[x].cmd', ],      1, False),
+    DriverType('sdmmc_phy[x].d0',        bus_phy, 'output', ['sdmmc_conn[x].d0',  ],      1, False),
+    DriverType('sdmmc_phy[x].d1',        bus_phy, 'output', ['sdmmc_conn[x].d1',  ],      1, False),
+    DriverType('sdmmc_phy[x].d2',        bus_phy, 'output', ['sdmmc_conn[x].d2',  ],      1, False),
+    DriverType('sdmmc_phy[x].d3',        bus_phy, 'output', ['sdmmc_conn[x].d3',  ],      1, False),
+    DriverType('sdmmc_phy[x].d4',        bus_phy, 'output', ['sdmmc_conn[x].d4',  ],      1, False),
+    DriverType('sdmmc_phy[x].d5',        bus_phy, 'output', ['sdmmc_conn[x].d5',  ],      1, False),
+    DriverType('sdmmc_phy[x].d6',        bus_phy, 'output', ['sdmmc_conn[x].d6',  ],      1, False),
+    DriverType('sdmmc_phy[x].d7',        bus_phy, 'output', ['sdmmc_conn[x].d7',  ],      1, False),
+    DriverType('sdmmc_phy[x].ds',        bus_phy, 'output', ['sdmmc_conn[x].ds',  ],      1, False),
+    DriverType('sdmmc_phy[x].rstn',      bus_phy, 'output', ['sdmmc_conn[x].rstn',],      1, False),
+
+    DriverType('sdmmc_conn[x].clk',       bus_conn, 'output', ['sdmmc_phy[x].clk', ],      1, False),
+    DriverType('sdmmc_conn[x].cmd',       bus_conn, 'output', ['sdmmc_phy[x].cmd', ],      1, False),
+    DriverType('sdmmc_conn[x].d0',        bus_conn, 'output', ['sdmmc_phy[x].d0',  ],      1, False),
+    DriverType('sdmmc_conn[x].d1',        bus_conn, 'output', ['sdmmc_phy[x].d1',  ],      1, False),
+    DriverType('sdmmc_conn[x].d2',        bus_conn, 'output', ['sdmmc_phy[x].d2',  ],      1, False),
+    DriverType('sdmmc_conn[x].d3',        bus_conn, 'output', ['sdmmc_phy[x].d3',  ],      1, False),
+    DriverType('sdmmc_conn[x].d4',        bus_conn, 'output', ['sdmmc_phy[x].d4',  ],      1, False),
+    DriverType('sdmmc_conn[x].d5',        bus_conn, 'output', ['sdmmc_phy[x].d5',  ],      1, False),
+    DriverType('sdmmc_conn[x].d6',        bus_conn, 'output', ['sdmmc_phy[x].d6',  ],      1, False),
+    DriverType('sdmmc_conn[x].d7',        bus_conn, 'output', ['sdmmc_phy[x].d7',  ],      1, False),
+    DriverType('sdmmc_conn[x].ds',        bus_conn, 'output', ['sdmmc_phy[x].ds',  ],      1, False),
+    DriverType('sdmmc_conn[x].rstn',      bus_conn, 'output', ['sdmmc_phy[x].rstn',],      1, False),
+
+
+]
 
 bus_list = [
     bus_qspi,
@@ -516,6 +695,9 @@ bus_list = [
     bus_gpio,
     bus_adc,
     bus_system,
+    bus_hdmi,
+    bus_pcie,
+    bus_sdmmc,
     # bus_rj45_conn,
 ]
 
