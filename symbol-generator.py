@@ -249,6 +249,58 @@ class Symbol:
                 self.unit_names.append(pin.unit)
             self.pins.append(pin)
 
+    def compress_busnames(self, bussignals):
+        busdict = {}
+        for bs in bussignals:
+            key = re.sub(r'\d+$', '', bs)
+            val_raw = bs.replace(key, '')
+            if val_raw.isdigit():
+                val = int(val_raw)
+            else:
+                val = None
+            if key not in busdict.keys():
+                busdict[key] = []
+            if val != None:
+                busdict[key].append(val)
+
+        compressed = ''
+        for k, l in busdict.items():
+
+            if len(l) == 0:
+                compressed = compressed + f' {k}'
+                continue
+            else:
+                l.sort()
+                # While continous, add... otherwise add to bussignals
+                last = None
+                start = l[0]
+                # compressed = compressed + f' {k}[{l[0]}'
+                for i in l:
+
+                    if l[-1] == i:
+                        lastid = True
+                    else:
+                        lastid = False
+
+                    if i-1 != last and last != None:
+                        discontinuity = True
+                    else:
+                        discontinuity = False
+
+                    if discontinuity:
+                        if start == last:
+                            compressed = compressed + f" {k}{last}"
+                        else:
+                            compressed = compressed + f" {k}[{start}..{last}]"
+                        start = i
+                    last = i
+                if start == last:
+                    compressed = compressed + f" {k}{last}"
+                else:
+                    compressed = compressed + f" {k}[{start}..{last}]"
+
+        return compressed.strip(' ')
+
     def parse_busses(self, prefix):
         # TODO: Add some error check for double define bus signals ect.
         bus_drivers = {}
@@ -267,7 +319,7 @@ class Symbol:
         ypos1 = 0 # actual
         ypos2 = 2.54 # next
         busname_tmp = ''
-        bussignals = ''
+        bussignals = []
         bus_drivers = dict(sorted(bus_drivers.items()))
         parsed=''
         number_found_busses = 0
@@ -285,16 +337,19 @@ class Symbol:
             is_new_bus = (busname != busname_tmp and not busname_tmp == '')
             if is_new_bus:
                 number_found_busses = number_found_busses + 1
-                busname_full = busname_tmp + f'{{{bussignals.lstrip()}}} '
+                # bussignalsstr = " ".join(bussignals)
+                bussignalsstr = self.compress_busnames(bussignals)
+                busname_full = busname_tmp + f'{{{bussignalsstr}}}'
                 parsed = parsed + parse_hierarchical_label(busname_full, xpos-2.54, ypos2, 180)
-                bussignals = ''
+                bussignals = []
                 ypos1 = ypos2 + 4*2.54
                 ypos2 = ypos1 + 2.54
             if last:
                 number_found_busses = number_found_busses + 1
 
 
-            bussignals = bussignals + ' ' + bussignal
+            # bussignals = bussignals + ' ' + bussignal
+            bussignals.append(bussignal)
 
             parsed = parsed + parse_label(buskey, xpos, ypos1, 0, 'left')
             parsed = parsed + parse_bus(xpos-2.54, ypos2, xpos-2.54, ypos2+2.54)
@@ -309,9 +364,14 @@ class Symbol:
             ypos2 = ypos1 + 2.54
             busname_tmp = busname
 
+        # bussignals = bussignals.strip(" ")
         if number_found_busses == 0:
             return
-        busname_full = busname + f'{{{bussignals.lstrip()}}} '
+
+
+
+        bussignalsstr = bussignalsstr = self.compress_busnames(bussignals)
+        busname_full = busname + f'{{{bussignalsstr}}}'
         parsed = parsed + parse_hierarchical_label(busname_full, xpos-2.54, ypos2, 180)
 
         # print(parsed)
