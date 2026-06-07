@@ -68,6 +68,7 @@ bus_octaspi = [
     DriverType('octaspi_slave[x].csn[x]', bus_slave, 'input',         ['octaspi_master[x].csn[x]'], 1, False),
     DriverType('octaspi_slave[x].dqs',    bus_slave, 'input',         ['octaspi_master[x].dqs'], 1, False),
     DriverType('octaspi_slave[x].clk',    bus_slave, 'input',         ['octaspi_master[x].clk'], 1, False),
+    DriverType('octaspi_slave[x].clkn',   bus_slave, 'input',         ['octaspi_master[x].clkn'], 1, False),
     DriverType('octaspi_slave[x].io0',    bus_slave, 'bidirectional', ['octaspi_master[x].io0'], 1, False),
     DriverType('octaspi_slave[x].io1',    bus_slave, 'bidirectional', ['octaspi_master[x].io1'], 1, False),
     DriverType('octaspi_slave[x].io2',    bus_slave, 'bidirectional', ['octaspi_master[x].io2'], 1, False),
@@ -81,6 +82,7 @@ bus_octaspi = [
     DriverType('octaspi_master[x].csn[x]',  bus_master, 'output',        ['octaspi_slave[x].csn[x]'], 1, False),
     DriverType('octaspi_master[x].dqs',     bus_master, 'output',        ['octaspi_slave[x].dqs'], 1, False),
     DriverType('octaspi_master[x].clk',     bus_master, 'output',        ['octaspi_slave[x].clk'], 1, False),
+    DriverType('octaspi_master[x].clkn',    bus_master, 'output',        ['octaspi_slave[x].clkn'], 1, False),
     DriverType('octaspi_master[x].io0',     bus_master, 'bidirectional', ['octaspi_slave[x].io0'], 1, False),
     DriverType('octaspi_master[x].io1',     bus_master, 'bidirectional', ['octaspi_slave[x].io1'], 1, False),
     DriverType('octaspi_master[x].io2',     bus_master, 'bidirectional', ['octaspi_slave[x].io2'], 1, False),
@@ -120,6 +122,22 @@ bus_jtag = [
     DriverType('jtag_slave[x].tdi',     bus_slave, 'input',  ['jtag_master[x].mosi'], 1, False),
     DriverType('jtag_slave[x].trstn',   bus_slave, 'input',  ['jtag_master[x].trstn'], 1, False),
     DriverType('jtag_slave[x].sysrstn', bus_slave, 'output', ['jtag_master[x].sysrstn'], 1, False),
+]
+
+bus_jtag_serialwire = [
+    DriverType('jtag_serialwire_master[x].tms_swdio', bus_master, 'output', ['jtag_serialwire_slave[x].tms_swdio'], 16, False),
+    DriverType('jtag_serialwire_master[x].tck_swclk', bus_master, 'output', ['jtag_serialwire_slave[x].tck_swclk'], 16, False),
+    DriverType('jtag_serialwire_master[x].mosi',      bus_master, 'output', ['jtag_serialwire_slave[x].tdi'], 1, False),
+    DriverType('jtag_serialwire_master[x].miso',      bus_master, 'input',  ['jtag_serialwire_slave[x].tdo'], 1, False),
+    DriverType('jtag_serialwire_master[x].trst_n',    bus_master, 'output', ['jtag_serialwire_slave[x].trst_n'], 1, False),
+    DriverType('jtag_serialwire_master[x].sysrst_n',  bus_master, 'output', ['jtag_serialwire_slave[x].sysrst_n'], 1, False),
+
+    DriverType('jtag_serialwire_slave[x].tms_swdio',    bus_slave, 'input',  ['jtag_serialwire_master[x].tms_swdio'],  1, False),
+    DriverType('jtag_serialwire_slave[x].tck_swclk',    bus_slave, 'input',  ['jtag_serialwire_master[x].tck_swclk'],  1, False),
+    DriverType('jtag_serialwire_slave[x].tdo',          bus_slave, 'output', ['jtag_serialwire_master[x].miso'], 1, False),
+    DriverType('jtag_serialwire_slave[x].tdi',          bus_slave, 'input',  ['jtag_serialwire_master[x].mosi'], 1, False),
+    DriverType('jtag_serialwire_slave[x].trstn',        bus_slave, 'input',  ['jtag_serialwire_master[x].trstn'], 1, False),
+    DriverType('jtag_serialwire_slave[x].sysrstn',      bus_slave, 'output', ['jtag_serialwire_master[x].sysrstn'], 1, False),
 ]
 
 bus_adapter40p = [
@@ -257,6 +275,21 @@ bus_mdi100m = [
     DriverType('mdi100m.conn[x]_txp', bus_conn, 'bidirectional', ['mdi100m_phy[x].txp'], 1, False),
     DriverType('mdi100m.conn[x]_txm', bus_conn, 'bidirectional', ['mdi100m_phy[x].txm'], 1, False),
 
+]
+
+bus_usbfs = [
+
+    DriverType('usbfs_conn[x].dp',      bus_conn,   'bidirectional', ['usbfs_phy[x].dp'], 1, False),
+    DriverType('usbfs_conn[x].dm',      bus_conn,   'bidirectional', ['usbfs_phy[x].dm'], 1, False),
+    DriverType('usbfs_conn[x].vbus',    bus_conn,   'bidirectional', ['usbfs_phy[x].vbus'], 1, False),
+    DriverType('usbfs_conn[x].otg_id',  bus_conn,   'bidirectional', ['usbfs_phy[x].otg_id'], 1, False),
+    DriverType('usbfs_conn[x].sof',     bus_conn,   'bidirectional', ['usbfs_phy[x].sof'], 1, False),
+
+    DriverType('usbfs_phy[x].dp',      bus_phy,   'bidirectional', ['usbfs_conn[x].dp'], 1, False),
+    DriverType('usbfs_phy[x].dm',      bus_phy,   'bidirectional', ['usbfs_conn[x].dm'], 1, False),
+    DriverType('usbfs_phy[x].vbus',    bus_phy,   'bidirectional', ['usbfs_conn[x].vbus'], 1, False),
+    DriverType('usbfs_phy[x].otg_id',  bus_phy,   'bidirectional', ['usbfs_conn[x].otg_id'], 1, False),
+    DriverType('usbfs_phy[x].sof',     bus_phy,   'bidirectional', ['usbfs_conn[x].sof'], 1, False),
 ]
 
 bus_usbc = [
@@ -676,6 +709,7 @@ bus_sdmmc = [
 ]
 
 bus_list = [
+    bus_jtag_serialwire,
     bus_qspi,
     bus_spi,
     bus_jtag,
@@ -698,6 +732,7 @@ bus_list = [
     bus_hdmi,
     bus_pcie,
     bus_sdmmc,
+    bus_usbfs,
     # bus_rj45_conn,
 ]
 
