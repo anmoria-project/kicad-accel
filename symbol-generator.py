@@ -211,14 +211,19 @@ class SymbolPin:
 
         # if (component == "short"):
         #     device = "W_Small"
+        ref_value = 99999
         if (component == 'R'):
             device = "R_Small"
+            reference = f'R{ref_value}'
         elif (component == 'C') or (component == "F"):
             device = "C_Small"
+            reference = f'C{ref_value}'
         elif (component == 'L') or (component == "H"):
             device = "L_Small"
+            reference = f'L{ref_value}'
         elif (component == "X"):
             device = "FerriteBead_Small"
+            reference = f'FB{ref_value}'
         else:
             log(log_error, f"Termination component unknown: Pin={self.ic_pin}; Component={component}!")
             exit(-1)
@@ -227,7 +232,7 @@ class SymbolPin:
         parsed = ''
         parsed = parsed + parse_label(driver, 5.08 + xoff, ypos, 0, "left")
         # parsed = parsed + parse_hierarchical_label(driver, 5.08, ypos, 0)
-        parsed = parsed + parse_schematic_symbol(device, 2.54 + xoff,  ypos, 270, value)
+        parsed = parsed + parse_schematic_symbol(device, 2.54 + xoff,  ypos, 270, value, reference)
         parsed = parsed + parse_label(label, 0.0 + xoff, ypos, 180, "right")
 
         return parsed

@@ -24,8 +24,8 @@ def get_rand():
 		elif i == 4:
 			rand_str = rand_str + "-de" + f"{num:08x}"[-9:-1]
 	return rand_str
-	
-    	
+
+
 
 def indent(string, num_spaces):
     ret_str = ""
@@ -75,7 +75,7 @@ def parse_wire(xpos1, ypos1, xpos2, ypos2):
 '''
 	return parsed
 
-def parse_schematic_symbol(device, xpos, ypos, rotation, value):
+def parse_schematic_symbol(device, xpos, ypos, rotation, value, reference):
 	parsed = f'''\
 (symbol
 	(lib_id "Device:{device}")
@@ -87,7 +87,7 @@ def parse_schematic_symbol(device, xpos, ypos, rotation, value):
 	(dnp no)
 	(fields_autoplaced yes)
 	(uuid "24b36077-41b9-424d-9cfb-461eded128a1")
-	(property "Reference" "R2"
+	(property "Reference" "{reference}"
 		(at {xpos:.2f} {ypos:.2f} 90)
 		(effects
 			(font (size 1.016 1.016))
@@ -131,7 +131,7 @@ def parse_schematic_symbol(device, xpos, ypos, rotation, value):
 	(instances
 		(project "design1"
 			(path ""
-				(reference "R2")
+				(reference "")
 				(unit 1)
 			)
 		)
@@ -186,7 +186,7 @@ def parse_symboleditor_symbol(symbol_name, unit_names, pins):
 			max_char = len(pin.name)
 	if max_char < 10: max_char = 10
 	rect_x = (max_char + 1) * 2.54 * 0.7
-	
+
 	parsed = f'''\
 (symbol "{symbol_name}"
 	(exclude_from_sim no)
