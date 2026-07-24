@@ -417,11 +417,7 @@ bus_system = [
     DriverType('system_master.gnd1',    bus_powerout, 'power_out', ['system_slave.gnd1'], 1, False),
     DriverType('system_master.gnd2',    bus_powerout, 'power_out', ['system_slave.gnd2'], 1, False),
 
-    DriverType('system_master.vcc_id0',  bus_powerout, 'power_out', ['system_slave.vcc_id0'], 1, False),
-    DriverType('system_master.vcc_id1',  bus_powerout, 'power_out', ['system_slave.vcc_id1'], 1, False),
-    DriverType('system_master.vcc_id2',  bus_powerout, 'power_out', ['system_slave.vcc_id2'], 1, False),
-    DriverType('system_master.vcc_id3',  bus_powerout, 'power_out', ['system_slave.vcc_id3'], 1, False),
-    DriverType('system_master.vcc_id4',  bus_powerout, 'power_out', ['system_slave.vcc_id4'], 1, False),
+    DriverType('system_master.vcc_id[x]',  bus_powerout, 'power_out', ['system_slave.vcc_id[x]'], 1, False),
 
     DriverType('system_master.vcc1v2',  bus_powerout, 'power_out', ['system_slave.vcc1v2'], 1, False),
     DriverType('system_master.vcc1v8',  bus_powerout, 'power_out', ['system_slave.vcc1v8'], 1, False),
@@ -436,11 +432,7 @@ bus_system = [
     DriverType('system_slave.gnd1',    bus_powerin, 'power_in', ['system_master.gnd1'], 1, False),
     DriverType('system_slave.gnd2',    bus_powerin, 'power_in', ['system_master.gnd2'], 1, False),
 
-    DriverType('system_slave.vcc_id0',  bus_powerin, 'power_in', ['system_master.vcc_id0'], 1, False),
-    DriverType('system_slave.vcc_id1',  bus_powerin, 'power_in', ['system_master.vcc_id1'], 1, False),
-    DriverType('system_slave.vcc_id2',  bus_powerin, 'power_in', ['system_master.vcc_id2'], 1, False),
-    DriverType('system_slave.vcc_id3',  bus_powerin, 'power_in', ['system_master.vcc_id3'], 1, False),
-    DriverType('system_slave.vcc_id4',  bus_powerin, 'power_in', ['system_master.vcc_id4'], 1, False),
+    DriverType('system_slave.vcc_id[x]',  bus_powerin, 'power_in', ['system_master.vcc_id[x]'], 1, False),
 
     DriverType('system_slave.vcc1v2',  bus_powerin, 'power_in', ['system_master.vcc1v2'], 1, False),
     DriverType('system_slave.vcc1v8',  bus_powerin, 'power_in', ['system_master.vcc1v8'], 1, False),
