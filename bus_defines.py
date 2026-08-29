@@ -142,7 +142,7 @@ bus_jtag_serialwire = [
     DriverType('jtag_serialwire_master[x].mosi',      bus_master, 'output', ['jtag_serialwire_slave[x].tdi'], 1, False),
     DriverType('jtag_serialwire_master[x].miso',      bus_master, 'input',  ['jtag_serialwire_slave[x].tdo'], 1, False),
     DriverType('jtag_serialwire_master[x].trstn',     bus_master, 'output', ['jtag_serialwire_slave[x].trstn'], 1, False),
-    DriverType('jtag_serialwire_master[x].sysrst_n',  bus_master, 'output', ['jtag_serialwire_slave[x].sysrst_n'], 1, False),
+    DriverType('jtag_serialwire_master[x].sysrstn',   bus_master, 'output', ['jtag_serialwire_slave[x].sysrstn'], 1, False),
 
     DriverType('jtag_serialwire_slave[x].tms_swdio',    bus_slave, 'input',  ['jtag_serialwire_master[x].tms_swdio'],  1, False),
     DriverType('jtag_serialwire_slave[x].tck_swclk',    bus_slave, 'input',  ['jtag_serialwire_master[x].tck_swclk'],  1, False),
