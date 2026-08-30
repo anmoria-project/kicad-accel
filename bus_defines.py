@@ -331,13 +331,13 @@ bus_usbc = [
 
 ]
 
-
 bus_lvds = [
 
-    DriverType('lvds_rx[x].dpx_clkp', bus_slave, 'input', ['lvds_tx[x].dn0'], 1, False),
-    DriverType('lvds_rx[x].dnx_clkn', bus_slave, 'input', ['lvds_tx[x].dn0'], 1, False),
-    DriverType('lvds_rx[x].clkp', bus_slave, 'input', ['lvds_tx[x].dn0'], 1, False),
-    DriverType('lvds_rx[x].clkn', bus_slave, 'input', ['lvds_tx[x].dp0'], 1, False),
+    DriverType('lvds_rx[x].clkp', bus_slave, 'input', ['lvds_tx[x].clkp'], 1, False),
+    DriverType('lvds_rx[x].clkn', bus_slave, 'input', ['lvds_tx[x].clkn'], 1, False),
+
+    DriverType('lvds_tx[x].clkp', bus_master, 'output', ['lvds_rx[x].clkp'], 1, False),
+    DriverType('lvds_tx[x].clkn', bus_master, 'output', ['lvds_rx[x].clkn'], 1, False),
 
     DriverType('lvds_rx[x].dn0', bus_slave, 'input', ['lvds_tx[x].dn0'], 1, False),
     DriverType('lvds_rx[x].dn1', bus_slave, 'input', ['lvds_tx[x].dn1'], 1, False),
