@@ -136,21 +136,21 @@ bus_jtag = [
     DriverType('jtag_slave[x].sysrstn', bus_slave, 'output', ['jtag_master[x].sysrstn'], 1, False),
 ]
 
-bus_jtag_serialwire = [
-    DriverType('jtag_serialwire_master[x].tms_swdio', bus_master, 'output', ['jtag_serialwire_slave[x].tms_swdio'], 16, False),
-    DriverType('jtag_serialwire_master[x].tck_swclk', bus_master, 'output', ['jtag_serialwire_slave[x].tck_swclk'], 16, False),
-    DriverType('jtag_serialwire_master[x].mosi',      bus_master, 'output', ['jtag_serialwire_slave[x].tdi'], 1, False),
-    DriverType('jtag_serialwire_master[x].miso',      bus_master, 'input',  ['jtag_serialwire_slave[x].tdo'], 1, False),
-    DriverType('jtag_serialwire_master[x].trstn',     bus_master, 'output', ['jtag_serialwire_slave[x].trstn'], 1, False),
-    DriverType('jtag_serialwire_master[x].sysrstn',   bus_master, 'output', ['jtag_serialwire_slave[x].sysrstn'], 1, False),
+# bus_jtag_serialwire = [
+#     DriverType('jtag_serialwire_master[x].tms',       bus_master, 'output', ['jtag_serialwire_slave[x].tms'], 16, False),
+#     DriverType('jtag_serialwire_master[x].tck',       bus_master, 'output', ['jtag_serialwire_slave[x].tck'], 16, False),
+#     DriverType('jtag_serialwire_master[x].m2s',       bus_master, 'output', ['jtag_serialwire_slave[x].m2s'], 1, False),
+#     DriverType('jtag_serialwire_master[x].s2m',       bus_master, 'input',  ['jtag_serialwire_slave[x].s2m'], 1, False),
+#     DriverType('jtag_serialwire_master[x].trstn',     bus_master, 'output', ['jtag_serialwire_slave[x].trstn'], 1, False),
+#     DriverType('jtag_serialwire_master[x].sysrstn',   bus_master, 'output', ['jtag_serialwire_slave[x].sysrstn'], 1, False),
 
-    DriverType('jtag_serialwire_slave[x].tms_swdio',    bus_slave, 'input',  ['jtag_serialwire_master[x].tms_swdio'],  1, False),
-    DriverType('jtag_serialwire_slave[x].tck_swclk',    bus_slave, 'input',  ['jtag_serialwire_master[x].tck_swclk'],  1, False),
-    DriverType('jtag_serialwire_slave[x].tdo',          bus_slave, 'output', ['jtag_serialwire_master[x].miso'], 1, False),
-    DriverType('jtag_serialwire_slave[x].tdi',          bus_slave, 'input',  ['jtag_serialwire_master[x].mosi'], 1, False),
-    DriverType('jtag_serialwire_slave[x].trstn',        bus_slave, 'input',  ['jtag_serialwire_master[x].trstn'], 1, False),
-    DriverType('jtag_serialwire_slave[x].sysrstn',      bus_slave, 'output', ['jtag_serialwire_master[x].sysrstn'], 1, False),
-]
+#     DriverType('jtag_serialwire_slave[x].tms',        bus_slave, 'input',  ['jtag_serialwire_master[x].tms'],  1, False),
+#     DriverType('jtag_serialwire_slave[x].clk',        bus_slave, 'input',  ['jtag_serialwire_master[x].clk'],  1, False),
+#     DriverType('jtag_serialwire_slave[x].s2m',        bus_slave, 'output', ['jtag_serialwire_master[x].s2m'], 1, False),
+#     DriverType('jtag_serialwire_slave[x].m2s',        bus_slave, 'input',  ['jtag_serialwire_master[x].m2s'], 1, False),
+#     DriverType('jtag_serialwire_slave[x].trstn',      bus_slave, 'input',  ['jtag_serialwire_master[x].trstn'], 1, False),
+#     DriverType('jtag_serialwire_slave[x].sysrstn',    bus_slave, 'output', ['jtag_serialwire_master[x].sysrstn'], 1, False),
+# ]
 
 bus_adapter40p = [
     DriverType('adapter40p_adapter[x].dp0',     bus_adapter, 'bidirectional', ['adapter40p_som[x].dp0'], 1, False),
@@ -713,7 +713,7 @@ bus_sdmmc = [
 ]
 
 bus_list = [
-    bus_jtag_serialwire,
+    # bus_jtag_serialwire,
     bus_qspi,
     bus_spi,
     bus_jtag,
