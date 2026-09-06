@@ -125,8 +125,8 @@ bus_jtag = [
     DriverType('jtag_master[x].tck',       bus_master, 'output', ['jtag_slave[x].tck'], 16, False),
     DriverType('jtag_master[x].mosi',      bus_master, 'output', ['jtag_slave[x].tdi'], 1, False),
     DriverType('jtag_master[x].miso',      bus_master, 'input',  ['jtag_slave[x].tdo'], 1, False),
-    DriverType('jtag_master[x].trst_n',    bus_master, 'output', ['jtag_slave[x].trst_n'], 1, False),
-    DriverType('jtag_master[x].sysrst_n',  bus_master, 'output', ['jtag_slave[x].sysrst_n'], 1, False),
+    DriverType('jtag_master[x].trstn',    bus_master, 'output', ['jtag_slave[x].trstn'], 1, False),
+    DriverType('jtag_master[x].sysrstn',  bus_master, 'output', ['jtag_slave[x].sysrstn'], 1, False),
 
     DriverType('jtag_slave[x].tms',     bus_slave, 'input',  ['jtag_master[x].tms'],  1, False),
     DriverType('jtag_slave[x].tck',     bus_slave, 'input',  ['jtag_master[x].tck'],  1, False),
