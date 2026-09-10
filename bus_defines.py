@@ -194,12 +194,12 @@ bus_usart = [
 bus_i2c = [
     DriverType('i2c_master[x].sda',     bus_master, 'bidirectional', ['i2c_slave[x].sda'], 32, False),
     DriverType('i2c_master[x].scl',     bus_master, 'output',        ['i2c_slave[x].scl'], 32, False),
-    DriverType('i2c_master[x].m2s_irq', bus_master, 'output',        ['i2c_slave[x].m2s_irq'], 1, False),
-    DriverType('i2c_master[x].s2m_irq', bus_master, 'input',         ['i2c_slave[x].s2m_irq'], 1, False),
+    DriverType('i2c_master[x].irq_m2s', bus_master, 'output',        ['i2c_slave[x].irq_m2s'], 1, False),
+    DriverType('i2c_master[x].irq_s2m', bus_master, 'input',         ['i2c_slave[x].irq_s2m'], 1, False),
     DriverType('i2c_slave[x].sda',      bus_slave,  'bidirectional', ['i2c_master[x].sda'], 1, False),
     DriverType('i2c_slave[x].scl',      bus_slave,  'output',        ['i2c_master[x].scl'], 1, False),
-    DriverType('i2c_slave[x].m2s_irq',  bus_slave,  'input',         ['i2c_master[x].m2s_irq'], 1, False),
-    DriverType('i2c_slave[x].s2m_irq',  bus_slave,  'output',        ['i2c_master[x].s2m_irq'], 1, False),
+    DriverType('i2c_slave[x].irq_m2s',  bus_slave,  'input',         ['i2c_master[x].irq_m2s'], 1, False),
+    DriverType('i2c_slave[x].irq_s2m',  bus_slave,  'output',        ['i2c_master[x].irq_s2m'], 1, False),
 ]
 
 bus_serialwire = [
