@@ -344,7 +344,8 @@ class Symbol:
                 number_found_busses = number_found_busses + 1
                 # bussignalsstr = " ".join(bussignals)
                 bussignalsstr = self.compress_busnames(bussignals)
-                busname_full = busname_tmp + f'{{{bussignalsstr}}}'
+                busname_full = busname_tmp + f'{{ {bussignalsstr} }}'
+                # NOTE: Kicad needs additional space, otherwise the signals will be ignored
                 parsed = parsed + parse_hierarchical_label(busname_full, xpos-2.54, ypos2, 180)
                 bussignals = []
                 ypos1 = ypos2 + 4*2.54
@@ -376,7 +377,7 @@ class Symbol:
 
 
         bussignalsstr = bussignalsstr = self.compress_busnames(bussignals)
-        busname_full = busname + f'{{{bussignalsstr}}}'
+        busname_full = busname + f'{{ {bussignalsstr} }}'
         parsed = parsed + parse_hierarchical_label(busname_full, xpos-2.54, ypos2, 180)
 
         # print(parsed)
