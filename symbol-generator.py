@@ -23,6 +23,8 @@ import re
 from parser_lib import *
 from logger import *
 from bus_defines import *
+import csv
+from package_defines import footprints
 
 version = "0.3.0"
 C_INCH = 2.45
@@ -251,12 +253,52 @@ class Symbol:
         self.name = name
         self.pins = []
         self.unit_names = []
+        self.meta = []
 
     def add_pins(self, pins):
         for pin in pins:
             if pin.unit not in self.unit_names:
                 self.unit_names.append(pin.unit)
             self.pins.append(pin)
+
+    def substitute_footprint(self):
+        fp = self.meta['footprint']
+        if not fp in footprints.keys():
+            log(log_error, f"Footprint is not known! footprint={fp}! Please add footprint to package_defines.py!")
+            exit(-1)
+        self.meta['footprint'] = footprints[fp]['full_name']
+
+    def add_meta(self, meta):
+        keys_replace = {'package': 'footprint', 'component':'value'}
+        keys_found = []
+        meta_primary = {
+            "footprint": "footprint-text",
+            "value": "value-text"}
+        meta_optional = {
+            "datasheet" : "datasheet-text",
+            "description": "description-text"}
+        for key, val in meta.items():
+            if key in keys_replace:
+                key_old = key
+                key = keys_replace[key]
+                log(log_note, f"Replace 'meta' key '{key_old}' with '{key}'")
+            if key in meta_primary.keys():
+                meta_primary[key] = val
+                log(log_debug, f"Add key '{key}' with value = '{val}' to meta_primary!")
+            elif key in meta_optional.keys():
+                meta_optional[key] = val
+                log(log_debug, f"Add key '{key}' with value = '{val}' to meta_optional!")
+            else:
+                log(log_warn, f"Found key='{key}' in 'meta' which is unknown! Key will be ignored!")
+            keys_found.append(key)
+        for key in meta_primary.keys():
+            if key not in keys_found:
+                log(log_error, f"Missing meta-key='{key} in 'meta' row!")
+                exit(-1)
+        self.meta = meta_primary | meta_optional
+
+        self.substitute_footprint()
+
 
     def compress_busnames(self, bussignals):
         busdict = {}
@@ -453,7 +495,7 @@ class Symbol:
 
     def parse(self):
 
-        return parse_symboleditor_symbol(self.name, self.unit_names, self.pins)
+        return parse_symboleditor_symbol(self.name, self.unit_names, self.pins, self.meta)
 
 
 
@@ -511,9 +553,56 @@ def apply_shared_terminations(Pins):
         ProcessedPins.append(pin)
     return ProcessedPins
 
+def check_sanity_csv(text, seperator = ";"):
+    cnt_semi = text.count(';')
+    cnt_comma = text.count(',')
+    cnt_tab = text.count('\t')
 
-def csv2pins(filepath):
-    seperator = ';'
+    log(log_debug, f"Count semi={cnt_semi}, comma={cnt_comma}, tabs={cnt_tab}")
+
+    if cnt_semi > cnt_comma and cnt_semi > cnt_tab:
+        seperator = ';'
+    elif cnt_comma > cnt_tab:
+        seperator = ','
+    else:
+        seperator = '\t'
+
+    if seperator == ',':
+        log(log_error, "CSV uses seperator ',' which is forbidden! Please change the CSV to ';' or tab as seperator!")
+        exit(-1)
+    log(log_note, f"Selected seperator for .csv file: '{seperator}'")
+
+
+
+
+def csv2kv(filepath, column_name, seperator = ";"):
+
+    keys_found = {}
+
+    with open (filepath, 'r', encoding='utf-8') as f:
+        reader = csv.DictReader(f, delimiter=seperator)
+        # print(f"DBG: Fieldnames: [{reader.fieldnames}]")
+        if not column_name in reader.fieldnames:
+            log(log_error, f"CSV does not have column named '{column_name}'")
+            exit(-1)
+        meta_cells = [row[column_name] for row in reader]
+
+        for cell in meta_cells:
+            if cell.strip() == '':
+                continue
+            if  cell.count("=") == 0:
+                log(log_error, "Entry in 'meta' row does not have proper 'key=value' pair!")
+            key_value = cell.split("=", 1)
+            key = key_value[0].strip()
+            val = key_value[1].strip()
+            if key in keys_found.keys():
+                log(log_error, "Found double defined key in 'meta' row!")
+            keys_found[key] = val
+
+    return keys_found
+
+
+def csv2pins(filepath, seperator = ";"):
     cols_primary = {"block": -1,
                     "pin_id": -1,
                     "function0": -1,
@@ -531,7 +620,8 @@ def csv2pins(filepath):
                     "termination": -1,
                     "capabilities": -1,
                     "origin_pin_name": -1,
-                    "notes": -1
+                    "notes": -1,
+                    "meta": -1
     }
 
 
@@ -543,24 +633,7 @@ def csv2pins(filepath):
     line_id = 0
     lines = text.split('\n')
 
-    cnt_semi = text.count(';')
-    cnt_comma = text.count(',')
-    cnt_tab = text.count('\t')
-
-    log(log_debug, f"Count semi={cnt_semi}, comma={cnt_comma}, tabs={cnt_tab}")
-
-    if cnt_semi > cnt_comma and cnt_semi > cnt_tab:
-        seperator = ';'
-    elif cnt_comma > cnt_tab:
-        seperator = ','
-    else:
-        seperator = '\t'
-
-    if seperator == ',':
-        log(log_error, "CSV uses seperator ',' which is forbidden! Please change the CSV to ';' or tab as seperator!")
-        exit(-1)
-
-    log(log_note, f"Selected seperator for .csv file: '{seperator}'")
+    check_sanity_csv(text, seperator)
 
     # NOTE: Autodetect column position
     col_id = 0
@@ -737,8 +810,10 @@ def main():
 
     sym1 = Symbol(sym_name)
     pins = csv2pins(path)
+    meta = csv2kv(filepath = path, column_name = 'meta')
 
     sym1.add_pins(pins)
+    sym1.add_meta(meta)
     lib1 = Library(lib_name)
     lib1.add_symbols([sym1])
     lib1.gen_file()

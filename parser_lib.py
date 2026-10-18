@@ -178,7 +178,7 @@ def parse_bus(xpos1, ypos1, xpos2, ypos2):
 '''
 	return parsed
 
-def parse_symboleditor_symbol(symbol_name, unit_names, pins):
+def parse_symboleditor_symbol(symbol_name, unit_names, pins, meta):
 
 	max_char = 0
 	for pin in pins:
@@ -213,7 +213,7 @@ def parse_symboleditor_symbol(symbol_name, unit_names, pins):
 			)
 		)
 	)
-	(property "Value" "value-text"
+	(property "Value" "{meta['value']}"
 		(at {rect_x} -8.89 0)
 		(do_not_autoplace)
 		(effects
@@ -223,7 +223,7 @@ def parse_symboleditor_symbol(symbol_name, unit_names, pins):
 			(justify left)
 		)
 	)
-	(property "Footprint" "footprint-text"
+	(property "Footprint" "{meta['footprint']}"
 		(at {rect_x} -11.43 0)
 		(do_not_autoplace)
 		(effects
@@ -234,7 +234,7 @@ def parse_symboleditor_symbol(symbol_name, unit_names, pins):
 			(hide yes)
 		)
 	)
-	(property "Description" "description-text"
+	(property "Description" "{meta['description']}"
 		(at {rect_x} -13.97 0)
 		(do_not_autoplace)
 		(effects
@@ -245,7 +245,7 @@ def parse_symboleditor_symbol(symbol_name, unit_names, pins):
 			(hide yes)
 		)
 	)
-	(property "Datasheet" "datasheet-text"
+	(property "Datasheet" "{meta['datasheet']}"
 		(at {rect_x} -16.51 0)
 		(do_not_autoplace)
 		(effects
