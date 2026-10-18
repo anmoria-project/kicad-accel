@@ -81,6 +81,8 @@ class SymbolPin:
         self.driver_raw = driver_raw
         self.terminations = []
         self.connections = []
+        self.hasExtTermination = False
+        self.hasSelfTermination = False
 
         ## DRIVER STUFF
 
@@ -143,6 +145,7 @@ class SymbolPin:
 
                     # exit(-1)
                 self.terminations.append(termination)
+
         if ':self' in termination_str:
             self.hasSelfTermination = True
         else:
@@ -152,6 +155,7 @@ class SymbolPin:
             self.hasExtTermination = True
         else:
             self.hasExtTermination = False
+
 
     def parse_label(self, index):
 
@@ -480,6 +484,33 @@ class Library:
 
 # def gen_labels_file(self):
 
+def apply_shared_terminations(Pins):
+    term_dict_self = {}
+    term_dict_ext = {}
+    ProcessedPins = []
+    for pin in Pins:
+
+        if not pin.name in term_dict_self.keys():
+            term_dict_self[pin.name] = False
+
+        if not pin.name in term_dict_ext.keys():
+            term_dict_ext[pin.name] = False
+
+        if pin.hasSelfTermination :
+            term_dict_self[pin.name] = True
+
+        if pin.hasExtTermination:
+            term_dict_ext[pin.name] = True
+
+    # Apply terminations for all same ned pins...
+    for pin in Pins:
+        if term_dict_self[pin.name]:
+            pin.hasSelfTermination = True
+        if term_dict_ext[pin.name]:
+            pin.hasExtTermination = True
+        ProcessedPins.append(pin)
+    return ProcessedPins
+
 
 def csv2pins(filepath):
     seperator = ';'
@@ -637,7 +668,11 @@ def csv2pins(filepath):
     if len(used_blocks) < 2:
         log(log_error, "Number of used blocks must be at least 2! Please add another block (f.e. split function and power)")
         exit(-1)
-    return Pins
+
+    # Check if connector have multiple same pins. Activate Terminations
+    ProcessedPins = apply_shared_terminations(Pins)
+
+    return ProcessedPins
 
 
 def print_help():
