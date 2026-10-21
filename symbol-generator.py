@@ -25,6 +25,9 @@ from logger import *
 from bus_defines import *
 import csv
 from package_defines import footprints
+from pathlib import Path
+
+import kicad_symbol_generator as kigen
 
 version = "0.3.0"
 C_INCH = 2.45
@@ -427,7 +430,7 @@ class Symbol:
         parsed = parsed + parse_hierarchical_label(busname_full, xpos-2.54, ypos2, 180)
 
         # print(parsed)
-        filepath = f"./build/{prefix}.kicad_busses"
+        filepath = f"./output/{prefix}.kicad_busses"
         log(log_note, f"Write file: {filepath}")
 
         fd = open(filepath, 'w+', encoding='utf-8')
@@ -447,7 +450,7 @@ class Symbol:
             if (term_pos_index_all < i_all) :
                 term_pos_index_all = i_all
             unit_text = ""
-            filepath = f"./build/{prefix}_{unit}.kicad_labels"
+            filepath = f"./output/{prefix}_{unit}.kicad_labels"
             for pin in self.pins:
                 if pin.unit != unit:
                     continue
@@ -481,13 +484,13 @@ class Symbol:
 
             log(log_note, f"Write file: {filepath}")
 
-            # filepath = f'./build/{filename}.kicad_labels'
+            # filepath = f'./output/{filename}.kicad_labels'
             fd = open(filepath, 'w+', encoding='utf-8')
             fd.write(unit_text)
             fd.flush()
             fd.close()
             # unit_text_all = unit_text_all + unit_text
-        filepath = f"./build/{prefix}_allblocks.kicad_labels"
+        filepath = f"./output/{prefix}_allblocks.kicad_labels"
         fd = open(filepath, 'w+', encoding='utf-8')
         fd.write(unit_text_all)
         fd.flush()
@@ -516,13 +519,40 @@ class Library:
     def parse(self):
         return parse_library(self.symbols)
 
-    def gen_file(self):
-        filepath = f'./build/{self.name}.kicad_sym'
+    def prepare_kigen_pins(self, Pins):
+        PinList = []
+        Units = {}
+        for pin in Pins:
+            if not pin.unit in Units.keys():
+                Units[pin.unit] = len(Units)
+            PinList.append([pin.name, pin.driver, Units[pin.unit]])
+        PinList.sort(key=lambda x:x[2])
+        return PinList
+
+
+    def gen_file_kigen(self):
+        filepath = f'./output/{self.name}.kicad_sym'
+
+        for symbol in self.symbols:
+            print(f"found symbol: {symbol.name}")
+ #           for pin in symbol.pins:
+#                print(f"Found Pin: {pin.unit}:{pin.ic_pin}:{pin.name}:{pin.driver}")
+            pin_list = self.prepare_kigen_pins(symbol.pins)
+            kigen.update_symbol(symbol.name, pin_list, filepath)
+        log(log_note, "Generated file: " + filepath)
+
+    def gen_file_old(self):
+        filepath = f'./output/{self.name}.kicad_sym'
         f_lib = open(filepath, 'w+', encoding='utf-8')
         f_lib.write(self.parse())
         f_lib.flush()
         f_lib.close()
         log(log_note, "Generated file: " + filepath)
+
+
+    def gen_file(self):
+        self.gen_file_kigen()
+
 
 # def gen_labels_file(self):
 
@@ -750,19 +780,21 @@ def csv2pins(filepath, seperator = ";"):
 
 def print_help():
     helpstr = '''
-Usage: [python3] system-generator.py [Options] FILE
+Usage: source init.sh && python3 system-generator.py [Options] <kicad_library_name>
 
 Options:
     -v, --version   Print license and version
     -h, --help      Print this help
 
 Example:
+    source init.sh && \
+    ./symbol-generator.py -o=<kicad_library_name>[.kicad_lib]
 
-    python3 symbol-generator.py ./test/multi_unit_test.csv
-
-    ./symbol-generator.py ./test/single_unit_test.csv
-
-Build output will be in the './build/' folder.
+NOTE: The generate works with: input, processing, output.
+All files in 'input' directory will be processed to the 'output'
+directory. You are self responsible to clean/copy the sources.
+Use the example makefile for conditional processing!
+Build output will be in the './output/' folder.
 Read the README.md for more information!
 Example input files are in folder ./test/*.csv
 '''
@@ -786,10 +818,6 @@ def main():
     # DO NOT REMOVE!
     print("Symbol-generator: For version or license use '--version'. For help use '--help'")
 
-
-    rand = get_rand()
-
-
     if '-v' in sys.argv or '--version' in sys.argv:
         print_license_short()
         exit(0)
@@ -799,26 +827,32 @@ def main():
         print_help()
         exit(0)
 
+    input_path = Path("./input/").resolve()
 
-    path = sys.argv[-1]
-    # path = "/home/yoctouser/scm/pcb-bricks/kicad-accel/test/multi_unit_big_test.csv"
-    if not os.path.isfile(path):
-        log(log_error, "File does not exist! Please specify a file as argument!")
-        exit(1)
-    sym_name = os.path.basename(path).split('.')[0]
-    lib_name = sym_name
+    lib_name = ""
 
-    sym1 = Symbol(sym_name)
-    pins = csv2pins(path)
-    meta = csv2kv(filepath = path, column_name = 'meta')
+    for arg in sys.argv:
+        if arg.startswith("-o="):
+            lib_name = arg.replace('-o=', '').replace('.kicad_lib', '').strip()
+    if lib_name == "":
+        log(log_error, "Library name is not set! Please check help (-h)!")
+        exit(-1)
 
-    sym1.add_pins(pins)
-    sym1.add_meta(meta)
     lib1 = Library(lib_name)
-    lib1.add_symbols([sym1])
+
+    SymbolList = []
+    for file_path in input_path.glob("*.csv"):
+        log(log_note, f"Found file for processing: {file_path}")
+        sym_name = os.path.basename(file_path).split('.')[0]
+        sym = Symbol(sym_name)
+        pins = csv2pins(file_path)
+        sym.add_pins(pins)
+        SymbolList.append(sym)
+    # exit(0)
+
+    lib1.add_symbols(SymbolList)
     lib1.gen_file()
     lib1.parse_labels()
-    log(log_warn, "Before using Termination, first add some dummy components from library: L_Small, C_Small, R_Small! Otherwise Kicad will crash!")
 
 
 if __name__ == "__main__":
