@@ -513,8 +513,8 @@ class Library:
 
     def parse_labels(self):
         for symbol in self.symbols:
-            symbol.parse_labels(self.name)
-            symbol.parse_busses(self.name)
+            symbol.parse_labels(self.name + "__" + symbol.name)
+            symbol.parse_busses(self.name + "__" + symbol.name)
 
     def parse(self):
         return parse_library(self.symbols)
@@ -535,8 +535,6 @@ class Library:
 
         for symbol in self.symbols:
             print(f"found symbol: {symbol.name}")
- #           for pin in symbol.pins:
-#                print(f"Found Pin: {pin.unit}:{pin.ic_pin}:{pin.name}:{pin.driver}")
             pin_list = self.prepare_kigen_pins(symbol.pins)
             kigen.update_symbol(symbol.name, pin_list, filepath)
         log(log_note, "Generated file: " + filepath)
