@@ -1,0 +1,29 @@
+block;pin_id;pin_prefix;function0;driver0;function1;driver1;voltage;termination;capabilities;origin_pin_name;notes;meta;;
+b0;1;;pc14-osc32_in;ci;;;;;;PC14-OSC32_IN (PC14);TODO: Connect quarz;package=ufqfpn28;;PC14-OSC32_IN (PC14)
+b0;2;;pc15-osc32_out;co;;;;;;PC15-OSC32_OUT (PC15);TODO: Connect quarz;;;PC15-OSC32_OUT (PC15)
+b0;3;;vdd;system_slave.vcc1v8;;;;;;VDD/VDDA;;;;VDD/VDDA
+b0;4;;gnd;system_slave.gnd;;;;;;VSS/VSSA;;;;VSS/VSSA
+b0;5;;pf_nrst;system_slave.rstn;;;;10kR:vdd;;PF2 - NRST;;;;PF2 - NRST
+b1;6;;pa0;adc_master[0].a0;;;;;;PA0;;;;PA0
+b1;7;;pa1;adc_master[0].a1;;;;;;PA1;;;;PA1
+b1;8;;pa2;adc_master[0].a2;;;;;;PA2;;;;PA2
+b1;9;;pa3;spi_master[0].miso;;;;;;PA3;;;;SPI2_MISO
+b1;10;;pa4;spi_master[0].mosi;;;;;;PA4;;;;SPI2_MOSI
+b1;11;;pa5;i2c_master[0].scl;;;;10kR:vdd;;PA5;;;;I2S1_CK/SPI1_SCK
+b1;12;;pa6;adc_master[0].a3;;;;;;PA6;;;;PA6
+b1;13;;pa7;i2c_master[0].sda;;;;10kR:vdd;;PA7;;;;I2S1_SD/SPI1_MOSI
+b1;14;;pb0;gpio[0].dio0;;;;;;PB0;;;;PB0
+b1;15;;pb1;gpio[0].dio1;;;;;;PB1;;;;PB1
+b1;16;;pa8;spi_master[0].csn[0];;;;;;PA8;;;;SPI2_NSS
+b1;17;;pc6;i2c_master[0].irq_s2m;;;;;;PC6;;;;PC6
+b1;18;;pa11;adc_master[0].a4;;;;;;PA11 [PA9];;;;PA11 [PA9]
+b1;19;;pa12;adc_master[0].a5;;;;;;PA12 [PA10];;;;PA12 [PA10]
+b0;20;;pa13;serialwire_slave[0].dio;;;;;;PA13;;;;SYS_SWDIO
+b0;21;;pa14-boot0;serialwire_slave[0].clk;;;;10kR:gnd;;PA14-BOOT0;;;;SYS_SWCLK
+b1;22;;pa15;spi_slave[0].csn[0];;;;;;PA15;;;;I2S1_WS/SPI1_NSS
+b1;23;;pb3;spi_slave[0].sck;;;;;;PB3;;;;I2S1_CK/SPI1_SCK
+b1;24;;pb4;spi_slave[0].miso;;;;;;PB4;;;;I2S1_MCK/SPI1_MISO
+b1;25;;pb5;spi_slave[0].mosi;;;;;;PB5;;;;I2S1_SD/SPI1_MOSI
+b1;26;;pb6;usart_master[0].tx;;;;;;PB6;;;;USART1_TX
+b1;27;;pb7;usart_master[0].rx;;;;;;PB7;;;;USART1_RX
+b1;28;;pb8;spi_master[0].sck;;;;;;PB8;;;;SPI2_SCK
