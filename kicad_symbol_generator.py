@@ -144,7 +144,7 @@ def update_symbol(symbol_name, pin_list, path="./Lib1.kicad_sym"):
     file = Path(path).resolve()
     dir = file.parent
     if not dir.exists():
-        log(log_debug, f"Directory does not exist! Directory: {dir}")
+        log(log_error, f"Directory does not exist! Directory: {dir}")
         exit(1)
     elif file.exists():
         log(log_note, f"Library exists: Open: {file}!")
@@ -154,15 +154,15 @@ def update_symbol(symbol_name, pin_list, path="./Lib1.kicad_sym"):
         lib = generate_lib()
 
     for sym  in lib.symbols:
-        print(f"Found symbol: {sym.entryName}")
+        log(log_note, f"Found symbol: {sym.entryName}")
         if symbol_name == sym.entryName:
-            print(f"Symbol already exist. Override: {symbol_name}!")
+            log(log_note, f"Symbol already existed. Override: {symbol_name}!")
         else:
-            print(f"Symbol did not exist. Create: {symbol_name}!")
+            log(log_note, f"Symbol did not exist. Create: {symbol_name}!")
     # Remove library
     lib.symbols = [s for s in lib.symbols if s.entryName != symbol_name]
 
-    # print(f"Create new symbol: {symbol_name}")
+    # log(log_note, f"Create new symbol: {symbol_name}")
     num_units = 0
 
     for pinname, driver, uid in pin_list:

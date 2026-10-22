@@ -355,7 +355,7 @@ class Symbol:
 
         return compressed.strip(' ')
 
-    def parse_busses(self, prefix):
+    def parse_busses(self, dirpath, filename):
         # TODO: Add some error check for double define bus signals ect.
         bus_drivers = {}
         for pin in self.pins:
@@ -429,8 +429,7 @@ class Symbol:
         busname_full = busname + f'{{ {bussignalsstr} }}'
         parsed = parsed + parse_hierarchical_label(busname_full, xpos-2.54, ypos2, 180)
 
-        # print(parsed)
-        filepath = f"./output/{prefix}.kicad_busses"
+        filepath = f"{dirpath}/{filename}.kicad_busses"
         log(log_note, f"Write file: {filepath}")
 
         fd = open(filepath, 'w+', encoding='utf-8')
@@ -439,7 +438,7 @@ class Symbol:
         fd.close()
 
 
-    def parse_labels(self, prefix):
+    def parse_labels(self, dirpath, filename):
         unit_text_all = ""
         i_all = 0
         term_pos_index_all = 0
@@ -450,7 +449,7 @@ class Symbol:
             if (term_pos_index_all < i_all) :
                 term_pos_index_all = i_all
             unit_text = ""
-            filepath = f"./output/{prefix}_{unit}.kicad_labels"
+            filepath = f"{dirpath}/{filename}_{unit}.kicad_labels"
             for pin in self.pins:
                 if pin.unit != unit:
                     continue
@@ -490,7 +489,7 @@ class Symbol:
             fd.flush()
             fd.close()
             # unit_text_all = unit_text_all + unit_text
-        filepath = f"./output/{prefix}_allblocks.kicad_labels"
+        filepath = f"{dirpath}/{filename}_allblocks.kicad_labels"
         fd = open(filepath, 'w+', encoding='utf-8')
         fd.write(unit_text_all)
         fd.flush()
@@ -503,9 +502,11 @@ class Symbol:
 
 
 class Library:
-    def __init__(self, name):
+    def __init__(self, name, filepath, use_simple_paths):
         self.name = name
         self.symbols = []
+        self.filepath = filepath
+        self.use_simple_paths = use_simple_paths
 
     def add_symbols(self, symbols):
         for symbol in symbols:
@@ -513,8 +514,13 @@ class Library:
 
     def parse_labels(self):
         for symbol in self.symbols:
-            symbol.parse_labels(self.name + "__" + symbol.name)
-            symbol.parse_busses(self.name + "__" + symbol.name)
+            dirpath = Path(self.filepath).parent.name
+            if self.use_simple_paths:
+                filename = symbol.name
+            else:
+                filename = self.name + "__" + symbol.name
+            symbol.parse_labels(dirpath, filename)
+            symbol.parse_busses(dirpath, filename)
 
     def parse(self):
         return parse_library(self.symbols)
@@ -531,21 +537,21 @@ class Library:
 
 
     def gen_file_kigen(self):
-        filepath = f'./output/{self.name}.kicad_sym'
+        filepath = self.filepath
 
         for symbol in self.symbols:
-            print(f"found symbol: {symbol.name}")
             pin_list = self.prepare_kigen_pins(symbol.pins)
             kigen.update_symbol(symbol.name, pin_list, filepath)
-        log(log_note, "Generated file: " + filepath)
+        log(log_note, "Write file: " + filepath)
 
-    def gen_file_old(self):
-        filepath = f'./output/{self.name}.kicad_sym'
-        f_lib = open(filepath, 'w+', encoding='utf-8')
-        f_lib.write(self.parse())
-        f_lib.flush()
-        f_lib.close()
-        log(log_note, "Generated file: " + filepath)
+    ## Deprecated: Marked for removal
+    # def gen_file_old(self):
+    #     filepath = f'./output/{self.name}.kicad_sym'
+    #     f_lib = open(filepath, 'w+', encoding='utf-8')
+    #     f_lib.write(self.parse())
+    #     f_lib.flush()
+    #     f_lib.close()
+    #     log(log_note, "Generated file: " + filepath)
 
 
     def gen_file(self):
@@ -751,12 +757,6 @@ def csv2pins(filepath, seperator = ";"):
         elif splits[col_ids['driver0']].strip() != '' :
             driver = driver + splits[col_ids['driver0']].strip()
 
-        # # Resolve termination stuff:
-        # for term in termination_str.split(','):
-
-        #     exit(1)
-
-
         if (name == "" and block == "" and pin_id == ""):
             continue
         log(log_debug, "pin_id={}; block={}; name={}; driver={}".format( pin_id, block, name, driver))
@@ -776,28 +776,6 @@ def csv2pins(filepath, seperator = ";"):
     return ProcessedPins
 
 
-def print_help():
-    helpstr = '''
-Usage: source init.sh && python3 system-generator.py [Options] <kicad_library_name>
-
-Options:
-    -v, --version   Print license and version
-    -h, --help      Print this help
-
-Example:
-    source init.sh && \
-    ./symbol-generator.py -o=<kicad_library_name>[.kicad_lib]
-
-NOTE: The generate works with: input, processing, output.
-All files in 'input' directory will be processed to the 'output'
-directory. You are self responsible to clean/copy the sources.
-Use the example makefile for conditional processing!
-Build output will be in the './output/' folder.
-Read the README.md for more information!
-Example input files are in folder ./test/*.csv
-'''
-    print(helpstr)
-
 def print_license_short():
     license = f'''
 Symbol-generator v{version}
@@ -809,48 +787,98 @@ There is NO WARRANTY, to the extent permitted by law.
 '''
     print(license)
 
+import argparse
+
+def parse_args():
+
+    parser = argparse.ArgumentParser(
+        description='''
+Kicad-Accel[erator] Symbol Generator/Parser
+Generate .csv files into kicad symbol and schematic components''',
+        epilog='''
+Example: ./symbol-generator.py a.csv b.csv -o lib.kicad_sym
+
+Notes:
+    - Libraries are appended, not overwritten. Compiling one .csv at a time is recommended!
+    - Use Makefile/C-like style for compilation!
+    - For license information execute -v!
+
+WARN:
+    - Library compile can fail and destroy handwritten content in same library.
+    - Do source-control your libraries (handwritten) and input sources (.csv)!
+    - Keep generated and handwritten libraries strictly seperate!
+    - Clean/remove and regenerate your libraries often!
+''',
+    formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+
+    parser.add_argument(
+        "inputs", nargs="+", help="One or multiple "
+    )
+    parser.add_argument(
+        "-o", required=True, help="Output: Kicad library .kicad_sym"
+    )
+    parser.add_argument("-v", help="Print License information")
+
+
+    parser.add_argument(
+        "--simple-paths", action = "store_true", help="Do NOT extend .kicad_bus and .[all]blocks with library name"
+    )
+
+    args = parser.parse_args()
+
+    if args.v:
+        print_license_short()
+        exit(0)
+
+
+    LibPath = Path(args.o)
+
+    if not re.fullmatch("[a-zA-Z0-9_/-]+.kicad_sym", LibPath.name):
+        log(log_error, "Bad Argument '-o'! Symbol/Filename must end with .kicad_sym!")
+        exit(1)
+
+    if not LibPath.parent.is_dir():
+        log(log_error, f"Bad Argument '-o'! Directory must exist: {LibPath.parent}")
+        exit(1)
+    LibPath = LibPath.resolve()
+
+
+    inputFilepaths = []
+
+    for fp in args.inputs:
+        if not Path(fp).is_file() or not fp.endswith(".csv"):
+            log(log_error, f"Input file needs to exist and end with .csv: {fp}!")
+            exit(-1)
+        log(log_note, f"Found file for processing: {fp}")
+        inputFilepaths.append(Path(fp).resolve())
+
+    return LibPath, inputFilepaths, args.simple_paths
+
+
 def main():
     # TODO: Add switch for argument...
     global log_level_system
-    log_level_system = log_warn
+    log_level_system = log_note
     # DO NOT REMOVE!
-    print("Symbol-generator: For version or license use '--version'. For help use '--help'")
+    print("\n###\nSymbol-generator (Kicad-Accel): For version or license use '-v'. For help use '-h'\n###\n")
 
-    if '-v' in sys.argv or '--version' in sys.argv:
-        print_license_short()
-        exit(0)
+    LibPath, InFilepaths, useSimplePaths = parse_args()
 
-    if '-h' in sys.argv or '--help' in sys.argv or len(sys.argv) != 2:
-        print_license_short()
-        print_help()
-        exit(0)
+    LibName = LibPath.name.replace('.kicad_sym', '')
 
-    input_path = Path("./input/").resolve()
-
-    lib_name = ""
-
-    for arg in sys.argv:
-        if arg.startswith("-o="):
-            lib_name = arg.replace('-o=', '').replace('.kicad_lib', '').strip()
-    if lib_name == "":
-        log(log_error, "Library name is not set! Please check help (-h)!")
-        exit(-1)
-
-    lib1 = Library(lib_name)
-
+    lib = Library(LibName, str(LibPath), useSimplePaths)
     SymbolList = []
-    for file_path in input_path.glob("*.csv"):
-        log(log_note, f"Found file for processing: {file_path}")
-        sym_name = os.path.basename(file_path).split('.')[0]
+    for fp in InFilepaths:
+        sym_name = os.path.basename(fp).split('.')[0]
         sym = Symbol(sym_name)
-        pins = csv2pins(file_path)
+        pins = csv2pins(fp)
         sym.add_pins(pins)
         SymbolList.append(sym)
-    # exit(0)
 
-    lib1.add_symbols(SymbolList)
-    lib1.gen_file()
-    lib1.parse_labels()
+    lib.add_symbols(SymbolList)
+    lib.gen_file()
+    lib.parse_labels()
 
 
 if __name__ == "__main__":
