@@ -421,6 +421,7 @@ class Symbol:
 
         # bussignals = bussignals.strip(" ")
         if number_found_busses == 0:
+            log(log_note, f"No busses found, do not create .kicad_busses!")
             return
 
 
@@ -490,6 +491,7 @@ class Symbol:
             fd.close()
             # unit_text_all = unit_text_all + unit_text
         filepath = f"{dirpath}/{filename}_allblocks.kicad_labels"
+        log(log_note, f"Write file: {filepath}")
         fd = open(filepath, 'w+', encoding='utf-8')
         fd.write(unit_text_all)
         fd.flush()
@@ -514,7 +516,7 @@ class Library:
 
     def parse_labels(self):
         for symbol in self.symbols:
-            dirpath = Path(self.filepath).parent.name
+            dirpath = Path(self.filepath).parent.resolve()
             if self.use_simple_paths:
                 filename = symbol.name
             else:
@@ -879,7 +881,6 @@ def main():
     lib.add_symbols(SymbolList)
     lib.gen_file()
     lib.parse_labels()
-
 
 if __name__ == "__main__":
     main()
