@@ -7,69 +7,10 @@ from logger import *
 
 from pathlib import Path
 
-def generate_lib1():
-
-    lib = SymbolLib(
-        version = "20250114",
-        generator="kicad_symbol_generator",
-    )
-
-    # Create symbol and default props
-    symbol = Symbol.create_new(
-        id = "Symbol1",
-        reference="U",
-        value="Value1"
-    )
-
-    # Kicad symbol normally contains child unit called 'MyComponent_0_1' (graphics and pins)
-    # unit=symbol.units[0]
-
-    unit = Symbol(
-        entryName="Symbol1",
-        unitId=0,
-        styleId=1,
-    )
-    symbol.units.append(unit)
-
-    # Draw
-    unit.graphicItems.append(
-        SyRect(
-            start=Position(X=-2.54, Y=2.54),
-            end=Position(2.54, 2.54),
-            stroke=Stroke(width=0, type="default"),
-            fill=Fill(type="background"),
-            )
-    )
-
-
-    # Add two pins
-    unit.pins.extend([
-        SymbolPin(
-            electricalType="input",
-            graphicalStyle="line",
-            position=Position(5.08, 0.0, angle=0),
-            length=2.54,
-            name="IN",
-            number="1",
-
-        ),
-    SymbolPin(
-            electricalType="output",
-            graphicalStyle="line",
-            position=Position(2*5.08, 0.0, angle=0),
-            length=2.54,
-            name="OUT",
-            number="2",
-        ),
-    ])
-
-    lib.symbols.append(symbol)
-    lib.to_file("Lib1.kicad_sym")
-
 def generate_lib():
 
     lib = SymbolLib(
-        version = "20250114",
+        version = "20241209",
         generator="kicad_symbol_generator",
     )
     return lib
