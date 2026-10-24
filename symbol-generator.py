@@ -533,16 +533,25 @@ class Library:
         for pin in Pins:
             if not pin.unit in Units.keys():
                 Units[pin.unit] = len(Units)
-            PinList.append([pin.name, pin.driver, Units[pin.unit]])
-        PinList.sort(key=lambda x:x[2])
+            PinList.append([pin.name, pin.driver, Units[pin.unit], pin.ic_pin])
+        # PinList.sort(key=lambda x:x[2])
         return PinList
 
+    def check_pin_ids(self, Pins):
+        PinIDs = {}
+        for pin in Pins:
+            if pin.ic_pin in PinIDs.keys():
+                log(log_error, f"Pin ID is defined multiple times: {pin.ic_pin}")
+                exit(1)
+            else:
+                PinIDs[pin.ic_pin] = True
 
     def gen_file_kigen(self):
         filepath = self.filepath
 
         for symbol in self.symbols:
             pin_list = self.prepare_kigen_pins(symbol.pins)
+            self.check_pin_ids(symbol.pins)
             kigen.update_symbol(symbol.name, pin_list, filepath)
         log(log_note, "Write file: " + filepath)
 

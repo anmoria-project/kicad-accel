@@ -55,9 +55,9 @@ def add_pins(units, pin_list):
     # Add two pins
 
     offset_id = 0
-    pin_id = 1
+    # pin_id = 1
     uid_old = 0
-    for pinname, driver, uid in pin_list:
+    for pinname, driver, uid, pinid in pin_list:
         if uid != uid_old:
             uid_old = uid
             offset_id = 0
@@ -66,13 +66,13 @@ def add_pins(units, pin_list):
                 electricalType=driver,
                 graphicalStyle="line",
                 position=Position(0.0, -1.0 * (1.27 + 2.54 * offset_id), angle=0),
-                length=2.54,
+                length=2*2.54,
                 name=pinname,
-                number=f"{pin_id}",
+                number=f"{pinid}",
 
             ),
         ])
-        pin_id = pin_id + 1
+        # pin_id = pin_id + 1
         offset_id  = offset_id + 1
 
 def store(lib, symbol, path):
@@ -106,7 +106,7 @@ def update_symbol(symbol_name, pin_list, path="./Lib1.kicad_sym"):
     # log(log_note, f"Create new symbol: {symbol_name}")
     num_units = 0
 
-    for pinname, driver, uid in pin_list:
+    for pinname, driver, uid, pinid in pin_list:
         num_units = max(uid, num_units)
     num_units  = num_units + 1
     symbol, units = add_symbol(symbol_name, num_units)
@@ -114,14 +114,14 @@ def update_symbol(symbol_name, pin_list, path="./Lib1.kicad_sym"):
 
     num_max_chars = max(len(pin[0]) for pin in pin_list)
     # TODO: Optimize for rect size...
-    rect_x_end = max(4*2.54, num_max_chars * 0.6 * 2.54 + 1.27)
+    rect_x_end = max(4*2.54, num_max_chars * 0.6 * 2.54 + 1.27 + 2.54)
 
     for uid in range(0, num_units):
         uid_num_of_pins = len([pin for pin in pin_list if pin[2] == uid])
 
         rect_y_end = -1.0 * (uid_num_of_pins * 2.54 +  0.0)
         draw_rect(units, uid,
-                  Position(2.54, 0),
+                  Position(2*2.54, 0),
                   Position(rect_x_end, rect_y_end))
         for prop in symbol.properties:
             if prop.key == "Reference":

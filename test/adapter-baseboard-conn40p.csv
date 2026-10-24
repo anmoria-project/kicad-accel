@@ -1,0 +1,41 @@
+block;pin_id;pin_prefix;function0;driver0;function1;driver1;voltage;termination;capabilities;origin_pin_name;meta;notes
+side_a;a1;;vcc_master;system_master[0].vcc_id[0];;;;;;;footprint=df40c-40p;
+side_a;a2;;sw_swdio;;jtag_tms;jtag_master[0].tms;;;;;value=df40c-40p;SWDIO
+side_a;a3;;sw_swclk;;jtag_tck;jtag_master[0].tck;;;;;;"SWCLK; JTAG TMS and TCK pins are shared with SWDIO and SWCLK, respectively, and a specific sequence on the TMS pin is used to switch between JTAG-DP and SW-DP"
+side_a;a4;;;;jtag_tdi;jtag_master[0].mosi;;;;;;
+side_a;a5;;;;jtag_tdo;jtag_master[0].miso;;;;;;
+side_a;a6;;mreset_n;do;;;;;;;;System Enable/disable
+side_a;a7;;gnd;system_master[0].gnd;;;;;;;;
+side_a;a8;;;;som_pin_p0;adapter40p_som.dp0;;;;;;
+side_a;a9;;;;som_pin_n0;adapter40p_som.dn0;;;;;;
+side_a;a10;;gnd;system_master[0].gnd;;;;;;;;
+side_a;a11;;;;som_pin_p2;adapter40p_som.dp2;;;;;;
+side_a;a12;;;;som_pin_n2;adapter40p_som.dn2;;;;;;
+side_a;a13;;gnd;system_master[0].gnd;;;;;;;;
+side_a;a14;;;;som_clk_p;adapter40p_som.clkp;;;;;;
+side_a;a15;;;;som_clk_n;adapter40p_som.clkn;;;;;;
+side_a;a16;;gnd;system_master[0].gnd;;;;;;;;
+side_a;a17;;vcc1v8;system_master[0].vcc1v8;;;;1uF:gnd, 100nF:gnd, 600x:self;I = 1 * 0.25A (0.2A), P= 0.36W;;;
+side_a;a18;;vcc3v3;system_master[0].vcc3v3;;;;1uF:gnd, 100nF:gnd, 600x:self;I = 2 * 0.25A (0.4A), P=1.32W;;;
+side_a;a19;;vcc3v3;system_master[0].vcc3v3;;;;;;;;
+side_a;a20;;gnd;system_master[0].gnd;;;;;;;;
+side_b;b1;;vcc_som;pi;;;;;;;;AC coupled SOM power. Do not use for power!
+side_b;b2;;mspi_miso;spi_master[0].miso;;;;;;;;
+side_b;b3;;mspi_mosi;spi_master[0].mosi;;;;;;;;
+side_b;b4;;mspi_sck;spi_master[0].sck;;;;;;;;
+side_b;b5;;mspi_csn;spi_master[0].csn[0];;;;;;;;
+side_b;b6;;;;adapter2bboard_irq;bidir;;;;;;NOTE: This pin can be bidirectional if necessary...
+side_b;b7;;gnd;system_master[0].gnd;;;;;;;;
+side_b;b8;;;;som_pin_p1;adapter40p_som.dp1;;;;;;
+side_b;b9;;;;som_pin_n1;adapter40p_som.dn1;;;;;;
+side_b;b10;;gnd;system_master[0].gnd;;;;;;;;
+side_b;b11;;;;som_pin_p3;adapter40p_som.dp3;;;;;;
+side_b;b12;;;;som_pin_n3;adapter40p_som.dn3;;;;;;
+side_b;b13;;gnd;system_master[0].gnd;;;;;;;;
+side_b;b14;;;;som_adapter_irq;adapter40p_som.s2a_irq;;;;;;
+side_b;b15;;;;adapter_som_irq;adapter40p_som.a2s_irq;;;;;;
+side_b;b16;;gnd;system_master[0].gnd;;;;;;;;
+side_b;b17;;vcc12v0;system_master[0].vcc12v0;;;;1uF:gnd, 100nF:gnd, 600x:self;I = 3 * 0.25A (0.6A), P=7.2W;;;
+side_b;b18;;vcc12v0;system_master[0].vcc12v0;;;;;;;;
+side_b;b20;;vcc12v0;system_master[0].vcc12v0;;;;;;;;NOTE: Flipped on purpose. Testing unordered pin
+side_b;b19;;gnd;system_master[0].gnd;;;;;;;;
