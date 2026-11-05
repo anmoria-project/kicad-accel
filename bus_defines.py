@@ -536,7 +536,26 @@ bus_gpio = [
     DriverType('gpio[x].di5', bus_gpio, 'input', ['gpio[x].do5'], 1, True),
     DriverType('gpio[x].di6', bus_gpio, 'input', ['gpio[x].do6'], 1, True),
     DriverType('gpio[x].di7', bus_gpio, 'input', ['gpio[x].do7'], 1, True),
+]
 
+bus_pwm = [
+    DriverType('pwm_master[x].pwm0', bus_master, 'output', ['pwm_slave[x].pwm0'], 1, True),
+    DriverType('pwm_master[x].pwm1', bus_master, 'output', ['pwm_slave[x].pwm1'], 1, True),
+    DriverType('pwm_master[x].pwm2', bus_master, 'output', ['pwm_slave[x].pwm2'], 1, True),
+    DriverType('pwm_master[x].pwm3', bus_master, 'output', ['pwm_slave[x].pwm3'], 1, True),
+    DriverType('pwm_master[x].pwm4', bus_master, 'output', ['pwm_slave[x].pwm4'], 1, True),
+    DriverType('pwm_master[x].pwm5', bus_master, 'output', ['pwm_slave[x].pwm5'], 1, True),
+    DriverType('pwm_master[x].pwm6', bus_master, 'output', ['pwm_slave[x].pwm6'], 1, True),
+    DriverType('pwm_master[x].pwm7', bus_master, 'output', ['pwm_slave[x].pwm7'], 1, True),
+
+    DriverType('pwm_slave[x].pwm0', bus_slave, 'input', ['pwm_master[x].pwm0'], 1, True),
+    DriverType('pwm_slave[x].pwm1', bus_slave, 'input', ['pwm_master[x].pwm1'], 1, True),
+    DriverType('pwm_slave[x].pwm2', bus_slave, 'input', ['pwm_master[x].pwm2'], 1, True),
+    DriverType('pwm_slave[x].pwm3', bus_slave, 'input', ['pwm_master[x].pwm3'], 1, True),
+    DriverType('pwm_slave[x].pwm4', bus_slave, 'input', ['pwm_master[x].pwm4'], 1, True),
+    DriverType('pwm_slave[x].pwm5', bus_slave, 'input', ['pwm_master[x].pwm5'], 1, True),
+    DriverType('pwm_slave[x].pwm6', bus_slave, 'input', ['pwm_master[x].pwm6'], 1, True),
+    DriverType('pwm_slave[x].pwm7', bus_slave, 'input', ['pwm_master[x].pwm7'], 1, True),
 ]
 
 bus_adc = [
@@ -743,6 +762,7 @@ bus_list = [
     bus_pcie,
     bus_sdmmc,
     bus_usbfs,
+    bus_pwm,
     # bus_rj45_conn,
 ]
 
