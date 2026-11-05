@@ -57,6 +57,9 @@ def add_pins(units, pin_list):
     offset_id = 0
     # pin_id = 1
     uid_old = 0
+
+    # TODO: This is kind of ugly. Fix later (at best in common parser and throw here if not sorted. Otherwise signal table might be off?!)
+    pin_list.sort(key=lambda x: x[2])
     for pinname, driver, uid, pinid in pin_list:
         if uid != uid_old:
             uid_old = uid
