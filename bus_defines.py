@@ -538,6 +538,40 @@ bus_gpio = [
     DriverType('gpio[x].di7', bus_gpio, 'input', ['gpio[x].do7'], 1, True),
 ]
 
+bus_parallel = [
+    DriverType('parallel_master[x].d0',          bus_master, 'output', ['parallel_slave[x].d0'], 1, True),
+    DriverType('parallel_master[x].d1',          bus_master, 'output', ['parallel_slave[x].d1'], 1, True),
+    DriverType('parallel_master[x].d2',          bus_master, 'output', ['parallel_slave[x].d2'], 1, True),
+    DriverType('parallel_master[x].d3',          bus_master, 'output', ['parallel_slave[x].d3'], 1, True),
+    DriverType('parallel_master[x].d4',          bus_master, 'output', ['parallel_slave[x].d4'], 1, True),
+    DriverType('parallel_master[x].d5',          bus_master, 'output', ['parallel_slave[x].d5'], 1, True),
+    DriverType('parallel_master[x].d6',          bus_master, 'output', ['parallel_slave[x].d6'], 1, True),
+    DriverType('parallel_master[x].d7',          bus_master, 'output', ['parallel_slave[x].d7'], 1, True),
+    DriverType('parallel_master[x].clk_mosi',    bus_master, 'output', ['parallel_slave[x].clk_mosi'], 1, True),
+    DriverType('parallel_master[x].clk_miso',    bus_master, 'input',  ['parallel_slave[x].clk_miso'], 1, True),
+    DriverType('parallel_master[x].wr_req_mosi_n', bus_master, 'output', ['parallel_slave[x].wr_req_mosi_n'], 1, True),
+    DriverType('parallel_master[x].wr_req_miso_n', bus_master, 'input',  ['parallel_slave[x].wr_req_miso_n'], 1, True),
+    DriverType('parallel_master[x].rd_rdy_mosi_n', bus_master, 'output', ['parallel_slave[x].rd_rdy_mosi_n'], 1, True),
+    DriverType('parallel_master[x].rd_rdy_miso_n', bus_master, 'input',  ['parallel_slave[x].rd_rdy_miso_n'], 1, True),
+
+    DriverType('parallel_slave[x].d0',          bus_slave, 'input',   ['parallel_master[x].d0'], 1, True),
+    DriverType('parallel_slave[x].d1',          bus_slave, 'input',   ['parallel_master[x].d1'], 1, True),
+    DriverType('parallel_slave[x].d2',          bus_slave, 'input',   ['parallel_master[x].d2'], 1, True),
+    DriverType('parallel_slave[x].d3',          bus_slave, 'input',   ['parallel_master[x].d3'], 1, True),
+    DriverType('parallel_slave[x].d4',          bus_slave, 'input',   ['parallel_master[x].d4'], 1, True),
+    DriverType('parallel_slave[x].d5',          bus_slave, 'input',   ['parallel_master[x].d5'], 1, True),
+    DriverType('parallel_slave[x].d6',          bus_slave, 'input',   ['parallel_master[x].d6'], 1, True),
+    DriverType('parallel_slave[x].d7',          bus_slave, 'input',   ['parallel_master[x].d7'], 1, True),
+    DriverType('parallel_slave[x].clk_mosi',    bus_slave, 'input',   ['parallel_master[x].clk_mosi'], 1, True),
+    DriverType('parallel_slave[x].clk_miso',    bus_slave, 'output',  ['parallel_master[x].clk_miso'], 1, True),
+    DriverType('parallel_slave[x].wr_req_mosi_n', bus_slave, 'output', ['parallel_master[x].wr_req_mosi_n'], 1, True),
+    DriverType('parallel_slave[x].wr_req_miso_n', bus_slave, 'input',  ['parallel_master[x].wr_req_miso_n'], 1, True),
+    DriverType('parallel_slave[x].rd_rdy_mosi_n', bus_slave, 'output', ['parallel_master[x].rd_rdy_mosi_n'], 1, True),
+    DriverType('parallel_slave[x].rd_rdy_miso_n', bus_slave, 'input',  ['parallel_master[x].rd_rdy_miso_n'], 1, True),
+
+]
+
+
 bus_pwm = [
     DriverType('pwm_master[x].pwm0', bus_master, 'output', ['pwm_slave[x].pwm0'], 1, True),
     DriverType('pwm_master[x].pwm1', bus_master, 'output', ['pwm_slave[x].pwm1'], 1, True),
@@ -763,6 +797,7 @@ bus_list = [
     bus_sdmmc,
     bus_usbfs,
     bus_pwm,
+    bus_parallel,
     # bus_rj45_conn,
 ]
 
