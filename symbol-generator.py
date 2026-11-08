@@ -94,12 +94,11 @@ class SymbolPin:
         # Add substitution for lazy driver keys
         # TODO: Remove backwards compatibility when finished with this here...
         driver = re.sub(r'\[[0-9]+\]', '', driver_raw).lower().replace('.', '_')
-        found = False
+        driver2 = re.sub(r'[0-9]+$', '', driver)
         for key in self.driver_subst.keys():
             key_legacy = key.replace('.', '_')
-            if driver == key_legacy:
+            if driver == key_legacy or driver2 == key_legacy:
                 driver = self.driver_subst[key]
-                found = True
                 break
 
         if driver not in kicad_drivers:
@@ -363,7 +362,8 @@ class Symbol:
                 for drivertype in bus:
                     busdriver = drivertype.name.replace('[x]', '').lower().replace('.', '_')
                     pindriver = re.sub(r'\[[0-9]+\]', '', pin.driver_raw).lower().replace('.', '_')
-                    if pindriver == busdriver:
+                    pindriver2 = re.sub(r'[0-9]+$', '', pindriver)
+                    if pindriver == busdriver or (pindriver2 == busdriver):
                         bus_drivers[pin.driver_raw] = pin.name
                     else:
                         # print(f"Missmatch: {pindriver}:{busdriver}")

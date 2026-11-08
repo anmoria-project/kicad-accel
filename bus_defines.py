@@ -540,20 +540,22 @@ bus_gpio = [
 
 bus_parallel = [
     DriverType('parallel_master[x].d[x]',          bus_master, 'output', ['parallel_slave[x].d[x]'], 1, True),
-    DriverType('parallel_master[x].clk_mosi',    bus_master, 'output', ['parallel_slave[x].clk_mosi'], 1, True),
-    DriverType('parallel_master[x].clk_miso',    bus_master, 'input',  ['parallel_slave[x].clk_miso'], 1, True),
+    DriverType('parallel_master[x].clk_mosi',      bus_master, 'output', ['parallel_slave[x].clk_mosi'], 1, True),
+    DriverType('parallel_master[x].clk_miso',      bus_master, 'input',  ['parallel_slave[x].clk_miso'], 1, True),
     DriverType('parallel_master[x].wr_req_mosi_n', bus_master, 'output', ['parallel_slave[x].wr_req_mosi_n'], 1, True),
     DriverType('parallel_master[x].wr_req_miso_n', bus_master, 'input',  ['parallel_slave[x].wr_req_miso_n'], 1, True),
     DriverType('parallel_master[x].rd_rdy_mosi_n', bus_master, 'output', ['parallel_slave[x].rd_rdy_mosi_n'], 1, True),
     DriverType('parallel_master[x].rd_rdy_miso_n', bus_master, 'input',  ['parallel_slave[x].rd_rdy_miso_n'], 1, True),
+    DriverType('parallel_master[x].oe_mosi_n',     bus_master, 'input',  ['parallel_slave[x].oe_mosi_n'], 1, True),
 
     DriverType('parallel_slave[x].d[x]',          bus_slave, 'input',   ['parallel_master[x].d[x]'], 1, True),
-    DriverType('parallel_slave[x].clk_mosi',    bus_slave, 'input',   ['parallel_master[x].clk_mosi'], 1, True),
-    DriverType('parallel_slave[x].clk_miso',    bus_slave, 'output',  ['parallel_master[x].clk_miso'], 1, True),
+    DriverType('parallel_slave[x].clk_mosi',      bus_slave, 'input',   ['parallel_master[x].clk_mosi'], 1, True),
+    DriverType('parallel_slave[x].clk_miso',      bus_slave, 'output',  ['parallel_master[x].clk_miso'], 1, True),
     DriverType('parallel_slave[x].wr_req_mosi_n', bus_slave, 'output', ['parallel_master[x].wr_req_mosi_n'], 1, True),
     DriverType('parallel_slave[x].wr_req_miso_n', bus_slave, 'input',  ['parallel_master[x].wr_req_miso_n'], 1, True),
     DriverType('parallel_slave[x].rd_rdy_mosi_n', bus_slave, 'output', ['parallel_master[x].rd_rdy_mosi_n'], 1, True),
     DriverType('parallel_slave[x].rd_rdy_miso_n', bus_slave, 'input',  ['parallel_master[x].rd_rdy_miso_n'], 1, True),
+    DriverType('parallel_slave[x].oe_mosi_n',     bus_master, 'input', ['parallel_master[x].oe_mosi_n'], 1, True),
 
 ]
 
